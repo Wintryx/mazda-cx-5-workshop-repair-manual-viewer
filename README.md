@@ -7,7 +7,7 @@ zweisprachiger Suche (Deutsch ⇄ Englisch), Lesezeichen, Notizen, Reparatur-Che
 Läuft ohne Internet und ohne externe Laufzeit-Abhängigkeiten (reines Node.js + lokal eingebundenes PDF.js)
 auf Laptop oder Tablet im Werkstattbetrieb.
 
-**Stand:** v1.6.0 · Oktober 2026
+**Stand:** v1.7.0 · Oktober 2026
 
 ---
 
@@ -36,7 +36,7 @@ mazda-manual-viewer/
 ├─ lib/paths.js           Auflösung des Handbuch-Verzeichnisses
 ├─ config/                chapters.json, packs.json, checklists.json, settings.json
 ├─ public/                Frontend (index.html, app.js, style.css), PDF.js, search_index.json
-├─ tools/                 validate.js, run_tests.js, build_packs.js, titles.js, Tests
+├─ tools/                 validate.js, run_tests.js, titles.js, ocr_*.{py,ps1,js}, Tests
 ├─ data/                  7.294 PDFs (nicht versioniert, siehe .gitignore)
 ├─ START_VIEWER.bat       Doppelklick-Start mit Node-Prüfung
 ├─ package.json           Scripts: start, index, packs, validate, test
@@ -119,10 +119,11 @@ npm run test:browser # Playwright/Chrome, optional (benötigt playwright und lau
 
 ## 9. Bekannte Grenzen
 
-- **Titelabdeckung 72,1 %** (5.256 von 7.294): Der Rest sind Seiten ohne eigene Überschrift
-  (Fortsetzungsseiten, reine Bildseiten) — dort bleibt der Titel leer statt geraten.
-- **1.007 Seiten ohne Text** (reine Bildseiten, v. a. Schaltpläne und Bodyshop-Deckblätter): nur über
-  die Kapitelstruktur erreichbar, nicht über Stichworte. OCR ist als Paket D geplant (TODO 2.4).
+- **Titelabdeckung 76,9 %** (5.608 von 7.294): Der Rest sind Seiten ohne eigene Überschrift
+  (Fortsetzungsseiten, Zeichnungen ohne Beschriftung) — dort bleibt der Titel leer statt geraten.
+- **OCR-Texte** der 253 Zeichnungsseiten (Schaltpläne, Bodyshop) sind maschinell gelesen und enthalten
+  Fehler („BAITERY", „[CRAY]"). Sie taugen für Stichworte, nicht für Zitate; die Seiten selbst sind
+  maßgeblich.
 - **Drehmomente** der Injektor-Karte sind gegen `01-14B-37` und `01-14B-38` geprüft und je Zeile verlinkt;
   sie gelten für den 2.2 Skyactiv-D — andere Motorvarianten haben eigene Werte.
 - Die PDFs unterliegen dem Urheberrecht von Mazda — siehe Abschnitt 11.
@@ -133,6 +134,20 @@ npm run test:browser # Playwright/Chrome, optional (benötigt playwright und lau
 - Port-Datei `.active_port` ist reine Information und wird beim Start überschrieben.
 - Sicherungen vor Umbauten liegen in `_backup/` (nicht versioniert).
 - `TODO.md` führt offene Punkte, `CHANGELOG.md` die Versionshistorie.
+
+**OCR neu erzeugen** (nur nötig, wenn sich die PDFs ändern; das Ergebnis
+`config/ocr_text.json` ist versioniert):
+
+```powershell
+python tools/ocr_pages.py        # rendert die Seiten ohne Text (200 dpi)
+powershell -NoProfile -File tools/ocr_batch.ps1 `
+  -Manifest "$env:TEMP\mazda-ocr\manifest.json" -Out "$env:TEMP\mazda-ocr\results.json"
+node tools/ocr_merge.js "$env:TEMP\mazda-ocr\results.json"
+npm run index
+```
+
+Voraussetzungen: Python 3 mit `pymupdf` (`pip install pymupdf`) und ein Windows-OCR-Sprachpaket
+(hier de-DE). Der Viewer selbst braucht weder Python noch Netz — nur dieser Wartungsschritt.
 
 ## 11. Rechtehinweis
 

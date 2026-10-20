@@ -6,6 +6,42 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.7.0] - 2026-10-20
+
+### Volltext & Suchbarkeit (P1)
+- **PDF.js-Volltext als Rückfallebene** (TODO 2.4): 1.007 Seiten lieferten keinen Text, weil der eigene
+  Stream-Extraktor nur literale `(…)Tj`-Strings liest und an den Hex-Strings dieser Dateien scheitert —
+  nicht, wie seit v1.4.0 angenommen, weil es reine Bildseiten wären. `tools/titles.js` liefert jetzt
+  Titel **und** Seitentext in einem PDF.js-Durchlauf; `build_index.js` nutzt den Text, sobald
+  `extractText()` leer bleibt.
+- **Keywords 6.285 → 7.041 (86,2 % → 96,5 %)**, Sektionscodes 6.221 → 6.302, Titel 5.256 → 5.357 (73,4 %).
+- **Kopf-/Fußzeilen-Filter:** „BACK TO CHAPTER INDEX", „TO MODEL INDEX" und „MAZDA CX5 …" werden vor der
+  Keyword-Bildung entfernt — sonst hätten die verbleibenden Zeichnungsseiten nur Boilerplate-Keywords.
+- **OCR der Zeichnungsseiten** (TODO 2.4): Die 251 verbleibenden Seiten sind Schaltplan- und
+  Karosseriezeichnungen, deren Beschriftungen als **Vektorpfade** gezeichnet sind — sie stehen in keinem
+  Textstrom, werden aber beim Rendern sichtbar. Erste Messung am eingebetteten Rasterbild ergab 0 Zeichen;
+  der Fehler war, das Rendering nicht zu prüfen.
+  - Pipeline: `tools/ocr_pages.py` (PyMuPDF, 200 dpi) → `tools/ocr_batch.ps1` (Windows-OCR, de-DE) →
+    `tools/ocr_merge.js` → `config/ocr_text.json` (203 KB, versioniert, damit ein Rebuild keine erneute
+    OCR braucht)
+  - **253 Seiten** erkannt, Ø 756 Zeichen; Titel aus der ersten OCR-Zeile („ELECTRONIC 4WD CONTROL SYSTEM",
+    „AUTOMATIC TRANSAXLE CONTROL SYSTEM")
+  - OCR-Text ist naturgemäß fehlerbehaftet („BAITERY", „[CRAY]") — für Stichworte reicht es, für Zitate nicht
+- **Endstand:** Keywords **7.292 (100 %)**, Titel **5.608 (76,9 %)**, Sektionscodes 6.302, keine Seite
+  ohne Text mehr.
+- **Suche:** „4WD" findet 264 Dokumente, „Solenoid" 273 — vorher nur über die Kapitelstruktur erreichbar.
+- **Ranking:** Mit dem neuen Volltext zog die Technical-Guide-Seite bei „Klima" erneut am HVAC-Kapitel
+  vorbei — Gruppen-Boost 55 → 65 (`server.js`), Suchtests wieder 15/15.
+- Index 4,30 MB (< 6 MB), Build 139 s.
+
+### Verifiziert
+- `npm run validate` → OK (7.294 Dokumente, 0 ungültige Sektionscodes, 53 Pack-Verweise)
+- `npm test` → 47 API- und 15 Suchprüfungen grün
+- OCR-Gegenprobe: erzeugtes Textbild wird korrekt gelesen; gerenderte Schaltplanseite liefert
+  „4WD SOLENOID", „4WD CONTROL MODULE", „DIFFERENTIAL OIL TEMPERATURE SENSOR"
+
+---
+
 ## [1.6.0] - 2026-10-20
 
 ### Titel & Suche (P1)

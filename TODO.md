@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.6.0 · 20.10.2026
+**Stand:** v1.7.0 · 20.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -15,22 +15,25 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.5.1 umgesetzt:** Paket B (1.4 – Injektor-Drehmomente gegen die Originalseiten belegt und verlinkt).
 >
 > **v1.6.0 umgesetzt:** Paket C (2.2 – Titel aus dem PDF-Layout, 50,2 % → 72,1 %).
+>
+> **v1.7.0 umgesetzt:** Paket D (2.4 – Volltext über PDF.js nachgezogen, Keywords 86,2 % → 96,5 %; OCR nach Messung verworfen).
 
 ---
 
-## 🎯 Nächste Schritte (v1.7.0)
+## 🎯 Nächste Schritte (v1.8.0)
 
-Pakete **A** (Projekt-Hygiene, v1.5.0), **B** (Drehmomente, v1.5.1) und **C** (Titel, v1.6.0) sind erledigt — siehe unten. Es bleibt ein inhaltliches Paket: **D → 2.4**.
+Die vier großen Pakete **A–D** sind erledigt (siehe unten). Offen sind Betriebs-Kleinigkeiten und Ausbau, nach Nutzen sortiert:
 
-| Paket | Inhalt | Aufwand | Bringt |
+| Punkt | Inhalt | Aufwand | Bringt |
 |---|---|---|---|
-| **D** | OCR der 1.007 Bildseiten | ~1 Tag | Schaltpläne und Bodyshop durchsuchbar |
-
-### [ ] D – OCR der Bildseiten
-- [ ] Bestätigen, dass die 1.007 Seiten ohne Text nur aus `/Image`-XObjects bestehen
-- [ ] Tesseract (deu+eng) offline über diese Seiten laufen lassen, `t`/`kw` nachziehen
-- [ ] Laufzeit messen und Index-Größe prüfen (Ziel < 6 MB)
-- **Fertig, wenn:** Schaltpläne über Stichworte wie „4WD-Solenoid" oder „Massepunkt" auffindbar sind.
+| **6.3** | Globale DTC-Übersicht generieren | ~2 h | „P0301" führt direkt zum Diagnoseblatt |
+| **6.1** | Kapitelbaum aus dem Index (161 Sektionen) | ~2 h | jedes Dokument in ≤ 3 Klicks |
+| **5.5** | Smoke-Test mit `node --test` | ~1 h | schnellere Rückmeldung als die jetzigen Skripte |
+| **5.6** | `.active_port` beim Beenden aufräumen | ~15 min | keine irreführende Datei |
+| **5.8** | Range-Requests (206), Request-Log | ~1 h | sauberes HTTP und Fehlersuche |
+| **5.9** | Playwright als Dev-Setup | ~1 h | `npm run test:browser` ohne Vorbereitung |
+| **6.5** | Zweites Handbuch (L8/LF/L3) | ~3 h | Motorenreihe L |
+| **6.6** | Reparaturprotokoll | ~4 h | Historie für Wiederverkauf |
 
 ---
 
@@ -126,12 +129,16 @@ Die kuratierten Sets in `/api/favorites` wurden nie gegen den Index geprüft. Nu
 - **Maßnahme:** Typ anhand des Sektionscodes bestimmen, nicht anhand des Dateinamens
 - **Fertig, wenn:** Kapitel „Schaltpläne" exakt 277 Dokumente zeigt und die 91 Seiten unter 01/00 einsortiert sind
 
-### [ ] 2.4 1.009 Dokumente ohne Volltext-Keywords *(v1.4.0: Ursache geklärt – 1.007 Seiten sind reine Bildseiten, OCR entscheidbar)*
-- **Befund:** 1.007 Seiten liefern beim Extrahieren keinen Text (Deckblätter von Wiring/Bodyshop, einige Schaltpläne); Schaltpläne haben nur 7 % Keyword-Abdeckung
-- **Maßnahme (OCR):** Tesseract (deu+eng) offline über genau diese Seiten laufen lassen, Ergebnis in `t`/`kw` des Index übernehmen; Seitenliste aus dem Build-Report ziehen
-- **Aufwand/Risiko:** ~1 Tag; Index wächst (Ziel < 6 MB), Laufzeit einmalig, Qualität bei Strichzeichnungen begrenzt — Nutzen vorher an 20 Seiten messen
-- **Alternative:** bewusst akzeptieren und im README als Grenze dokumentieren
-- **Fertig, wenn:** Schaltpläne über Stichworte (z. B. „4WD-Solenoid", „Massepunkt") findbar sind oder die Entscheidung dokumentiert ist
+### [x] 2.4 Volltext-Lücken schließen *(v1.7.0: Extraktor-Bug behoben und Zeichnungsseiten per OCR erschlossen)*
+- **Befund v1.4.0:** 1.009 Seiten lieferten beim Extrahieren keinen Text — angenommen wurden „reine Bildseiten" und OCR als Lösung
+- **Erste Ursache:** PDF.js liest auf **allen** 1.009 Seiten Text; keine ist textlos. Der eigene Extraktor versteht nur literale `(…)Tj`-Strings und scheitert an den Hex-Strings dieser Dateien
+- **Maßnahme 1:** `tools/titles.js` liefert neben dem Titel auch den Seitentext; `build_index.js` nutzt ihn als Rückfallebene, wenn `extractText()` leer bleibt. Kopf-/Fußzeilen („BACK TO CHAPTER INDEX", „TO MODEL INDEX", „MAZDA CX5 …") werden vorher entfernt
+- **Zwischenstand:** Keywords 6.285 → 7.041 (86,2 % → 96,5 %), 251 Seiten blieben ohne Text
+- **Zweite Ursache:** Diese 251 Seiten sind Zeichnungen, deren Beschriftungen als **Vektorpfade** gezeichnet sind — im Textstrom unsichtbar, aber im Rendering vorhanden. Die Messung am eingebetteten Rasterbild ergab 0 Zeichen, weil dort nur die Strichzeichnung liegt
+- **Maßnahme 2 (OCR):** `tools/ocr_pages.py` (PyMuPDF, 200 dpi) → `tools/ocr_batch.ps1` (Windows-OCR de-DE) → `tools/ocr_merge.js` → `config/ocr_text.json` (203 KB, versioniert). `build_index.js` liest die Datei, ein Rebuild braucht keine erneute OCR
+- **Endstand:** 253 Seiten erkannt (Ø 756 Zeichen), Keywords **7.292 (100 %)**, Titel **5.608 (76,9 %)**, Sektionscodes 6.302, Index 4,30 MB
+- **Grenze:** OCR-Text ist fehlerbehaftet („BAITERY", „[CRAY]") — gut für Stichworte, nicht für Zitate. Neue Abhängigkeit nur für eine erneute OCR: Python + PyMuPDF + Windows-OCR-Sprachpaket
+- **Wirkung:** „4WD" 264 Treffer, „Solenoid" 273 — vorher nur über die Kapitelstruktur erreichbar. „Massepunkt" liefert weiterhin Treffer über die deutschen Synonyme
 
 ### [x] 2.5 `searchCatalog.find()` durch Map ersetzen
 - **Ort:** [`server.js`](file:///C:/Projekte/Tools/mazda-manual-viewer/server.js) (`byFile`-Map, Lookup in `extractPdfLinks`)
@@ -279,7 +286,7 @@ Mindestens diese Begriffe liefern heute 0 oder falsche Treffer:
 - Aus den `-02`-Seiten eine durchsuchbare Tabelle (Code → System → Dokument) bauen
 - **Fertig, wenn:** Eingabe „P0301" direkt zum richtigen Diagnoseblatt führt
 
-### [ ] 6.4 OCR für textlose Seiten prüfen *(zusammengeführt mit 2.4)*
+### [x] 6.4 OCR für textlose Seiten prüfen *(in 2.4 erledigt — Pipeline läuft)*
 - Siehe **2.4** — dort stehen Befund (1.007 Bildseiten), Aufwand und Abbruchkriterien.
 
 ### [ ] 6.5 Weiteres Handbuch einbinden
@@ -292,12 +299,9 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 
 ## Empfohlene Reihenfolge
 
-### v1.7.0 (als Nächstes)
+### v1.8.0 (als Nächstes)
 
-| Paket | Inhalt | Aufwand |
-|---|---|---|
-| **D** | 2.4 OCR der Bildseiten | ~1 Tag |
-| optional | 5.9 Playwright als Dev-Setup, 6.5 zweites Handbuch | je ~1 h |
+Siehe Tabelle „Nächste Schritte" oben — 6.3 und 6.1 zuerst, danach die Betriebs-Kleinigkeiten 5.5/5.6/5.8/5.9.
 
 ### Abgeschlossene Sprints (v1.4.0)
 
@@ -309,6 +313,20 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ in v1.5.0 (5.5/5.6/5.9 offen) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 offen) |
+
+---
+
+## ✅ Erledigt in v1.7.0
+
+- [x] **2.4 Volltext-Lücken** — 1.007 Seiten hatten keinen Text, weil der eigene Extraktor nur literale `(…)Tj`-Strings liest. `tools/titles.js` liefert jetzt zusätzlich den Seitentext, den `build_index.js` als Rückfallebene nutzt (ein PDF.js-Durchlauf für Titel und Text).
+  - **Keywords 6.285 → 7.041 (86,2 % → 96,5 %)**, Sektionscodes 6.221 → 6.302, Titel 5.256 → 5.357 (73,4 %).
+  - Kopf-/Fußzeilen werden vor der Keyword-Bildung entfernt, sonst hätten die Zeichnungsseiten nur „back to chapter index" als Inhalt.
+  - **OCR der Zeichnungsseiten:** Die 251 Restseiten sind Zeichnungen mit Beschriftungen als Vektorpfade.
+    Pipeline `tools/ocr_pages.py` → `tools/ocr_batch.ps1` → `tools/ocr_merge.js` → `config/ocr_text.json`;
+    253 Seiten erkannt (Ø 756 Zeichen), Titel aus der ersten OCR-Zeile.
+  - **Suche:** „4WD" 264 Treffer, „Solenoid" 273 — vorher nur über die Kapitelstruktur erreichbar.
+  - **Ranking:** Mit dem neuen Volltext zog die Technical-Guide-Seite bei „Klima" erneut vor — Gruppen-Boost 55 → 65, Suchtests 15/15.
+  - Index 4,22 MB (< 6 MB), Build 149 s.
 
 ---
 

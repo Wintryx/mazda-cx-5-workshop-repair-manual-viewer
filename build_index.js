@@ -13,10 +13,17 @@
 const fs = require('fs');
 const zlib = require('zlib');
 const path = require('path');
-const { layoutTitle } = require('./tools/titles');
+const { readPage } = require('./tools/titles');
 
 const { MANUAL_DIR, MANUAL_SOURCE } = require('./lib/paths');
 const OUT_FILE = path.join(__dirname, 'public', 'search_index.json');
+const OCR_FILE = path.join(__dirname, 'config', 'ocr_text.json');
+
+// OCR-Ergebnisse der Zeichnungsseiten (config/ocr_text.json, erzeugt von
+// tools/ocr_pages.py + tools/ocr_batch.ps1) – so überleben sie einen Rebuild.
+const OCR_TEXT = (() => {
+  try { return JSON.parse(fs.readFileSync(OCR_FILE, 'utf8')); } catch (e) { return {}; }
+})();
 
 const GROUPS = {
   '00': '00 Allgemein / Wartung',
@@ -191,6 +198,20 @@ function extractKeywords(text) {
   return out.join(' ');
 }
 
+/**
+ * Entfernt die auf jeder Seite wiederkehrenden Kopf-/Fußzeilen aus dem
+ * PDF.js-Text. Sonst bekämen reine Zeichnungsseiten Keywords wie
+ * "back to chapter index to model index" und würden jede Suche danach treffen.
+ */
+function stripBoilerplate(text) {
+  return String(text || '')
+    .replace(/BACK TO CHAPTER INDEX/gi, ' ')
+    .replace(/TO MODEL INDEX/gi, ' ')
+    .replace(/MAZDA CX5 (WORKSHOP REPAIR MANUAL|ELECTRICAL WIRING DIAGRAMS|TECHNICAL GUIDE|BODYSHOP MANUAL)/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function detectType(file) {
   if (file === 'front_page.pdf') return 'root';
   if (file.startsWith('mazda_cx5_electrical_wiring_diagrams')) return 'wiring';
@@ -215,19 +236,38 @@ async function build() {
   let noTitle = 0;
   let badSec = 0;
   let layoutTitles = 0;
+  let pdfTextFallback = 0;
+  let ocrTextUsed = 0;
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const filePath = path.join(MANUAL_DIR, file);
     try {
       const buf = fs.readFileSync(filePath);
-      const text = extractText(buf);
+      let text = extractText(buf);
+      const page = await readPage(filePath);
+      // PDF.js liest auch Seiten, bei denen die eigene Stream-Extraktion leer
+      // bleibt (Hex-Strings, andere Filter) – ohne diesen Zweig fehlten
+      // Volltext und Keywords für rund 1.000 Seiten.
+      if (!text && page.text) {
+        const cleaned = stripBoilerplate(page.text);
+        // Unter 25 Zeichen bleibt es bei "kein Text" – das sind reine
+        // Zeichnungsseiten, bei denen nur die Kopfzeile übrig bleibt.
+        if (cleaned.length >= 25) {
+          text = cleaned;
+          pdfTextFallback++;
+        }
+      }
       const section = findSection(text);
-      // Neuer Weg: Überschrift aus dem Layout (Position + Schriftgröße).
-      // Nur wenn dort nichts Sicheres steht, greift die Text-Heuristik.
-      const layout = await layoutTitle(filePath);
-      const title = layout || extractTitle(text, section.end);
-      if (layout) layoutTitles++;
+      // Letzte Ebene: OCR der gerenderten Seite. Die Beschriftungen der
+      // Zeichnungen sind Vektorpfade und stehen in keinem Textstrom.
+      const ocr = OCR_TEXT[file];
+      if (!text && ocr && ocr.t) {
+        text = ocr.t;
+        ocrTextUsed++;
+      }
+      const title = page.title || extractTitle(text, section.end) || (ocr && ocr.title) || '';
+      if (page.title) layoutTitles++;
       const kw = extractKeywords(text);
       const type = detectType(file);
 
@@ -267,6 +307,7 @@ async function build() {
   console.log(`  davon aus Layout : ${layoutTitles} (${(layoutTitles / catalog.length * 100).toFixed(1)} %)`);
   console.log(`  davon aus Text   : ${catalog.length - noTitle - layoutTitles}`);
   console.log(`Keywords           : ${kwCount} (${(kwCount / catalog.length * 100).toFixed(1)} %)`);
+  console.log(`  davon PDF.js-Text: ${pdfTextFallback}`);
   console.log(`Ohne Text (Bild)   : ${noText}`);
   console.log('\nGruppen:');
   Object.entries(byGroup).sort().forEach(([g, n]) => console.log(`  ${String(n).padStart(5)}  ${g}`));

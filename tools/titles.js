@@ -186,10 +186,13 @@ function topHeading(lines) {
 }
 
 /**
- * Liest die Überschrift einer Seite aus dem Layout.
- * @returns {Promise<string>} leer, wenn keine sichere Überschrift gefunden wurde
+ * Liest eine Seite einmal und liefert Überschrift und Volltext.
+ * Der Volltext dient als Rückfallebene für Seiten, bei denen die eigene
+ * Stream-Extraktion (build_index.extractText) leer bleibt — z. B. bei
+ * Hex-Strings oder anderen Filtern (vgl. TODO 2.4).
+ * @returns {Promise<{title: string, text: string}>}
  */
-async function layoutTitle(filePath) {
+async function readPage(filePath) {
   const pdfjsLib = loadPdfjs();
   const fs = require('fs');
   const data = new Uint8Array(fs.readFileSync(filePath));
@@ -207,7 +210,14 @@ async function layoutTitle(filePath) {
     const page = await doc.getPage(1);
     const content = await page.getTextContent();
     const lines = buildLines(content.items);
-    if (!lines.length) return '';
+    const text = content.items
+      .filter((it) => typeof it.str === 'string')
+      .map((it) => it.str)
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!lines.length) return { title: '', text };
 
     const body = bodyFontSize(lines);
     let best = null;
@@ -219,13 +229,18 @@ async function layoutTitle(filePath) {
     }
     // Ein Verfahrensbegriff am Zeilenende ist das stärkere Signal als die
     // oberste Zeile – sonst gewinnt z. B. "Sub side" gegen "TWC INSTALLATION".
-    if (best) return best.line.text;
-    return topHeading(lines);
+    return { title: best ? best.line.text : topHeading(lines), text };
   } catch (e) {
-    return '';
+    return { title: '', text: '' };
   } finally {
     if (doc) { try { await doc.destroy(); } catch (e) { /* egal */ } }
   }
 }
 
-module.exports = { layoutTitle, buildLines, scoreLine, bodyFontSize, HEADER_Y, FOOTER_Y };
+/** Nur die Überschrift (bequemer Einstieg für Stichproben). */
+async function layoutTitle(filePath) {
+  const page = await readPage(filePath);
+  return page.title;
+}
+
+module.exports = { readPage, layoutTitle, buildLines, scoreLine, bodyFontSize, HEADER_Y, FOOTER_Y };
