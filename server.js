@@ -316,7 +316,7 @@ function search(rawQuery, limit, offset) {
     }
 
     const hint = GROUP_HINTS[tokens[0]];
-    if (matched && hint && d.grp.startsWith(hint)) score += 45;
+    if (matched && hint && d.grp.startsWith(hint)) score += 55;
 
     if (matched && score > 0) {
       if (d.type === 'workshop') score += 10;

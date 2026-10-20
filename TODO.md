@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.5.1 · 20.10.2026
+**Stand:** v1.6.0 · 20.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -13,24 +13,18 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.5.0 umgesetzt:** Paket A (Projekt-Hygiene: 5.1–5.4, 5.7). Verifiziert mit `npm test` (47 API- + 15 Suchprüfungen) gegen `data\`.
 >
 > **v1.5.1 umgesetzt:** Paket B (1.4 – Injektor-Drehmomente gegen die Originalseiten belegt und verlinkt).
+>
+> **v1.6.0 umgesetzt:** Paket C (2.2 – Titel aus dem PDF-Layout, 50,2 % → 72,1 %).
 
 ---
 
-## 🎯 Nächste Schritte (v1.6.0)
+## 🎯 Nächste Schritte (v1.7.0)
 
-Pakete **A** (Projekt-Hygiene, v1.5.0) und **B** (Drehmomente, v1.5.1) sind erledigt — siehe unten. Es bleiben zwei inhaltliche Pakete, in dieser Reihenfolge sinnvoll — Details unter den jeweiligen Punkten (C → 2.2, D → 2.4).
+Pakete **A** (Projekt-Hygiene, v1.5.0), **B** (Drehmomente, v1.5.1) und **C** (Titel, v1.6.0) sind erledigt — siehe unten. Es bleibt ein inhaltliches Paket: **D → 2.4**.
 
 | Paket | Inhalt | Aufwand | Bringt |
 |---|---|---|---|
-| **C** | Titel 50 % → ~70 % über PDF.js-Layout | ~3 h | Suche und Sidebar deutlich lesbarer |
 | **D** | OCR der 1.007 Bildseiten | ~1 Tag | Schaltpläne und Bodyshop durchsuchbar |
-
-### [ ] C – Titel über das PDF.js-Layout
-- [ ] Node-fähigen PDF.js-Build (Legacy) einbinden und `getTextContent()` nutzen — es liefert `transform` (x/y) und `height` je Textstück
-- [ ] **Kopfzeile erkennen:** oberste Zeile mit Sektionscode oder wiederholtem Kolumnentitel (z. B. „MECHANICAL [SKYACTIV-D 2.2]") verwerfen
-- [ ] **Überschrift bestimmen:** größte Schriftgröße im oberen Drittel, sonst erste Zeile nach dem Sektionscode
-- [ ] Qualitätsfilter: 10–90 Zeichen, Großbuchstaben-Anteil > 0,6, keine reinen Zahlen/IDs
-- **Fertig, wenn:** ≥ 70 % der Dokumente einen Titel haben und eine Stichprobe von 20 Seiten keine Kopfzeilen mehr enthält.
 
 ### [ ] D – OCR der Bildseiten
 - [ ] Bestätigen, dass die 1.007 Seiten ohne Text nur aus `/Image`-XObjects bestehen
@@ -114,16 +108,17 @@ Die kuratierten Sets in `/api/favorites` wurden nie gegen den Index geprüft. Nu
 - **Maßnahme:** `full.replace(/[\u0080-\u009f\u00ad]/g, '-')` vor dem Match, dann strikt `(\d{2})-(\d{2})([A-Z]?) - (\d{1,3})` zusammensetzen; Trefferquote im Build-Log ausgeben
 - **Fertig, wenn:** 0 fehlerhafte Codes und `01-10A-16` usw. per Suche auffindbar
 
-### [ ] 2.2 Titel: 3.882 Dokumente ohne, viele verstümmelt *(v1.4.0: 50,2 % erreicht, Artefakte bereinigt – Ziel ~70 % offen)*
-- **Ort:** [`build_index.js`](file:///C:/Projekte/Tools/mazda-manual-viewer/build_index.js)
-- **Ist-Zustand v1.4.0:** 3.664 Titel (50,2 %), aber die Heuristik rät: auf `…1092.pdf` steht „BEFORE SERVICE PRECAUTION" statt „FUEL INJECTOR REMOVAL/INSTALLATION", weil der Querverweis vor der Überschrift im Textstrom liegt
-- **Ursache:** Text wird ohne Position extrahiert — Kopfzeile, Querverweis und Überschrift sind nicht unterscheidbar
-- **Maßnahme (Layout):** Node-fähigen PDF.js-Legacy-Build nutzen, `getTextContent()` liefert je Textstück `transform: [a,b,c,d,x,y]` und `height`
-  1. Zeilen nach `y` gruppieren, Kopf-/Fußzeile (oberste/unterste Zeile, enthält Sektionscode oder wiederholt sich auf > 60 % der Seiten) verwerfen
-  2. Überschrift = Textstück mit größter `height` im oberen Drittel; Fallback: erste Zeile nach dem Sektionscode
-  3. Qualitätsfilter: 10–90 Zeichen, Großbuchstaben-Anteil > 0,6, keine reinen Zahlen/IDs
-  4. Ergebnis gegen die 20 auffälligsten Seiten prüfen (`1092`, `1573`, `869`, `955`)
-- **Fertig, wenn:** ≥ 70 % der Dokumente einen Titel haben und in der Stichprobe keine Kopfzeilen mehr auftauchen
+### [x] 2.2 Titel aus dem PDF-Layout *(v1.6.0: 50,2 % → 72,1 %)*
+- **Ort:** [`build_index.js`](file:///C:/Projekte/Tools/mazda-manual-viewer/build_index.js), neu: [`tools/titles.js`](file:///C:/Projekte/Tools/mazda-manual-viewer/tools/titles.js)
+- **Ist-Zustand v1.4.0:** 3.664 Titel (50,2 %); die Heuristik riet, weil der Text ohne Position extrahiert wurde (auf `…1092.pdf` stand „BEFORE SERVICE PRECAUTION" statt „FUEL INJECTOR REMOVAL/INSTALLATION")
+- **Lösung:** `getTextContent()` liefert `transform` (x/y) und `height`; daraus werden Zeilen gebaut
+  1. Kopfband (y ≥ 762) und Fußband (y ≤ 60) werden verworfen — Kopfzeile und Sektionscode können so nicht mehr als Titel enden
+  2. Überschrift = Zeile mit Verfahrensbegriff am Ende (REMOVAL/INSTALLATION, INSPECTION, LOCATION INDEX …), bewertet nach Einzug (x), Höhe (y) und Schriftgröße; bei Gleichstand gewinnt die obere Zeile
+  3. Fallback für Technical-Guide-Seiten: oberste Zeile im Kopfbereich („Operation", „Structural View"), mit Filter gegen Tabellenköpfe und Satzfragmente
+  4. Letzter Fallback bleibt die alte Text-Heuristik, damit nichts verloren geht
+  5. Qualitätsfilter: 8–95 Zeichen, balancierte Klammern, keine Punktierungs-Lineale, keine Flowchart-Zeilen („Yes/No"), keine Sektionscodes
+- **Ergebnis:** 5.256 Titel (72,1 %), überwiegend aus dem Layout; Stichprobe ohne Kopfzeilen; `…1092.pdf` und `…955.pdf` tragen jetzt ihren echten Titel, `…1094.pdf` und `…1573.pdf` erstmals einen
+- **Nebenbefund:** Mit den besseren Titeln zog ein Technical-Guide-Treffer bei „Klima" am Kapitel 07 vorbei → Gruppen-Boost von 45 auf 55 erhöht, damit die Baugruppe bei Alltagsbegriffen vorn bleibt (`server.js`)
 
 ### [x] 2.3 91 Dateien im falschen Kapitel
 - **Ort:** [`build_index.js`](file:///C:/Projekte/Tools/mazda-manual-viewer/build_index.js)
@@ -297,12 +292,10 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 
 ## Empfohlene Reihenfolge
 
-### v1.6.0 (als Nächstes)
+### v1.7.0 (als Nächstes)
 
 | Paket | Inhalt | Aufwand |
 |---|---|---|
-| **B** | 1.4 Drehmomente belegen | ~1 h |
-| **C** | 2.2 Titel über PDF.js-Layout | ~3 h |
 | **D** | 2.4 OCR der Bildseiten | ~1 Tag |
 | optional | 5.9 Playwright als Dev-Setup, 6.5 zweites Handbuch | je ~1 h |
 
@@ -312,10 +305,22 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 |---|---|---|
 | 1 | 0.1–0.3, 5.1, 1.3 | ✅ (5.1 teilweise → A) |
 | 2 | 1.1, 1.2, 2.1, 4.3, 4.4 | ✅ |
-| 3 | 2.2, 2.3, 2.5, 3.1, 3.2 | ✅ (2.2 teilweise → C) |
+| 3 | 2.2, 2.3, 2.5, 3.1, 3.2 | ✅ (2.2 vollständig in v1.6.0) |
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ in v1.5.0 (5.5/5.6/5.9 offen) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 offen) |
+
+---
+
+## ✅ Erledigt in v1.6.0
+
+- [x] **2.2 Titel aus dem PDF-Layout** — neue [`tools/titles.js`](file:///C:/Projekte/Tools/mazda-manual-viewer/tools/titles.js): PDF.js `getTextContent()` liefert je Textstück Position und Höhe; daraus werden Zeilen im Kopfband (y 60–762) gebaut, Kopf-/Fußzeilen verworfen und die Überschrift über Verfahrensbegriff, Einzug und Schriftgröße bestimmt.
+  - Indextitel: **3.664 → 5.256 (50,2 % → 72,1 %)**, davon der Großteil aus dem Layout; die alte Text-Heuristik bleibt als Fallback.
+  - Stichprobe (304 Seiten, gleichmäßig über den Bestand): 50,0 % → 69,7 %; Workshop 65,3 % → 83,3 %, Technical Guide 12,5 % → 54,3 %, Bodyshop 27,3 % → 62,1 %.
+  - Qualitätsfilter: keine Kopfzeilen, keine Punktierungs-Lineale („….01-12A–3"), keine Flowchart-Zeilen („Yes/No"), keine Sektionscodes, balancierte Klammern, 8–95 Zeichen.
+  - Beispiele: `…1092.pdf` „FUEL INJECTOR REMOVAL/INSTALLATION" (vorher „BEFORE SERVICE PRECAUTION"), `…1094.pdf` „Fuel Injector Installation Note" (vorher leer), `…1573.pdf` „DIAGNOSIS FLOW [SKYACTIV-D 2.2 (R.H.D.)]" (vorher leer).
+  - Ranking: Mit den neuen Titeln zog ein Technical-Guide-Dokument bei „Klima" vor das Kapitel 07 → Gruppen-Boost 45 → 55 (`server.js`), Suchtests wieder 15/15.
+  - Index: 3,88 MB (Ziel < 6 MB), Build 155 s mit PDF.js; ohne neue Abhängigkeit, der vorhandene Browser-Build in `public/vendor` läuft in Node mit vorgeladenem Worker-Bundle.
 
 ---
 

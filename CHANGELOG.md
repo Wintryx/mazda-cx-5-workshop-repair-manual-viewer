@@ -6,6 +6,31 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.6.0] - 2026-10-20
+
+### Titel & Suche (P1)
+- **Titel aus dem PDF-Layout** (TODO 2.2): Neu `tools/titles.js`. PDF.js liefert über
+  `getTextContent()` je Textstück Position (`transform`) und Höhe; daraus werden Zeilen gebaut.
+  - Kopfband (y ≥ 762) und Fußband (y ≤ 60) werden verworfen — Kopfzeile und Sektionscode können
+    nicht mehr als Titel enden (vorher z. B. „BEFORE SERVICE PRECAUTION" auf `…1092.pdf`).
+  - Überschrift = Zeile mit Verfahrensbegriff am Ende (REMOVAL/INSTALLATION, INSPECTION,
+    LOCATION INDEX …), bewertet nach Einzug, Höhe im Blatt und Schriftgröße.
+  - Fallback für Technical-Guide-Seiten: oberste Zeile im Kopfbereich („Operation", „Structural View").
+  - Letzter Fallback bleibt die alte Text-Heuristik.
+  - Qualitätsfilter: 8–95 Zeichen, balancierte Klammern, keine Punktierungs-Lineale, keine
+    Flowchart-Zeilen („Yes/No"), keine Sektionscodes.
+- **Abdeckung:** 3.664 → **5.256 Titel (50,2 % → 72,1 %)**. Stichprobe über 304 Seiten:
+  50,0 % → 69,7 %; Workshop 65,3 % → 83,3 %, Technical Guide 12,5 % → 54,3 %,
+  Bodyshop 27,3 % → 62,1 %. `…1092.pdf` und `…955.pdf` tragen jetzt ihren echten Titel,
+  `…1094.pdf` und `…1573.pdf` erstmals einen.
+- **Ranking angepasst:** Mit den besseren Titeln zog ein Technical-Guide-Dokument bei „Klima" vor
+  das HVAC-Kapitel — der Gruppen-Boost für deutsche Alltagsbegriffe steigt von 45 auf 55 (`server.js`).
+- **Index:** 5.256 Titel, 3,88 MB, Build 155 s. Keine neue Abhängigkeit: Der vorhandene
+  PDF.js-Build aus `public/vendor` läuft in Node, wenn das Worker-Bundle vorab als
+  `globalThis.pdfjsWorker` geladen wird.
+
+---
+
 ## [1.5.1] - 2026-10-20
 
 ### Korrektheit (P1)

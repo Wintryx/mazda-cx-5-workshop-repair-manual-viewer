@@ -13,6 +13,7 @@
 const fs = require('fs');
 const zlib = require('zlib');
 const path = require('path');
+const { layoutTitle } = require('./tools/titles');
 
 const { MANUAL_DIR, MANUAL_SOURCE } = require('./lib/paths');
 const OUT_FILE = path.join(__dirname, 'public', 'search_index.json');
@@ -208,11 +209,12 @@ function resolveGroup(type, sec) {
   return (m && GROUPS[m[1]]) || 'Allgemein';
 }
 
-function build() {
+async function build() {
   const catalog = [];
   let noText = 0;
   let noTitle = 0;
   let badSec = 0;
+  let layoutTitles = 0;
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
@@ -221,7 +223,11 @@ function build() {
       const buf = fs.readFileSync(filePath);
       const text = extractText(buf);
       const section = findSection(text);
-      const title = extractTitle(text, section.end);
+      // Neuer Weg: Überschrift aus dem Layout (Position + Schriftgröße).
+      // Nur wenn dort nichts Sicheres steht, greift die Text-Heuristik.
+      const layout = await layoutTitle(filePath);
+      const title = layout || extractTitle(text, section.end);
+      if (layout) layoutTitles++;
       const kw = extractKeywords(text);
       const type = detectType(file);
 
@@ -234,7 +240,7 @@ function build() {
       catalog.push({ f: file, sec: '', t: '', grp: 'Allgemein', type: detectType(file), kw: '' });
     }
 
-    if ((i + 1) % 1000 === 0 || i === files.length - 1) {
+    if ((i + 1) % 500 === 0 || i === files.length - 1) {
       console.log(`Progress: ${i + 1} / ${files.length} files (${Math.round(((i + 1) / files.length) * 100)}%)`);
     }
   }
@@ -258,6 +264,8 @@ function build() {
   console.log(`Index-Größe        : ${sizeMb} MB`);
   console.log(`Sektionscode       : ${secCount} (${(secCount / catalog.length * 100).toFixed(1)} %), ungültig: ${badSec}`);
   console.log(`Titel              : ${catalog.length - noTitle} (${((catalog.length - noTitle) / catalog.length * 100).toFixed(1)} %)`);
+  console.log(`  davon aus Layout : ${layoutTitles} (${(layoutTitles / catalog.length * 100).toFixed(1)} %)`);
+  console.log(`  davon aus Text   : ${catalog.length - noTitle - layoutTitles}`);
   console.log(`Keywords           : ${kwCount} (${(kwCount / catalog.length * 100).toFixed(1)} %)`);
   console.log(`Ohne Text (Bild)   : ${noText}`);
   console.log('\nGruppen:');
@@ -268,6 +276,8 @@ function build() {
   console.log(`Saved: ${OUT_FILE}`);
 }
 
-if (require.main === module) build();
+if (require.main === module) {
+  build().catch((err) => { console.error('Index-Build fehlgeschlagen:', err); process.exit(1); });
+}
 
 module.exports = { extractText, findSection, extractTitle, extractKeywords, detectType, resolveGroup, MANUAL_DIR };

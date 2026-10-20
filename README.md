@@ -7,7 +7,7 @@ zweisprachiger Suche (Deutsch ⇄ Englisch), Lesezeichen, Notizen, Reparatur-Che
 Läuft ohne Internet und ohne externe Laufzeit-Abhängigkeiten (reines Node.js + lokal eingebundenes PDF.js)
 auf Laptop oder Tablet im Werkstattbetrieb.
 
-**Stand:** v1.5.1 · Oktober 2026
+**Stand:** v1.6.0 · Oktober 2026
 
 ---
 
@@ -36,7 +36,7 @@ mazda-manual-viewer/
 ├─ lib/paths.js           Auflösung des Handbuch-Verzeichnisses
 ├─ config/                chapters.json, packs.json, checklists.json, settings.json
 ├─ public/                Frontend (index.html, app.js, style.css), PDF.js, search_index.json
-├─ tools/                 validate.js, run_tests.js, build_packs.js, Tests
+├─ tools/                 validate.js, run_tests.js, build_packs.js, titles.js, Tests
 ├─ data/                  7.294 PDFs (nicht versioniert, siehe .gitignore)
 ├─ START_VIEWER.bat       Doppelklick-Start mit Node-Prüfung
 ├─ package.json           Scripts: start, index, packs, validate, test
@@ -119,8 +119,8 @@ npm run test:browser # Playwright/Chrome, optional (benötigt playwright und lau
 
 ## 9. Bekannte Grenzen
 
-- **Titelabdeckung 50,2 %** (3.664 von 7.294): Die Heuristik liest Text ohne Position; Kopfzeilen und
-  Querverweise sind nicht unterscheidbar. Lösung über PDF.js-Layout ist als Paket C geplant (TODO 2.2).
+- **Titelabdeckung 72,1 %** (5.256 von 7.294): Der Rest sind Seiten ohne eigene Überschrift
+  (Fortsetzungsseiten, reine Bildseiten) — dort bleibt der Titel leer statt geraten.
 - **1.007 Seiten ohne Text** (reine Bildseiten, v. a. Schaltpläne und Bodyshop-Deckblätter): nur über
   die Kapitelstruktur erreichbar, nicht über Stichworte. OCR ist als Paket D geplant (TODO 2.4).
 - **Drehmomente** der Injektor-Karte sind gegen `01-14B-37` und `01-14B-38` geprüft und je Zeile verlinkt;
