@@ -6,6 +6,25 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.9.0] - 2026-10-20
+
+### Fehlercodes (P3)
+- **DTC-Index** (TODO 6.3): `dtcCodesOf()`/`buildDtcIndex()` lesen aus Titel und Keywords aller Seiten
+  die Fehlercodes (`P0301`, `U0100:87`, …) und bauen eine Tabelle Code → Dokumente. **827 Dokumente,
+  358 Code-Varianten, 329 Basis-Codes.** `GET /api/dtc` liefert die Übersicht mit Anzahl und Baugruppe.
+- **Suche erkennt Codes**: `P0301` im Suchfeld führt direkt zu den Diagnoseblättern (7 Dokumente,
+  erstes `01-02-182`) statt in die allgemeine Trefferliste. Ranking: Code im Titel +120, Abschnitt `-02`
+  (Diagnose) +40, Werkstatthandbuch +25, „INSPECTION" +15.
+- **UI**: Hinweiszeile über den Treffern („Fehlercode P0301: 7 Dokumente – Diagnoseblätter zuerst"),
+  bei unbekannten Codes die Meldung, dass er im Handbuch nicht dokumentiert ist.
+- **Grenze**: Ein Code wird nur gefunden, wenn er in Titel oder Keywords der Seite steht. Reine
+  Tabellenseiten ohne Code im Text fehlen. Ein eigener „Fehlercodes"-Tab zum Durchblättern ist möglich,
+  aber nicht eingebaut — die Übersicht liegt über `/api/dtc` bereit.
+- **Tests**: API-Vertrag 53 → 59 Prüfungen, Suchtests 15 → 16, Browser-Test 30 → 32 (Hinweiszeile und
+  Sprung zum Diagnoseblatt).
+
+---
+
 ## [1.8.0] - 2026-10-20
 
 ### Kapitelbaum (P3)

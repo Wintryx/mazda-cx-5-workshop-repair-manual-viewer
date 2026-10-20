@@ -7,7 +7,7 @@ zweisprachiger Suche (Deutsch ⇄ Englisch), Lesezeichen, Notizen, Reparatur-Che
 Läuft ohne Internet und ohne externe Laufzeit-Abhängigkeiten (reines Node.js + lokal eingebundenes PDF.js)
 auf Laptop oder Tablet im Werkstattbetrieb.
 
-**Stand:** v1.8.0 · Oktober 2026
+**Stand:** v1.9.0 · Oktober 2026
 
 ---
 
@@ -18,6 +18,7 @@ auf Laptop oder Tablet im Werkstattbetrieb.
 | Kapitel | 15 Kapitelkarten 00–09 plus Schaltpläne, Karosserie, Technical Guide; Reparatur-Packs als Direkteinstieg |
 | Sektionen | Baum aus dem Index: 17 Gruppen → 238 Sektionen → alle 7.294 Dokumente, drei Klicks bis zur Seite |
 | Suche | Wortgrenzen, IDF-Gewichtung, Phrasen-Synonyme, Tippfehler-Toleranz, Umlaut-Normalisierung, Paging |
+| Fehlercodes | 329 DTCs (P/B/C/U) aus den Diagnosekapiteln; Code eingeben → Diagnoseblatt zuerst |
 | Seite | Hotspots aus PDF-Links (auch auf 254 quer liegenden Schaltplänen), Textauswahl, Zoom, Fit-Breite, Vollbild |
 | Werkstatt | Notizen pro Dokument, Lesezeichen, Checklisten (Injektoren, Bremsen vorn, Ölwechsel), Druck eines Seitenbereichs |
 | Betrieb | Port-Fallback, `--open`, `/api/status`, klare Startprüfung des Datenverzeichnisses |
@@ -85,6 +86,7 @@ PDF-Anzahl und Index-Abdeckung.
 | Breite anpassen | `W` oder Schaltfläche „Breite" |
 | Vollbild / Werkstattmodus | `F` |
 | Suche | Suchfeld oben, `Enter`; „mehr laden" für weitere Treffer |
+| Fehlercode | Code ins Suchfeld (`P0301`, `U0100:87`) → Diagnoseblätter zuerst; 329 Codes im Index (`/api/dtc`) |
 | Sprung zu Dateinummer | Sprungfeld (z. B. `1092` → `mazda_cx5_workshop_manual1092.pdf`) |
 | Kapitel / Sektionen | Sidebar: Schnellzugriff-Karten, darunter der Baum „Alle Sektionen" (Gruppe → Sektion → Dokument) |
 | Notizen, Lesezeichen | rechte Spalte, automatisch im LocalStorage gespeichert |

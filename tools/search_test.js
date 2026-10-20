@@ -21,6 +21,7 @@ const CASES = [
   { q: 'turbolader', minTotal: 3, topSec: null, why: 'Turbolader' },
   { q: 'spurstangenkopf', minTotal: 1, topSec: null, why: 'neuer Wörterbuch-Eintrag' },
   { q: 'drosselklappe', minTotal: 1, topSec: null, why: 'neuer Wörterbuch-Eintrag' },
+  { q: 'P0301', minTotal: 3, topSec: /^\d{2}-02/, why: 'Fehlercode führt zum Diagnoseblatt' },
   { q: 'zzzzzz', maxTotal: 0, why: 'kein Treffer bei Unsinn' }
 ];
 

@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.8.0 · 20.10.2026
+**Stand:** v1.9.0 · 20.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -19,16 +19,18 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.7.0 umgesetzt:** Paket D (2.4 – Volltext über PDF.js nachgezogen; OCR der Zeichnungsseiten).
 >
 > **v1.8.0 umgesetzt:** 6.1 Sektionsbaum, 6.2 Gruppen 10–12, 5.9 Playwright-Test ohne Vorbereitung.
+>
+> **v1.9.0 umgesetzt:** 6.3 Fehlercode-Suche (P0301 → Diagnoseblatt) inkl. `/api/dtc`.
 
 ---
 
-## 🎯 Nächste Schritte (v1.9.0)
+## 🎯 Nächste Schritte (v1.10.0)
 
-Die vier großen Pakete **A–D** und der Kapitelbaum sind erledigt (siehe unten). Offen, nach Nutzen sortiert:
+Die vier großen Pakete **A–D**, der Kapitelbaum und die Fehlercode-Suche sind erledigt (siehe unten).
+Offen, nach Nutzen sortiert:
 
 | Punkt | Inhalt | Aufwand | Bringt |
 |---|---|---|---|
-| **6.3** | Globale DTC-Übersicht generieren | ~2 h | „P0301" führt direkt zum Diagnoseblatt |
 | **5.5** | Smoke-Test mit `node --test` | ~1 h | schnellere Rückmeldung als die jetzigen Skripte |
 | **5.6** | `.active_port` beim Beenden aufräumen | ~15 min | keine irreführende Datei |
 | **5.8** | Range-Requests (206), Request-Log | ~1 h | sauberes HTTP und Fehlersuche |
@@ -280,10 +282,11 @@ Mindestens diese Begriffe liefern heute 0 oder falsche Treffer:
 ### [x] 6.2 Gruppen 10–12 im Baum *(v1.8.0, mit 6.1 erledigt)*
 - `build_index.js` kannte nur 00–09; seit v1.4.0 werden 10/11/12 zugeordnet, und der Sektionsbaum zeigt sie als eigene Gruppen (10 Multiplex/CAN, 11 i-stop, 12 Personalisierung)
 
-### [ ] 6.3 Globale DTC-Übersicht generieren
-- Es gibt keine übergreifende Fehlercode-Tabelle; DTCs liegen pro System (04-02A, 05-02A/B, 09-02A…L, 10-02B/D, …)
-- Aus den `-02`-Seiten eine durchsuchbare Tabelle (Code → System → Dokument) bauen
-- **Fertig, wenn:** Eingabe „P0301" direkt zum richtigen Diagnoseblatt führt
+### [x] 6.3 Globale DTC-Übersicht *(v1.9.0)*
+- **Umgesetzt:** `buildDtcIndex()` liest aus Titel und Keywords aller Seiten die Fehlercodes und baut eine Tabelle Code → Dokumente (827 Dokumente, 358 Code-Varianten, 329 Basis-Codes). `GET /api/dtc` liefert Code, Anzahl und häufigste Baugruppe
+- **Suche:** Eingabe eines Codes (`P0301`, `U0100:87`) nimmt eine eigene Ranking-Route: Code im Titel +120, Abschnitt `-02` +40, Werkstatthandbuch +25, „INSPECTION" +15 → P0301 landet auf `01-02-182`
+- **UI:** Hinweiszeile über den Treffern mit Code und Anzahl; unbekannte Codes werden als „nicht dokumentiert" gemeldet
+- **Grenze:** Nur Seiten mit Code in Titel oder Keywords werden gefunden — reine Tabellenseiten ohne Code im Text fehlen. Ein Browse-Tab für die 329 Codes ist über `/api/dtc` vorbereitet, aber nicht eingebaut
 
 ### [x] 6.4 OCR für textlose Seiten prüfen *(in 2.4 erledigt — Pipeline läuft)*
 - Siehe **2.4** — dort stehen Befund (1.007 Bildseiten), Aufwand und Abbruchkriterien.
@@ -298,9 +301,9 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 
 ## Empfohlene Reihenfolge
 
-### v1.9.0 (als Nächstes)
+### v1.10.0 (als Nächstes)
 
-Siehe Tabelle „Nächste Schritte" oben — 6.3 zuerst, danach 5.5/5.6/5.8 und die Ausbau-Punkte.
+Siehe Tabelle „Nächste Schritte" oben — zuerst die Betriebs-Kleinigkeiten 5.5/5.6/5.8, dann 6.5/6.6.
 
 ### Abgeschlossene Sprints (v1.4.0)
 
@@ -311,7 +314,21 @@ Siehe Tabelle „Nächste Schritte" oben — 6.3 zuerst, danach 5.5/5.6/5.8 und 
 | 3 | 2.2, 2.3, 2.5, 3.1, 3.2 | ✅ (2.2 vollständig in v1.6.0) |
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 offen) |
-| 6 | 4.10–4.12, 6.3 | ✅ (6.3 offen) |
+| 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.9.0
+
+- [x] **6.3 Fehlercodes** — `buildDtcIndex()` baut aus Titel und Keywords eine Tabelle Code → Dokumente
+  (827 Dokumente, 358 Varianten, 329 Basis-Codes); `GET /api/dtc` liefert Code, Anzahl und Baugruppe.
+  - **Suche:** Ein Code im Suchfeld (`P0301`, `U0100:87`) nimmt eine eigene Route mit Ranking
+    (Code im Titel +120, Diagnoseabschnitt `-02` +40, Werkstatthandbuch +25, „INSPECTION" +15).
+    P0301 → 7 Dokumente, oben `01-02-182` (Diagnostic Procedure).
+  - **UI:** Hinweiszeile über den Treffern; unbekannte Codes werden als nicht dokumentiert gemeldet.
+  - **Grenze:** Nur Seiten mit Code in Titel/Keywords werden gefunden — reine Tabellenseiten ohne Code
+    im Text fehlen. Die Übersicht für einen künftigen Browse-Tab liegt über `/api/dtc` bereit.
+  - **Tests:** API-Vertrag 59, Suchtests 16, Browser-Test 32 — alle grün.
 
 ---
 

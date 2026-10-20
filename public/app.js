@@ -550,6 +550,19 @@
       el.searchCount.textContent = data.total || 0;
       el.searchResultsSection.classList.remove('hidden');
 
+      // Fehlercode? Dann Hinweis über den Treffern zeigen.
+      const dtcHint = document.getElementById('dtc-hint');
+      if (dtcHint) {
+        if (data.dtc) {
+          dtcHint.textContent = data.dtc.total
+            ? `Fehlercode ${data.dtc.code}: ${data.dtc.total} Dokumente – Diagnoseblätter zuerst`
+            : `Fehlercode ${data.dtc.code} ist im Handbuch nicht dokumentiert`;
+          dtcHint.classList.remove('hidden');
+        } else {
+          dtcHint.classList.add('hidden');
+        }
+      }
+
       const html = (data.results || []).map((item) => `
         <a href="#" class="nav-item ${item.f === state.currentFile ? 'active' : ''}" data-file="${esc(item.f)}">
           <span class="nav-item-badge">${esc(item.sec || item.grp || 'DOC')}</span>

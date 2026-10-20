@@ -75,6 +75,16 @@ async function main() {
   const empty = await json('/api/search?q=');
   ok('Leere Suche liefert leeres Ergebnis', Array.isArray(empty.body.results) && empty.body.results.length === 0);
 
+  // --- Fehlercodes (v1.9.0) ---
+  const dtcSearch = await json('/api/search?q=P0301');
+  ok('Fehlercode liefert dtc-Block', dtcSearch.body.dtc && dtcSearch.body.dtc.code === 'P0301', JSON.stringify(dtcSearch.body.dtc));
+  ok('Fehlercode liefert Treffer', dtcSearch.body.total >= 3, String(dtcSearch.body.total));
+  ok('Fehlercode führt zu Diagnoseblatt', /^\d{2}-02/.test((dtcSearch.body.results[0] || {}).sec || ''), (dtcSearch.body.results[0] || {}).sec);
+  const dtcList = await json('/api/dtc');
+  ok('GET /api/dtc 200', dtcList.status === 200);
+  ok('DTC-Liste hat über 200 Codes', dtcList.body.count > 200, String(dtcList.body.count));
+  ok('DTC-Einträge haben code/count/system', dtcList.body.codes.every(c => c.code && c.count > 0 && c.system));
+
   // --- Links ---
   const l = await json('/api/links/mazda_cx5_workshop_manual1092.pdf');
   ok('GET /api/links 200', l.status === 200);

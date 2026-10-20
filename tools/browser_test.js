@@ -177,6 +177,14 @@ function check(name, cond, detail) {
   await tp.screenshot({ path: path.join(SHOTS, '04-tablet.png') });
   await tablet.close();
 
+  // ---------- 10b) Fehlercode-Suche (v1.9.0) ----------
+  await page.fill('#sidebar-search-input', 'P0301');
+  await page.waitForSelector('#dtc-hint:not(.hidden)', { timeout: 10000 });
+  const dtcText = (await page.textContent('#dtc-hint')) || '';
+  check('Fehlercode-Hinweis erscheint', /P0301/.test(dtcText), dtcText.trim());
+  const firstBadge = ((await page.textContent('#search-results-list .nav-item-badge')) || '').trim();
+  check('Fehlercode führt zum Diagnoseblatt', /^01-02/.test(firstBadge), firstBadge);
+
   // ---------- 11) Konsole ----------
   check('keine Konsolen-/Seitenfehler', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
 

@@ -310,3 +310,14 @@ body.workshop-mode .app-viewer { padding: 8px; }
   font-size: 10.5px;
   padding: 4px 6px;
 }
+
+/* ---------- Fehlercode-Hinweis in den Suchergebnissen (v1.9.0) ---------- */
+.dtc-hint {
+  margin: 4px 0 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: var(--text-primary);
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 6px;
+}

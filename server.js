@@ -95,6 +95,7 @@ function loadCatalog() {
   byFile.clear();
   for (const e of catalog) byFile.set(e.f, e);
   treeCache = null;
+  dtcCache = null;
   console.log(`Katalog geladen: ${catalog.length} Dokumente.`);
   docs = null; // Suchindex wird lazy gebaut
 }
@@ -331,10 +332,116 @@ function expandQuery(rawQuery) {
   return { q, tokens, concepts };
 }
 
+// ---------------------------------------------------------------------------
+// Fehlercodes (DTC) – Index Code → Dokumente (v1.9.0)
+// ---------------------------------------------------------------------------
+
+const DTC_RE = /\b([PBCU]\d{4})(?::(\d{2}))?\b/gi;
+
+/** Alle Fehlercodes eines Dokuments (Titel und Keywords). */
+function dtcCodesOf(entry) {
+  const hay = `${entry.t || ''} ${entry.kw || ''}`;
+  const codes = new Set();
+  let m;
+  DTC_RE.lastIndex = 0;
+  while ((m = DTC_RE.exec(hay)) !== null) codes.add(m[1].toUpperCase());
+  return [...codes];
+}
+
+let dtcCache = null;
+
+/** Baut einmalig die Tabelle Code → Dokumente; wird beim Katalog-Laden verworfen. */
+function buildDtcIndex() {
+  if (dtcCache) return dtcCache;
+  const map = new Map();
+  for (const e of catalog) {
+    for (const code of dtcCodesOf(e)) {
+      if (!map.has(code)) map.set(code, []);
+      map.get(code).push(e);
+    }
+  }
+  dtcCache = map;
+  return map;
+}
+
+/** Kurzinfo je Code für /api/dtc: Anzahl und häufigste Baugruppe. */
+function dtcOverview() {
+  const map = buildDtcIndex();
+  const out = [];
+  for (const [code, entries] of map) {
+    const groups = new Map();
+    for (const e of entries) groups.set(e.grp, (groups.get(e.grp) || 0) + 1);
+    let system = '';
+    let best = 0;
+    for (const [g, n] of groups) if (n > best) { best = n; system = g; }
+    out.push({ code, count: entries.length, system });
+  }
+  out.sort((a, b) => a.code.localeCompare(b.code));
+  return out;
+}
+
+/**
+ * Suche nach einem Fehlercode: Diagnoseblätter zuerst, danach Tabellen und
+ * Technical-Guide-Seiten. Titel mit Code > Diagnoseabschnitt -02 > Werkstatt-
+ * handbuch > "INSPECTION".
+ */
+function searchDtc(code, limit, offset) {
+  const map = buildDtcIndex();
+  const entries = map.get(code) || [];
+  const take = Math.max(1, Math.min(200, limit || 60));
+  const skip = Math.max(0, offset || 0);
+  const t0 = process.hrtime.bigint();
+
+  const hits = entries.map((e) => {
+    const title = e.t || '';
+    let score = 20;
+    if (new RegExp(`\\b${code}\\b`, 'i').test(title)) score += 120;
+    if (/DTC/i.test(title)) score += 30;
+    if (/^\d{2}-02/.test(e.sec || '')) score += 40;
+    if (e.type === 'workshop') score += 25;
+    if (/INSPECTION/i.test(title)) score += 15;
+
+    const kw = e.kw || '';
+    const pos = kw.toUpperCase().indexOf(code);
+    const snippet = pos >= 0
+      ? (pos > 40 ? '…' : '') + kw.slice(Math.max(0, pos - 40), pos + code.length + 50).trim() + '…'
+      : '';
+
+    return { e, score, snippet };
+  });
+
+  hits.sort((a, b) => b.score - a.score || String(a.e.f).localeCompare(String(b.e.f)));
+  const results = hits.slice(skip, skip + take).map((h) => ({
+    f: h.e.f,
+    sec: h.e.sec || '',
+    t: h.e.t || '',
+    grp: h.e.grp || '',
+    type: h.e.type || '',
+    score: h.score,
+    snippet: h.snippet
+  }));
+
+  const ms = Number(process.hrtime.bigint() - t0) / 1e6;
+  return {
+    query: code.toLowerCase(),
+    terms: [code],
+    results,
+    total: hits.length,
+    offset: skip,
+    limit: take,
+    took: Math.round(ms * 10) / 10,
+    dtc: { code, total: hits.length }
+  };
+}
+
 function search(rawQuery, limit, offset) {
   if (!docs) buildSearchIndex();
   const { q, tokens, concepts } = expandQuery(rawQuery || '');
   if (!q) return { query: '', terms: [], results: [], total: 0, took: 0, offset: 0, limit };
+
+  // Fehlercode? Dann direkt die Diagnoseblätter liefern.
+  const dtcMatch = q.replace(/\s+/g, '').match(/^([pbcu]\d{4})(?::(\d{2}))?$/);
+  if (dtcMatch) return searchDtc(dtcMatch[1].toUpperCase(), limit, offset);
 
   const N = docs.length;
   const take = Math.max(1, Math.min(200, limit || 60));
@@ -615,6 +722,12 @@ function handleRequest(req, res) {
 
   if (pathname === '/api/tree') {
     sendJson(res, 200, buildTree());
+    return;
+  }
+
+  if (pathname === '/api/dtc') {
+    const codes = dtcOverview();
+    sendJson(res, 200, { count: codes.length, codes });
     return;
   }
 
