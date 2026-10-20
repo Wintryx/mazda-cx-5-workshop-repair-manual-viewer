@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.7.0 · 20.10.2026
+**Stand:** v1.8.0 · 20.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -16,22 +16,22 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 >
 > **v1.6.0 umgesetzt:** Paket C (2.2 – Titel aus dem PDF-Layout, 50,2 % → 72,1 %).
 >
-> **v1.7.0 umgesetzt:** Paket D (2.4 – Volltext über PDF.js nachgezogen, Keywords 86,2 % → 96,5 %; OCR nach Messung verworfen).
+> **v1.7.0 umgesetzt:** Paket D (2.4 – Volltext über PDF.js nachgezogen; OCR der Zeichnungsseiten).
+>
+> **v1.8.0 umgesetzt:** 6.1 Sektionsbaum, 6.2 Gruppen 10–12, 5.9 Playwright-Test ohne Vorbereitung.
 
 ---
 
-## 🎯 Nächste Schritte (v1.8.0)
+## 🎯 Nächste Schritte (v1.9.0)
 
-Die vier großen Pakete **A–D** sind erledigt (siehe unten). Offen sind Betriebs-Kleinigkeiten und Ausbau, nach Nutzen sortiert:
+Die vier großen Pakete **A–D** und der Kapitelbaum sind erledigt (siehe unten). Offen, nach Nutzen sortiert:
 
 | Punkt | Inhalt | Aufwand | Bringt |
 |---|---|---|---|
 | **6.3** | Globale DTC-Übersicht generieren | ~2 h | „P0301" führt direkt zum Diagnoseblatt |
-| **6.1** | Kapitelbaum aus dem Index (161 Sektionen) | ~2 h | jedes Dokument in ≤ 3 Klicks |
 | **5.5** | Smoke-Test mit `node --test` | ~1 h | schnellere Rückmeldung als die jetzigen Skripte |
 | **5.6** | `.active_port` beim Beenden aufräumen | ~15 min | keine irreführende Datei |
 | **5.8** | Range-Requests (206), Request-Log | ~1 h | sauberes HTTP und Fehlersuche |
-| **5.9** | Playwright als Dev-Setup | ~1 h | `npm run test:browser` ohne Vorbereitung |
 | **6.5** | Zweites Handbuch (L8/LF/L3) | ~3 h | Motorenreihe L |
 | **6.6** | Reparaturprotokoll | ~4 h | Historie für Wiederverkauf |
 
@@ -261,25 +261,24 @@ Mindestens diese Begriffe liefern heute 0 oder falsche Treffer:
 - [ ] einfaches Request-Log (Methode, Pfad, Dauer) für Fehlersuche
 - [x] `hashchange`-Listener, damit manuelle `#datei.pdf`-Eingaben funktionieren
 
-### [ ] 5.9 Playwright als optionales Dev-Setup
-- `tools/browser_test.js` läuft nur, wenn `playwright` installiert ist (aktuell außerhalb des Projekts getestet)
-- **Maßnahme:** `devDependencies: { "playwright": "^1.64" }`, Script `test:browser`, Hinweis im README, dass der Test das installierte Chrome nutzt (`channel: 'chrome'`) und einen laufenden Server voraussetzt
-- **Abwägung:** ~50 MB `node_modules` gegen 27 End-to-End-Prüfungen; `tools/ui_test.js` (CDP-Variante) bleibt die abhängigkeitsfreie Alternative
-- **Fertig, wenn:** `npm run test:browser` ohne manuelle Vorbereitung durchläuft
+### [x] 5.9 Playwright als Dev-Setup *(v1.8.0)*
+- **Umgesetzt:** `devDependencies: { "playwright": "^1.64.0" }` (installiert: 1.64.1, ohne Browser-Download — der Test nutzt das installierte Chrome über `channel: 'chrome'`)
+- **Ohne Vorbereitung:** `tools/run_browser_test.js` startet den Viewer selbst auf Port 3480–3539, führt `tools/browser_test.js` dagegen aus und beendet ihn. `npm run test:browser` braucht nur `npm install` und Chrome
+- **Abwägung bleibt:** `node_modules` (~50 MB) gegen 30 End-to-End-Prüfungen; `tools/ui_test.js` (CDP) ist weiter die abhängigkeitsfreie Alternative
+- **Fertig, wenn:** `npm run test:browser` ohne manuelle Vorbereitung durchläuft — **30/30 grün**
 
 ---
 
 ## 🔵 P3 – Ausbau
 
-### [ ] 6.1 Kapitelbaum aus dem Index generieren
-- Der Bestand hat **161 echte Sektionen** (00-00 … 12-00), die UI zeigt 15 Karten; nur **49 von 7.294** Dokumenten (0,7 %) sind direkt verlinkt
-- Generator: pro Sektion `{ code, count, tocFile, label }` → `chapters.json`; Sortierung nach Sektion, Gruppen 00–12
-- Die 15 handgepflegten Karten aus `/api/chapters` bleiben als „Schnellzugriff" darüber
-- **Fertig, wenn:** jedes Dokument in ≤ 3 Klicks erreichbar ist
+### [x] 6.1 Kapitelbaum aus dem Index *(v1.8.0)*
+- **Umgesetzt als Laufzeit-Baum** statt `chapters.json`: `GET /api/tree` baut aus dem Suchindex Gruppe → Sektion → Dokumente (17 Gruppen, 238 Sektionen, alle 7.294 Dokumente). Vorteil: kann nicht veralten, keine zweite Datenquelle
+- Sektion = Kapitelteil des Codes (`01-14B-35` → `01-14B`); Bezeichnung nur, wenn ≥ 40 % der Sektion denselben Titel tragen — sonst steht der Code, statt einen falschen Titel zu zeigen
+- UI: aufklappbare Gruppen und Sektionen unter den 16 Schnellzugriff-Karten; Dokumente werden erst beim Aufklappen gerendert (nicht 7.294 Links auf einmal)
+- **Fertig, wenn:** jedes Dokument in ≤ 3 Klicks erreichbar ist — Klick 1 Gruppe, Klick 2 Sektion, Klick 3 Dokument
 
-### [ ] 6.2 Gruppen 10 (Multiplex/CAN, 255 Docs), 11 (i-stop, 52) und 12 (Personalisierung, 5) in den Baum aufnehmen
-- Sie landen derzeit im Sammelbecken „Allgemein" ([`build_index.js`](file:///C:/Projekte/Tools/mazda-manual-viewer/build_index.js) kennt nur 00–09)
-- **Fertig, wenn:** die Gruppen als eigene Kapitel erscheinen
+### [x] 6.2 Gruppen 10–12 im Baum *(v1.8.0, mit 6.1 erledigt)*
+- `build_index.js` kannte nur 00–09; seit v1.4.0 werden 10/11/12 zugeordnet, und der Sektionsbaum zeigt sie als eigene Gruppen (10 Multiplex/CAN, 11 i-stop, 12 Personalisierung)
 
 ### [ ] 6.3 Globale DTC-Übersicht generieren
 - Es gibt keine übergreifende Fehlercode-Tabelle; DTCs liegen pro System (04-02A, 05-02A/B, 09-02A…L, 10-02B/D, …)
@@ -299,9 +298,9 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 
 ## Empfohlene Reihenfolge
 
-### v1.8.0 (als Nächstes)
+### v1.9.0 (als Nächstes)
 
-Siehe Tabelle „Nächste Schritte" oben — 6.3 und 6.1 zuerst, danach die Betriebs-Kleinigkeiten 5.5/5.6/5.8/5.9.
+Siehe Tabelle „Nächste Schritte" oben — 6.3 zuerst, danach 5.5/5.6/5.8 und die Ausbau-Punkte.
 
 ### Abgeschlossene Sprints (v1.4.0)
 
@@ -311,8 +310,20 @@ Siehe Tabelle „Nächste Schritte" oben — 6.3 und 6.1 zuerst, danach die Betr
 | 2 | 1.1, 1.2, 2.1, 4.3, 4.4 | ✅ |
 | 3 | 2.2, 2.3, 2.5, 3.1, 3.2 | ✅ (2.2 vollständig in v1.6.0) |
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
-| 5 | 5.2–5.7, 6.1, 6.2 | ✅ in v1.5.0 (5.5/5.6/5.9 offen) |
+| 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 offen) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 offen) |
+
+---
+
+## ✅ Erledigt in v1.8.0
+
+- [x] **6.1 Sektionsbaum aus dem Index** — `GET /api/tree` baut beim ersten Aufruf Gruppe → Sektion → Dokumente aus dem Suchindex (17 Gruppen, 238 Sektionen, 7.294 Dokumente), gecacht bis zum nächsten Katalog-Laden. Kein `chapters.json`, das veralten könnte.
+  - Sektion = Kapitelteil (`01-14B-35` → `01-14B`) — vorher ergab jede Seite eine eigene „Sektion" (1.115 in Gruppe 01 statt 30)
+  - Bezeichnung nur bei homogenen Sektionen (≥ 40 % gleicher Titel), sonst steht der Code — sonst hätte `01-14B` den Titel einer falsch zugeordneten Seite gezeigt
+  - UI unter den Schnellzugriff-Karten: Gruppen und Sektionen klappen auf, Dokumente werden erst dann gerendert; Dokumentzeile zeigt Seiten- und Sektionstitel
+  - Jedes Dokument ist in drei Klicks erreichbar (Gruppe → Sektion → Dokument)
+- [x] **6.2 Gruppen 10–12** — erscheinen im Baum als eigene Gruppen (10 Multiplex/CAN, 11 i-stop, 12 Personalisierung); `build_index.js` ordnet sie seit v1.4.0 zu
+- [x] **5.9 Playwright** — `playwright@1.64.1` als Dev-Abhängigkeit (ohne Browser-Download, `channel: 'chrome'`), `npm run test:browser` startet den Viewer selbst (Port 3480–3539) über `tools/run_browser_test.js`; der Test deckt jetzt auch den Sektionsbaum ab: **30/30 grün**
 
 ---
 

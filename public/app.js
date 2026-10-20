@@ -623,6 +623,57 @@
     }
   }
 
+  // ---------------------------------------------------------------- Sektionsbaum (v1.8.0)
+  // Gruppe → Sektion → Dokumente, aus /api/tree (entsteht aus dem Suchindex).
+  let treeData = null;
+
+  async function initSectionTree() {
+    const box = document.getElementById('section-tree');
+    if (!box || treeData) return;
+    try {
+      treeData = await (await fetch('/api/tree')).json();
+    } catch (err) {
+      console.warn('Sektionsbaum nicht verfügbar:', err);
+      box.innerHTML = '<div class="tree-loading">Kapitelbaum nicht verfügbar</div>';
+      return;
+    }
+    box.innerHTML = treeData.map((g, gi) => `
+      <div class="tree-group">
+        <button class="tree-head" data-kind="group" data-group="${gi}">
+          <span class="tree-caret">▶</span>
+          <span class="tree-name">${esc(g.label)}</span>
+          <span class="badge-count">${g.count}</span>
+        </button>
+        <div class="tree-body hidden"></div>
+      </div>`).join('');
+  }
+
+  function renderTreeSections(gi, bodyEl) {
+    if (bodyEl.dataset.filled) return;
+    bodyEl.dataset.filled = '1';
+    bodyEl.innerHTML = treeData[gi].sections.map((s, si) => `
+      <div class="tree-section">
+        <button class="tree-head tree-head-sub" data-kind="section" data-group="${gi}" data-index="${si}">
+          <span class="tree-caret">▶</span>
+          <span class="tree-code">${esc(s.code || 'ohne Code')}</span>
+          <span class="tree-name">${esc(s.label || '')}</span>
+          <span class="badge-count">${s.count}</span>
+        </button>
+        <div class="tree-docs hidden"></div>
+      </div>`).join('');
+  }
+
+  function renderTreeDocs(gi, si, docsEl) {
+    if (docsEl.dataset.filled) return;
+    docsEl.dataset.filled = '1';
+    const section = treeData[gi].sections[si];
+    docsEl.innerHTML = section.docs.map((d) => `
+      <a href="#" class="nav-item tree-doc" data-file="${esc(d.f)}">
+        <span class="nav-item-badge">${esc(d.s || '–')}</span>
+        <span class="nav-item-text" title="${esc(d.t || d.f)}">${esc(d.t || d.f)}</span>
+      </a>`).join('');
+  }
+
   async function loadPacks() {
     try {
       const packs = await (await fetch('/api/favorites')).json();
@@ -863,6 +914,26 @@
 
     // Ein einziger Delegate-Handler für alle klickbaren Listenpunkte
     document.addEventListener('click', (e) => {
+      // Sektionsbaum: Gruppe oder Sektion auf-/zuklappen
+      const head = e.target.closest('.tree-head');
+      if (head) {
+        e.preventDefault();
+        const gi = parseInt(head.dataset.group, 10);
+        const wrap = head.parentElement;
+        if (head.dataset.kind === 'group') {
+          const body = wrap.querySelector('.tree-body');
+          renderTreeSections(gi, body);
+          body.classList.toggle('hidden');
+          wrap.classList.toggle('open');
+        } else {
+          const si = parseInt(head.dataset.index, 10);
+          const docsEl = wrap.querySelector('.tree-docs');
+          renderTreeDocs(gi, si, docsEl);
+          docsEl.classList.toggle('hidden');
+          wrap.classList.toggle('open');
+        }
+        return;
+      }
       const del = e.target.closest('.btn-delete-bookmark');
       if (del) {
         e.preventDefault();
@@ -994,6 +1065,7 @@
     renderNotes();
 
     await Promise.all([loadChapters(), loadPacks(), loadChecklists()]);
+    initSectionTree();
 
     const hash = location.hash.replace('#', '').trim();
     await loadPdf(hash && hash.endsWith('.pdf') ? hash : state.currentFile);

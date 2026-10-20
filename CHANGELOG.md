@@ -6,6 +6,30 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.8.0] - 2026-10-20
+
+### Kapitelbaum (P3)
+- **Sektionsbaum aus dem Index** (TODO 6.1): `GET /api/tree` baut beim ersten Aufruf
+  Gruppe → Sektion → Dokumente aus dem Suchindex — 17 Gruppen, 238 Sektionen, alle 7.294 Dokumente.
+  Kein gepflegtes `chapters.json`, das veralten könnte; der Baum wird beim Neuladen des Katalogs verworfen.
+  - Sektion = Kapitelteil des Codes (`01-14B-35` → `01-14B`); ohne diese Normalisierung hätte Gruppe 01
+    allein 1.115 „Sektionen" (eine je Seite) statt 30
+  - Bezeichnung nur bei homogenen Sektionen (≥ 40 % derselben Überschrift), sonst steht der Code —
+    eine falsch zugeordnete Seite soll die Sektion nicht umbenennen
+- **UI**: unter den 16 Schnellzugriff-Karten klappt „Alle Sektionen" auf; Gruppen und Sektionen öffnen
+  sich, Dokumente werden erst dann gerendert (keine 7.294 Links auf einmal). Drei Klicks bis zum Dokument.
+- **Gruppen 10–12** (TODO 6.2) erscheinen als eigene Gruppen im Baum.
+
+### Tests (P3)
+- **Playwright als Dev-Setup** (TODO 5.9): `devDependencies: { "playwright": "^1.64.0" }`, Installation
+  ohne Browser-Download — der Test nutzt das installierte Chrome (`channel: 'chrome'`).
+- **`npm run test:browser` ohne Vorbereitung**: `tools/run_browser_test.js` startet den Viewer selbst auf
+  Port 3480–3539, führt `tools/browser_test.js` aus und beendet ihn; ein laufender Viewer bleibt unberührt.
+- Der Browser-Test prüft jetzt auch den Sektionsbaum → **30/30 grün** (vorher 27); der API-Vertrag
+  wächst um sechs Baum-Prüfungen (47 → 53).
+
+---
+
 ## [1.7.0] - 2026-10-20
 
 ### Volltext & Suchbarkeit (P1)

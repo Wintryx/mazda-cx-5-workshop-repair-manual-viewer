@@ -84,6 +84,7 @@ const MIME = {
 let catalog = [];
 const byFile = new Map();
 let docs = [];
+let treeCache = null;
 
 function loadCatalog() {
   catalog = readJson(INDEX_FILE, []);
@@ -93,8 +94,73 @@ function loadCatalog() {
   }
   byFile.clear();
   for (const e of catalog) byFile.set(e.f, e);
+  treeCache = null;
   console.log(`Katalog geladen: ${catalog.length} Dokumente.`);
   docs = null; // Suchindex wird lazy gebaut
+}
+
+// ---------------------------------------------------------------------------
+// Kapitelbaum (aus dem Index generiert, v1.8.0)
+// ---------------------------------------------------------------------------
+
+/**
+ * Baut aus dem Katalog einen Baum Gruppe → Sektion → Dokumente.
+ * Die 161 Sektionen ergeben sich aus den Sektionscodes, die Bezeichnung aus
+ * dem häufigsten Titel der Sektion. Wird beim ersten Aufruf berechnet und
+ * beim Neuladen des Katalogs verworfen.
+ */
+function buildTree() {
+  if (treeCache) return treeCache;
+
+  const groups = new Map();
+  for (const e of catalog) {
+    const groupLabel = e.grp || 'Allgemein';
+    let group = groups.get(groupLabel);
+    if (!group) {
+      group = { label: groupLabel, count: 0, sections: new Map() };
+      groups.set(groupLabel, group);
+    }
+    group.count++;
+
+    // Sektion = Kapitelteil des Codes ("01-14B-35" -> "01-14B"), nicht die Einzelseite
+    const code = (String(e.sec || '').match(/^(\d{2}-\d{2}[A-Z]?)/) || [])[1] || '';
+    let section = group.sections.get(code);
+    if (!section) {
+      section = { code, titles: new Map(), docs: [] };
+      group.sections.set(code, section);
+    }
+    section.docs.push({ f: e.f, s: e.sec || '', t: (e.t || '').slice(0, 70) });
+    if (e.t) section.titles.set(e.t, (section.titles.get(e.t) || 0) + 1);
+  }
+
+  const groupRank = (label) => {
+    const m = String(label).match(/^(\d{2})\b/);
+    return m ? parseInt(m[1], 10) : 99;
+  };
+  const fileNo = (f) => {
+    const m = String(f).match(/(\d+)\.pdf$/);
+    return m ? parseInt(m[1], 10) : 0;
+  };
+
+  const tree = [...groups.values()].map((g) => {
+    const sections = [...g.sections.values()].map((s) => {
+      // Nur eine wirklich homogene Sektion bekommt eine Bezeichnung; sonst
+      // bleibt der Code stehen, statt einen irreführenden Titel zu zeigen.
+      let label = '';
+      let best = 0;
+      for (const [title, n] of s.titles) {
+        if (n > best) { best = n; label = title; }
+      }
+      if (!label || best / s.docs.length < 0.4) label = '';
+      s.docs.sort((a, b) => fileNo(a.f) - fileNo(b.f));
+      return { code: s.code, label: label.slice(0, 60), count: s.docs.length, docs: s.docs };
+    }).sort((a, b) => (a.code || 'zz').localeCompare(b.code || 'zz'));
+
+    return { key: String(g.label).slice(0, 2), label: g.label, count: g.count, sections };
+  }).sort((a, b) => groupRank(a.label) - groupRank(b.label) || a.label.localeCompare(b.label));
+
+  treeCache = tree;
+  return tree;
 }
 
 // ---------------------------------------------------------------------------
@@ -544,6 +610,11 @@ function handleRequest(req, res) {
 
   if (pathname === '/api/chapters') {
     sendJson(res, 200, readJson(path.join(CONFIG_DIR, 'chapters.json'), []));
+    return;
+  }
+
+  if (pathname === '/api/tree') {
+    sendJson(res, 200, buildTree());
     return;
   }
 

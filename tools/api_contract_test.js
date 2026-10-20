@@ -37,6 +37,17 @@ async function main() {
   const subs = ch.body.flatMap(c => c.subsections || []);
   ok('Unterkapitel haben title+file', subs.every(s => s.title && s.file), String(subs.length) + ' Unterkapitel');
 
+  // --- Sektionsbaum (v1.8.0) ---
+  const tree = await json('/api/tree');
+  ok('GET /api/tree 200', tree.status === 200);
+  ok('Baum ist ein Array', Array.isArray(tree.body));
+  ok('Baum hat mindestens 12 Gruppen', tree.body.length >= 12, String(tree.body.length));
+  const sections = tree.body.flatMap((g) => g.sections || []);
+  ok('Sektionen haben code/count/docs', sections.every((s) => typeof s.code === 'string' && s.count === s.docs.length));
+  const treeDocs = sections.reduce((n, s) => n + s.docs.length, 0);
+  ok('Baum enthält alle 7.294 Dokumente', treeDocs === 7294, String(treeDocs));
+  ok('Gruppen 10–12 vorhanden', ['10', '11', '12'].every((k) => tree.body.some((g) => g.label.startsWith(k + ' '))));
+
   // --- Packs ---
   const packs = await json('/api/favorites');
   ok('GET /api/favorites 200', packs.status === 200);

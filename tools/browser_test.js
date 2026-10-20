@@ -36,6 +36,17 @@ function check(name, cond, detail) {
   check('TextLayer gefüllt', await page.locator('#text-layer span').count() > 50);
   check('Hotspots vorhanden', await page.locator('.hotspot-link').count() > 0);
   check('Kapitelbaum 16 Karten', await page.locator('.chapter-card').count() === 16);
+
+  // Sektionsbaum aus dem Index (v1.8.0)
+  await page.waitForSelector('#section-tree .tree-group', { timeout: 15000 });
+  check('Sektionsbaum geladen', await page.locator('#section-tree .tree-group').count() > 10);
+  await page.locator('#section-tree .tree-head').first().click();
+  const sectionCount = await page.locator('#section-tree .tree-section').count();
+  check('Gruppe klappt Sektionen auf', sectionCount > 0, String(sectionCount));
+  await page.locator('#section-tree .tree-head-sub').first().click();
+  const treeDocs = await page.locator('#section-tree .tree-doc').count();
+  check('Sektion zeigt Dokumente', treeDocs > 0, String(treeDocs));
+
   await page.screenshot({ path: path.join(SHOTS, '01-start.png') });
 
   // ---------- 2) Hotspot-Navigation ----------

@@ -7,7 +7,7 @@ zweisprachiger Suche (Deutsch ⇄ Englisch), Lesezeichen, Notizen, Reparatur-Che
 Läuft ohne Internet und ohne externe Laufzeit-Abhängigkeiten (reines Node.js + lokal eingebundenes PDF.js)
 auf Laptop oder Tablet im Werkstattbetrieb.
 
-**Stand:** v1.7.0 · Oktober 2026
+**Stand:** v1.8.0 · Oktober 2026
 
 ---
 
@@ -16,6 +16,7 @@ auf Laptop oder Tablet im Werkstattbetrieb.
 | Bereich | Funktion |
 |---|---|
 | Kapitel | 15 Kapitelkarten 00–09 plus Schaltpläne, Karosserie, Technical Guide; Reparatur-Packs als Direkteinstieg |
+| Sektionen | Baum aus dem Index: 17 Gruppen → 238 Sektionen → alle 7.294 Dokumente, drei Klicks bis zur Seite |
 | Suche | Wortgrenzen, IDF-Gewichtung, Phrasen-Synonyme, Tippfehler-Toleranz, Umlaut-Normalisierung, Paging |
 | Seite | Hotspots aus PDF-Links (auch auf 254 quer liegenden Schaltplänen), Textauswahl, Zoom, Fit-Breite, Vollbild |
 | Werkstatt | Notizen pro Dokument, Lesezeichen, Checklisten (Injektoren, Bremsen vorn, Ölwechsel), Druck eines Seitenbereichs |
@@ -85,7 +86,7 @@ PDF-Anzahl und Index-Abdeckung.
 | Vollbild / Werkstattmodus | `F` |
 | Suche | Suchfeld oben, `Enter`; „mehr laden" für weitere Treffer |
 | Sprung zu Dateinummer | Sprungfeld (z. B. `1092` → `mazda_cx5_workshop_manual1092.pdf`) |
-| Kapitel / Packs | linke Sidebar |
+| Kapitel / Sektionen | Sidebar: Schnellzugriff-Karten, darunter der Baum „Alle Sektionen" (Gruppe → Sektion → Dokument) |
 | Notizen, Lesezeichen | rechte Spalte, automatisch im LocalStorage gespeichert |
 | Checklisten | Kapitelkarte „Checklisten", Fortschritt pro Dokument |
 | Drucken / Export | `Strg+P` bzw. Schaltfläche, Seitenbereich z. B. `1573–1575` |
@@ -111,10 +112,13 @@ PDF-Anzahl und Index-Abdeckung.
 npm run validate     # Index, Kapitel, Packs, Checklisten gegeneinander (offline, Exit-Code für CI)
 npm test             # validate + eigener Testserver auf Port 3480–3539 + API- und Suchtests
 npm run test:api     # nur API-Vertrag gegen laufenden Server
-npm run test:browser # Playwright/Chrome, optional (benötigt playwright und laufenden Server)
+npm run test:browser # Playwright in Chrome: echte Bedienung (30 Prüfungen), startet den Server selbst
 ```
 
-`npm test` startet seinen Server selbst und lässt einen bereits laufenden Viewer auf 3300 unberührt.
+`npm test` und `npm run test:browser` starten ihren Server selbst (Port 3480–3539) und lassen einen
+bereits laufenden Viewer auf 3300 unberührt. Der Browser-Test braucht einmalig `npm install`
+(Playwright ist Dev-Abhängigkeit) und ein installiertes Google Chrome — es werden keine
+Playwright-Browser heruntergeladen (`channel: 'chrome'`).
 `npm run test:api` erwartet die Adresse als Argument, Standard `http://127.0.0.1:3300`.
 
 ## 9. Bekannte Grenzen
