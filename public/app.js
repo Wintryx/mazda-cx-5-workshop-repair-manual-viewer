@@ -881,6 +881,14 @@
       if (item && item.dataset.file) {
         e.preventDefault();
         loadPdf(item.dataset.file);
+        return;
+      }
+      // Quellenlinks in Karten (z. B. Drehmoment-Zeile → 01-14B-38)
+      const src = e.target.closest('.inline-link[data-file]');
+      if (src) {
+        e.preventDefault();
+        e.stopPropagation();
+        loadPdf(src.dataset.file);
       }
     });
 

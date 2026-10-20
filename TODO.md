@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.5.0 · 20.10.2026
+**Stand:** v1.5.1 · 20.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -11,24 +11,19 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.4.0 umgesetzt:** P0 vollständig, P1 (außer 1.4, 2.2, 2.4) und P2 vollständig. Verifiziert mit `tools/validate.js` (OK) und `tools/search_test.js` (15/15).
 >
 > **v1.5.0 umgesetzt:** Paket A (Projekt-Hygiene: 5.1–5.4, 5.7). Verifiziert mit `npm test` (47 API- + 15 Suchprüfungen) gegen `data\`.
+>
+> **v1.5.1 umgesetzt:** Paket B (1.4 – Injektor-Drehmomente gegen die Originalseiten belegt und verlinkt).
 
 ---
 
 ## 🎯 Nächste Schritte (v1.6.0)
 
-Paket **A** (Projekt-Hygiene) ist mit v1.5.0 erledigt — siehe „Erledigt in v1.5.0" unten. Es bleiben drei Pakete, in dieser Reihenfolge sinnvoll — Details unter den jeweiligen Punkten (B → 1.4, C → 2.2, D → 2.4).
+Pakete **A** (Projekt-Hygiene, v1.5.0) und **B** (Drehmomente, v1.5.1) sind erledigt — siehe unten. Es bleiben zwei inhaltliche Pakete, in dieser Reihenfolge sinnvoll — Details unter den jeweiligen Punkten (C → 2.2, D → 2.4).
 
 | Paket | Inhalt | Aufwand | Bringt |
 |---|---|---|---|
-| **B** | Drehmomente belegen (01-14B-34/37/38) | ~1 h | Sicherheit bei der häufigsten Arbeit |
 | **C** | Titel 50 % → ~70 % über PDF.js-Layout | ~3 h | Suche und Sidebar deutlich lesbarer |
 | **D** | OCR der 1.007 Bildseiten | ~1 Tag | Schaltpläne und Bodyshop durchsuchbar |
-
-### [ ] B – Drehmomente verifizieren
-- [ ] Spickzettel gegen **01-14B-34** (Einspritzleitungen 32–42 Nm), **01-14B-37** (Montagehinweis/Anzugschema) und **01-14B-38** (Klammer 1,8–2,2 Nm + 180°) abgleichen
-- [ ] Rücklaufleitung (22–26 Nm) belegen — oder aus der Karte entfernen
-- [ ] Jede Zeile der Karte bekommt einen Quellenlink (`data-file` auf die Seite)
-- **Fertig, wenn:** keine Zeile ohne Seitenangabe ist und die Werte im PDF exakt so stehen.
 
 ### [ ] C – Titel über das PDF.js-Layout
 - [ ] Node-fähigen PDF.js-Build (Legacy) einbinden und `getTextContent()` nutzen — es liefert `transform` (x/y) und `height` je Textstück
@@ -108,13 +103,6 @@ Die kuratierten Sets in `/api/favorites` wurden nie gegen den Index geprüft. Nu
   4. alle `sec`-Werte matchen `^\d{2}-\d{2}[A-Z]?-\d+$`
   5. jede Sektion hat einen TOC-Kandidaten
 - **Fertig, wenn:** der Check mit Exit-Code 0 läuft und die heutigen 19 Fehler als Fehler meldet
-
-### [ ] 1.4 Injektor-Drehmomente gegen Original prüfen
-Die Spickzettel-Karte im Frontend ([`index.html`](file:///C:/Projekte/Tools/mazda-manual-viewer/public/index.html)) nennt Werte (1,8–2,2 Nm + 180°, 32–42 Nm, 22–26 Nm). Diese wurden nicht gegen die PDF-Seiten abgeglichen — bei Drehmomenten ist ein Tippfehler teuer.
-
-- **Zu prüfen gegen:** `mazda_cx5_workshop_manual1091.pdf` (01-14B-34, Einspritzleitungen), `…1094.pdf` (01-14B-37, Montageanleitung), `…1095.pdf` (01-14B-38, Klammer-Drehmomente); die Rücklaufleitung (22–26 Nm) im Bereich 01-14B-4x suchen (Seite noch nicht bestätigt)
-- **Maßnahme:** jeden Wert aus dem PDF ablesen, in der Karte mit Seitenangabe verlinken (`data-file`), abweichende/unnötige Zeilen streichen
-- **Fertig, wenn:** jede Zeile mit Seitenzahl belegt ist (z. B. „→ 01-14B-38") und die Karte keine ungeprüften Zahlen mehr enthält
 
 ---
 
@@ -328,6 +316,17 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ in v1.5.0 (5.5/5.6/5.9 offen) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 offen) |
+
+---
+
+## ✅ Erledigt in v1.5.1
+
+- [x] **1.4 Injektor-Drehmomente belegt** — alle Werte der Karte „2.2D Injektor-Drehmomente" stammen jetzt aus den Originalseiten, jede Zeile hat einen Quellenlink (`data-file`, Sprung direkt auf die Seite).
+  - `01-14B-37` (`…1094.pdf`): Mutter 1 – Voranzug 1,8–2,2 N·m (Schritt 4), Lösen −30° bis −150° (Schritt 5).
+  - `01-14B-38` (`…1095.pdf`): Mutter 2 – Endzug 1,8–2,2 N·m + **177–183°** (Schritt 6; die Karte sagte vorher „+ 180°" ohne Toleranz), Einspritzleitungen 32–42 N·m (Schritte 7–8), Rücklaufleitung Injektorseite 22–26 N·m (Schritt 10).
+  - **Neu in der Karte:** Common Rail 20–26 N·m (`01-14B-38`, Schritt 9) — wird beim Injektortausch gelöst und muss wieder angezogen werden.
+  - **Gegenprobe `01-14B-34`** (`…1091.pdf`): bestätigt 32–42 N·m für beide Einspritzleitungen; die dort genannte Klammer der Pumpenseite (4,2–5,2 N·m) gehört nicht zum Injektortausch und bleibt außen vor.
+  - Quellenlinks funktionieren: neuer Delegate-Handler in `app.js` für `.inline-link[data-file]` (vorher ohne Wirkung).
 
 ---
 

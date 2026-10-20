@@ -7,7 +7,7 @@ zweisprachiger Suche (Deutsch ⇄ Englisch), Lesezeichen, Notizen, Reparatur-Che
 Läuft ohne Internet und ohne externe Laufzeit-Abhängigkeiten (reines Node.js + lokal eingebundenes PDF.js)
 auf Laptop oder Tablet im Werkstattbetrieb.
 
-**Stand:** v1.5.0 · Oktober 2026
+**Stand:** v1.5.1 · Oktober 2026
 
 ---
 
@@ -123,7 +123,8 @@ npm run test:browser # Playwright/Chrome, optional (benötigt playwright und lau
   Querverweise sind nicht unterscheidbar. Lösung über PDF.js-Layout ist als Paket C geplant (TODO 2.2).
 - **1.007 Seiten ohne Text** (reine Bildseiten, v. a. Schaltpläne und Bodyshop-Deckblätter): nur über
   die Kapitelstruktur erreichbar, nicht über Stichworte. OCR ist als Paket D geplant (TODO 2.4).
-- **Drehmomente** in der Injektor-Karte sind noch nicht gegen die Originalseiten geprüft (TODO 1.4).
+- **Drehmomente** der Injektor-Karte sind gegen `01-14B-37` und `01-14B-38` geprüft und je Zeile verlinkt;
+  sie gelten für den 2.2 Skyactiv-D — andere Motorvarianten haben eigene Werte.
 - Die PDFs unterliegen dem Urheberrecht von Mazda — siehe Abschnitt 11.
 
 ## 10. Wartung

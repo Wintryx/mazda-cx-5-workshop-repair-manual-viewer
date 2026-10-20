@@ -6,6 +6,24 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.5.1] - 2026-10-20
+
+### Korrektheit (P1)
+- **Injektor-Drehmomente belegt** (TODO 1.4): Die Karte „2.2D Injektor-Drehmomente" ist Zeile für Zeile
+  gegen die Originalseiten geprüft; jede Zeile verlinkt ihre Quelle.
+  - Mutter 1 – Voranzug 1,8–2,2 N·m, Lösen −30° bis −150° (`01-14B-37`, Schritte 4–5)
+  - Mutter 2 – Endzug 1,8–2,2 N·m + **177–183°** statt „+ 180°" ohne Toleranz (`01-14B-38`, Schritt 6)
+  - Einspritzleitungen 32–42 N·m (`01-14B-38`, Schritte 7–8; in `01-14B-34` bestätigt)
+  - Rücklaufleitung Injektorseite 22–26 N·m (`01-14B-38`, Schritt 10) — die zuvor offene Seite ist belegt
+  - **Ergänzt:** Common Rail 20–26 N·m (`01-14B-38`, Schritt 9), wird beim Injektortausch gelöst und wieder angezogen
+  - Nicht übernommen: Klammer der Pumpenseite 4,2–5,2 N·m (`01-14B-34`) — gehört nicht zum Injektortausch
+- **Quellenlinks** in der Karte springen auf die Seite (`data-file`); `.inline-link[data-file]` wird jetzt
+  im Delegated Click-Handler von `public/app.js` behandelt (vorher ohne Funktion).
+- Darstellung: die Quellenangabe steht klein unter dem Wert und rechtsbündig, damit die 280 px breite
+  Karte in der Seitenleiste nicht überläuft (`public/style-v14.css`).
+
+---
+
 ## [1.5.0] - 2026-10-20
 
 Projekt-Hygiene (Paket A): Das Projekt ist jetzt ohne `C:\Temp`, ohne Handarbeit und ohne laufenden
