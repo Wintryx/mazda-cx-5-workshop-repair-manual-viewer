@@ -1,0 +1,14 @@
+# Handbuch-PDFs (451 MB) – nicht versionieren, werden aus dem ZIP entpackt
+data/
+
+# Abhängigkeiten (npm test / test:browser)
+node_modules/
+
+# Laufzeit-Info des Port-Fallbacks
+.active_port
+
+# Lokale Sicherungen vor größeren Umbauten
+_backup/
+
+# Logs
+*.log

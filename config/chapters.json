@@ -1,0 +1,131 @@
+[
+  {
+    "id": "00",
+    "title": "00 Allgemein & Wartung",
+    "icon": "📋",
+    "startFile": "mazda_cx5_workshop_manual3.pdf",
+    "description": "Fahrzeugidentifikation, Wartungsintervalle, Schmierstoffe, Füllmengen, Hebe- und Abschlepppunkte"
+  },
+  {
+    "id": "01",
+    "title": "01 Motor (Engine: 2.2D & 2.0G)",
+    "icon": "🔧",
+    "startFile": "mazda_cx5_workshop_manual56.pdf",
+    "description": "Komplette Mechanik, Steuerkette, Nockenwellen, Zylinderkopf, Ventile",
+    "subsections": [
+      { "title": "01-10B Motor-Mechanik 2.2D (Steuerkette, Nockenwellen)", "file": "mazda_cx5_workshop_manual704.pdf" },
+      { "title": "01-11B Schmiersystem 2.2D (Ölstand, Ölsieb, Ölpumpe)", "file": "mazda_cx5_workshop_manual840.pdf" },
+      { "title": "01-12B Kühlsystem 2.2D (Kühler, Wasserpumpe, Thermostat)", "file": "mazda_cx5_workshop_manual890.pdf" },
+      { "title": "01-13B Ansaugsystem & Turbolader 2.2D", "file": "mazda_cx5_workshop_manual924.pdf" },
+      { "title": "01-14B Kraftstoffsystem & Injektoren 2.2D", "file": "mazda_cx5_workshop_manual1059.pdf" },
+      { "title": "01-15B Abgasanlage & DPF 2.2D", "file": "mazda_cx5_workshop_manual1128.pdf" },
+      { "title": "01-16B Emissionssystem & AGR 2.2D", "file": "mazda_cx5_workshop_manual1162.pdf" },
+      { "title": "01-40 Motorsteuerung PCM (Sensoren, Regelung)", "file": "mazda_cx5_workshop_manual1263.pdf" }
+    ]
+  },
+  {
+    "id": "02",
+    "title": "02 Fahrwerk & Radaufhängung (Suspension)",
+    "icon": "🛞",
+    "startFile": "mazda_cx5_workshop_manual1342.pdf",
+    "description": "Federbeine, Querlenker, Stabilisatoren, Achsvermessung, Radlager"
+  },
+  {
+    "id": "03",
+    "title": "03 Antriebsstrang & Allrad (Driveline / Axle)",
+    "icon": "⚙️",
+    "startFile": "mazda_cx5_workshop_manual1439.pdf",
+    "description": "Antriebswellen, Kardanwelle, Hinterachsdifferential, Allradkupplung (AWD)"
+  },
+  {
+    "id": "04",
+    "title": "04 Bremsen & Regelsysteme (Brakes)",
+    "icon": "🛑",
+    "startFile": "mazda_cx5_workshop_manual1567.pdf",
+    "description": "Vorder-/Hinterradbremse, Bremsscheiben, Beläge, Feststellbremse, ABS/DSC-Einheit",
+    "subsections": [
+      { "title": "Vorderradbremse: Beläge & Sattel (04-11)", "file": "mazda_cx5_workshop_manual1695.pdf" },
+      { "title": "Bremsscheibe: Schlag & Dicke prüfen (04-11-25/26)", "file": "mazda_cx5_workshop_manual1693.pdf" },
+      { "title": "Bremskraftverstärker & Hauptzylinder (04-11-18)", "file": "mazda_cx5_workshop_manual1686.pdf" },
+      { "title": "Bremsflüssigkeit prüfen (04-11-4)", "file": "mazda_cx5_workshop_manual1675.pdf" },
+      { "title": "Feststellbremse: Prüfen & Einstellen (04-12)", "file": "mazda_cx5_workshop_manual1707.pdf" }
+    ]
+  },
+  {
+    "id": "05",
+    "title": "05 Getriebe (Transmission / Transaxle)",
+    "icon": "🕹️",
+    "startFile": "mazda_cx5_workshop_manual1736.pdf",
+    "description": "6-Gang Schaltgetriebe (C66M-R) und 6-Stufen Automatikgetriebe (FW6A-EL/GW6A-EL)"
+  },
+  {
+    "id": "06",
+    "title": "06 Lenkung (Steering)",
+    "icon": "🧭",
+    "startFile": "mazda_cx5_workshop_manual2314.pdf",
+    "description": "Elektrische Servolenkung (EPS), Lenkgetriebe, Spurstangen, Lenksäule"
+  },
+  {
+    "id": "07",
+    "title": "07 Heizung & Klimaanlage (HVAC)",
+    "icon": "❄️",
+    "startFile": "mazda_cx5_workshop_manual2377.pdf",
+    "description": "Klimakompressor, Kondensator, Verdampfer, Gebläsemotor, Innenraumfilter"
+  },
+  {
+    "id": "08",
+    "title": "08 Airbag & Rückhaltesysteme (Restraints)",
+    "icon": "🛡️",
+    "startFile": "mazda_cx5_workshop_manual2584.pdf",
+    "description": "Fahrer-/Beifahrerairbag, Seitenairbags, Gurtstraffer, Crashsensoren"
+  },
+  {
+    "id": "09",
+    "title": "09 Karosserie, Beleuchtung & Elektrik (Body & Electrics)",
+    "icon": "💡",
+    "startFile": "mazda_cx5_workshop_manual2792.pdf",
+    "description": "Scheinwerfer, Rückleuchten, Türen, Fensterheber, Zentralverriegelung, Sicherungskästen"
+  },
+  {
+    "id": "can",
+    "title": "10 Multiplex / CAN & Diagnosebusse",
+    "icon": "🔌",
+    "startFile": "mazda_cx5_workshop_manual4687.pdf",
+    "description": "CAN-Bus, Steuergerätevernetzung, Kommunikations-DTCs, Diagnoseabläufe"
+  },
+  {
+    "id": "istop",
+    "title": "11 i-stop & Start-Stopp-System",
+    "icon": "🔋",
+    "startFile": "mazda_cx5_workshop_manual4921.pdf",
+    "description": "i-stop-Funktion, Batteriestromsensor, Startergenerator, Freigabebedingungen"
+  },
+  {
+    "id": "sst",
+    "title": "Spezialwerkzeuge (Special Service Tools)",
+    "icon": "🧰",
+    "startFile": "mazda_cx5_electrical_wiring_manual6.pdf",
+    "description": "Übersicht der Mazda-Original-Spezialwerkzeuge mit Teilenummern (00-00-2 / 00-00-7)"
+  },
+  {
+    "id": "wiring",
+    "title": "Elektrische Schaltpläne (Wiring Diagrams)",
+    "icon": "⚡",
+    "startFile": "mazda_cx5_electrical_wiring_diagrams1.pdf",
+    "description": "277 Schaltpläne, Kabelverläufe, Steckerbelegungen und Massepunkte"
+  },
+  {
+    "id": "body",
+    "title": "Karosserie-Instandsetzung (Bodyshop Manual)",
+    "icon": "🚗",
+    "startFile": "mazda_cx5_bodyshop_manual1.pdf",
+    "description": "161 Karosseriedokumente, Richtmaße, Schweißpunkte, Spaltmaße"
+  },
+  {
+    "id": "tech",
+    "title": "Technischer Leitfaden (Technical Guide)",
+    "icon": "📘",
+    "startFile": "mazda_cx5_technical_guide_manual1.pdf",
+    "description": "1.790 Dokumente zu Systemarchitektur, Sensor-Kennlinien und Funktionsprinzipien"
+  }
+]

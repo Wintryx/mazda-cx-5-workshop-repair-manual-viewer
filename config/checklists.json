@@ -1,0 +1,41 @@
+[
+  {
+    "id": "injectors",
+    "title": "Injektoren tauschen (2.2 Skyactiv-D)",
+    "vehicle": "CX-5 2.2D",
+    "steps": [
+      { "text": "Kraftstoffdruck abbauen (Before Service)", "file": "mazda_cx5_workshop_manual1063.pdf" },
+      { "text": "Einspritzleitungen ausbauen", "file": "mazda_cx5_workshop_manual1090.pdf" },
+      { "text": "Injektor ausbauen, Kupferdichtung erneuern", "file": "mazda_cx5_workshop_manual1092.pdf" },
+      { "text": "Injektor einbauen (Anzugschema der Montageanleitung)", "file": "mazda_cx5_workshop_manual1094.pdf" },
+      { "text": "Klammer-Drehmoment nach Vorschrift prüfen", "file": "mazda_cx5_workshop_manual1095.pdf" },
+      { "text": "Injektor elektrisch prüfen (Widerstand)", "file": "mazda_cx5_workshop_manual1096.pdf" },
+      { "text": "Kraftstoffsystem entlüften (After Service)", "file": "mazda_cx5_workshop_manual1064.pdf" }
+    ]
+  },
+  {
+    "id": "brakes-front",
+    "title": "Bremsen vorne: Beläge & Scheiben",
+    "vehicle": "CX-5",
+    "steps": [
+      { "text": "Bremsanlage: Übersicht und Aufbau", "file": "mazda_cx5_workshop_manual1672.pdf" },
+      { "text": "Sattel abnehmen, Belag und Scheibe ausbauen", "file": "mazda_cx5_workshop_manual1695.pdf" },
+      { "text": "Montagehinweise für Bremsbeläge beachten", "file": "mazda_cx5_workshop_manual1696.pdf" },
+      { "text": "Bremsscheibe: Seitenschlag prüfen", "file": "mazda_cx5_workshop_manual1693.pdf" },
+      { "text": "Bremsscheibe: Dicke / Verschleißmaß prüfen", "file": "mazda_cx5_workshop_manual1694.pdf" },
+      { "text": "Bremsflüssigkeitsstand prüfen", "file": "mazda_cx5_workshop_manual1675.pdf" }
+    ]
+  },
+  {
+    "id": "oil-change",
+    "title": "Ölwechsel & Ölfilter (2.2 Skyactiv-D)",
+    "vehicle": "CX-5 2.2D",
+    "steps": [
+      { "text": "Ölstand vor dem Wechsel prüfen", "file": "mazda_cx5_workshop_manual840.pdf" },
+      { "text": "Motorölwechsel (Ablass, Füllmenge, Spezifikation)", "file": "mazda_cx5_workshop_manual843.pdf" },
+      { "text": "Ölfilter wechseln (Anzugpunkt beachten)", "file": "mazda_cx5_workshop_manual844.pdf" },
+      { "text": "Ölsieb prüfen (Kupferring-Rückstände)", "file": "mazda_cx5_workshop_manual842.pdf" },
+      { "text": "Öldruck nach dem Wechsel prüfen", "file": "mazda_cx5_workshop_manual846.pdf" }
+    ]
+  }
+]

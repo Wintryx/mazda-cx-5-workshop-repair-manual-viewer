@@ -1,0 +1,302 @@
+[
+  {
+    "category": "🔧 Diesel-Injektoren (2.2 Skyactiv-D)",
+    "items": [
+      {
+        "file": "mazda_cx5_workshop_manual1092.pdf",
+        "sec": "01-14B-35",
+        "title": "Injektor Aus-/Einbau (Kraftstoffsystem 2.2D)"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1094.pdf",
+        "sec": "01-14B-37",
+        "title": "Montageanleitung Injektor (Anzugschema)"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1095.pdf",
+        "sec": "01-14B-38",
+        "title": "Klammer-Drehmomente (Anzugschema Teil 2)"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1096.pdf",
+        "sec": "01-14B-39",
+        "title": "Injektor elektrisch prüfen (Widerstand)"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1090.pdf",
+        "sec": "01-14B-33",
+        "title": "Einspritzleitungen ausbauen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1091.pdf",
+        "sec": "01-14B-34",
+        "title": "Injector Pi pe Installation Note"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1093.pdf",
+        "sec": "01-14B-36",
+        "title": "See Fuel Injector Installation Note"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1063.pdf",
+        "sec": "01-14B-6",
+        "title": "YACTIV-D 2 . 2] FUEL SYSTEM FLOW DIAGRAM [SKYACTIV-D 2 . 2] id0114z7818400 End Of Sie BEFORE SERVICE"
+      }
+    ]
+  },
+  {
+    "category": "🛑 Bremsen-Service (Vorder- & Hinterachse)",
+    "items": [
+      {
+        "file": "mazda_cx5_workshop_manual1695.pdf",
+        "sec": "04-11-27",
+        "title": "Vorderradbremse: Belag & Scheibe aus-/einbauen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1696.pdf",
+        "sec": "04-11-28",
+        "title": "Montagehinweise Bremsbelag"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1693.pdf",
+        "sec": "04-11-25",
+        "title": "Bremsscheibe: Seitenschlag prüfen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1694.pdf",
+        "sec": "04-11-26",
+        "title": "Bremsscheibe: Dicke prüfen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1707.pdf",
+        "sec": "04-12-2",
+        "title": "Feststellbremse: Prüfen & Einstellen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1675.pdf",
+        "sec": "04-11-4",
+        "title": "Bremsflüssigkeit prüfen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1683.pdf",
+        "sec": "04-11-14",
+        "title": "CONVENTIONAL BRAKE SYSTEM BRAKE FLUID LEVEL SENSOR INSPECTION 1.Disconnect the br"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1697.pdf",
+        "sec": "04-11-29",
+        "title": "Disc Pad Installation Note 1.Clean the exposed area of t"
+      }
+    ]
+  },
+  {
+    "category": "🛢️ Ölwechsel, Ölsieb & Schmiersystem (2.2D)",
+    "items": [
+      {
+        "file": "mazda_cx5_workshop_manual843.pdf",
+        "sec": "01-11B-4",
+        "title": "Motorölwechsel (Füllmenge & Spezifikation)"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual844.pdf",
+        "sec": "01-11B-5",
+        "title": "Ölfilter wechseln (Anzugpunkt)"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual840.pdf",
+        "sec": "01-11B-10",
+        "title": "Ölstand prüfen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual842.pdf",
+        "sec": "01-11B-19",
+        "title": "Ölsieb prüfen / montieren"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual846.pdf",
+        "sec": "01-11B-7",
+        "title": "Öldruck prüfen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual854.pdf",
+        "sec": "01-11B-15",
+        "title": "S ee ENGINE OIL LEVEL INSPECTION [SKY A C TIV -D 2.2]"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual841.pdf",
+        "sec": "01-11B-2",
+        "title": "Engine oil solenoid valve REMOVAL/INSTALLATION [SKYACTIV-D 2.2]"
+      }
+    ]
+  },
+  {
+    "category": "⚙️ Steuerkette, Nockenwellen & Ventile (2.2D)",
+    "items": [
+      {
+        "file": "mazda_cx5_workshop_manual720.pdf",
+        "sec": "01-10B-16",
+        "title": "Steuerkette aus-/einbauen (Steuerzeiten)"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual704.pdf",
+        "sec": "01-10B-15",
+        "title": "TIMING CHAIN REMOVAL/INSTALLATION [SKYACTIV-D 2.2]"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual734.pdf",
+        "sec": "01-10B-30",
+        "title": "Loosen the timing chain tensioner using the following procedure"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual735.pdf",
+        "sec": "01-10B-31",
+        "title": "MECHANICAL [SKYACTIV-D 2.2] 01 Note By rotating the exhaust camshaft c"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual740.pdf",
+        "sec": "01-10B-36",
+        "title": "MECHANICAL [SKYACTIV-D 2.2] Timing Chain Installation Note 1.Verify that the timing mark"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual757.pdf",
+        "sec": "01-10B-53",
+        "title": "MECHANICAL [SKYACTIV-D 2.2] 01 Timing Chain Removal Note Caution Keep the timing chain"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual762.pdf",
+        "sec": "01-10B-58",
+        "title": "MECHANICAL [SKYACTIV-D 2.2] Camshaft Installation Note 1.Apply gear oil"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual765.pdf",
+        "sec": "01-10B-61",
+        "title": "Temporarily tighten the camshaft sprocket installation bolt"
+      }
+    ]
+  },
+  {
+    "category": "💨 Turbolader, DPF & AGR (2.2D)",
+    "items": [
+      {
+        "file": "mazda_cx5_workshop_manual955.pdf",
+        "sec": "01-13B-6",
+        "title": "Turbolader aus-/einbauen"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1128.pdf",
+        "sec": "01-15B-1",
+        "title": "Abgasanlage & DPF: Übersicht"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1162.pdf",
+        "sec": "01-16B-7",
+        "title": "Emissionssystem (AGR): Übersicht"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual933.pdf",
+        "sec": "01-13B-10",
+        "title": "Set the EGR cooler bypass valve out of the way. REMOVAL/INSTALLATION [SKYACTIV-D 2.2]"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual958.pdf",
+        "sec": "01-13B-35",
+        "title": "Water pipe No.1 5Turbocharger insulator No.1 6Water pipe No.2 installation bolt 7Water pipe No.3 installation"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1163.pdf",
+        "sec": "01-16B-2",
+        "title": "EGR valve INSTALLATION [SKYACTIV-D 2 . 2]"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1170.pdf",
+        "sec": "01-16B-9",
+        "title": "EGR VALVE INSPECTION [SKYACTIV-D 2 . 2] id0116e1801100"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1172.pdf",
+        "sec": "01-16B-11",
+        "title": "Install i n the reverse order of removal . End Of S i e 1EGR p i pe"
+      }
+    ]
+  },
+  {
+    "category": "❄️ Klima & Heizung (HVAC)",
+    "items": [
+      {
+        "file": "mazda_cx5_workshop_manual2473.pdf",
+        "sec": "07-10-1",
+        "title": "End Of Sie REFRIGERANT SYSTEM MAZDA CX5 WORKSHOP REPAIR MANUAL"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual2480.pdf",
+        "sec": "07-10-8",
+        "title": "REFRIGERANT SYSTEM SKYACTIV-D 2 ."
+      },
+      {
+        "file": "mazda_cx5_workshop_manual2482.pdf",
+        "sec": "07-10-10",
+        "title": "REFRIGERANT SYSTEM SKYACTIV-D 2 ."
+      },
+      {
+        "file": "mazda_cx5_workshop_manual2488.pdf",
+        "sec": "07-11-8",
+        "title": "BASIC SYSTEM 8.Remove the blower unit installation nuts. 9.Remove the blower unit."
+      },
+      {
+        "file": "mazda_cx5_workshop_manual2489.pdf",
+        "sec": "07-11-9",
+        "title": "BLOWER UNIT DISASSEMBLY/ASSEMBLY Caution Apply only"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual2494.pdf",
+        "sec": "07-11-15",
+        "title": "Step Part name Disassembly/assembly of main parts Heater core Evaporat"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual2502.pdf",
+        "sec": "07-11-25",
+        "title": "REFRIGERANT LINE REMOVAL/ INSTALLATION"
+      }
+    ]
+  },
+  {
+    "category": "🛞 Fahrwerk & Radlager",
+    "items": [
+      {
+        "file": "mazda_cx5_workshop_manual1355.pdf",
+        "sec": "02-11-1",
+        "title": "WHEEL ALIGNMENT 02 02-11WHEEL ALIGNMENT WHEEL ALIGNMENT PRE-INSPECTION"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1367.pdf",
+        "sec": "02-13-2",
+        "title": "FRONT SHOCK ABSORBER AND COIL SPRING REMOVAL/INSTALLATION"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1371.pdf",
+        "sec": "02-13-6",
+        "title": "End Of Sie FRONT SHOCK ABSORBER INSPECTION ASSEMBLY"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1389.pdf",
+        "sec": "02-14-4",
+        "title": "REAR SUSPENSION End Of S i e REAR SHOCK ABSORBER REMOVAL/INSTALLATION 1 . Remove i n the"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1386.pdf",
+        "sec": "02-14-5",
+        "title": "REAR COIL SPRING REMOVAL/INSTALLATION"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1390.pdf",
+        "sec": "02-14-5",
+        "title": "Rear Shock Absorber Upper Nut Installation Note 1 . L i ft up the rear lower"
+      },
+      {
+        "file": "mazda_cx5_workshop_manual1392.pdf",
+        "sec": "02-14-7",
+        "title": "Remove the rear lower arm outer bolt . 3 . Remove the rear co i l spr i ng . Rear Coil Spring Installation"
+      }
+    ]
+  }
+]

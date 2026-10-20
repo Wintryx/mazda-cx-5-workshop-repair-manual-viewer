@@ -1,0 +1,190 @@
+/* style-v14.css – Ergänzungen zu style.css (v1.4.0)
+   Enthält: Checklisten, Druck-Dialog, Such-Paging, Toast, Tablet-/Touch-Anpassungen,
+            Werkstatt-Vollbild und Druck-Stylesheet. */
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #e2e8f0;
+  font-size: 12.5px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  backdrop-filter: blur(8px);
+  max-width: 80vw;
+  text-align: center;
+}
+
+/* ---------- Sidebar-Tabs (jetzt drei) ---------- */
+.sidebar-tabs .tab-btn { font-size: 11px; padding: 10px 4px; flex: 1 1 0; }
+
+/* ---------- Suchergebnisse ---------- */
+.result-title { font-weight: 500; }
+.result-snippet { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.btn-more {
+  margin-top: 8px;
+  width: 100%;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: var(--accent-blue);
+  border-radius: 6px;
+  padding: 7px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.btn-more:hover { background: rgba(56, 189, 248, 0.2); }
+
+/* ---------- Notizen / Quick-Card ---------- */
+.note-title { font-weight: 600; color: #fff; font-size: 11.5px; }
+.note-preview { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.quick-card-hint { margin-top: 8px; font-size: 10px; color: var(--text-muted); }
+.inline-link { color: var(--accent-blue); text-decoration: none; }
+.inline-link:hover { text-decoration: underline; }
+
+/* ---------- Checklisten ---------- */
+.checklist-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.checklist-card:hover { border-color: rgba(56, 189, 248, 0.5); background: rgba(56, 189, 248, 0.05); }
+.checklist-card-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.checklist-card-title { font-size: 12px; font-weight: 600; color: #fff; }
+.progress { height: 4px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent-blue), #22d3ee); transition: width 0.25s ease; }
+
+.checklist-detail-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.checklist-detail-title { font-size: 12.5px; font-weight: 700; color: #fff; }
+.checklist-steps { display: flex; flex-direction: column; gap: 4px; }
+.checklist-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.checklist-step:hover { border-color: rgba(255, 255, 255, 0.12); }
+.checklist-step input { margin-top: 2px; accent-color: var(--accent-blue); flex-shrink: 0; }
+.checklist-step.done .step-text { text-decoration: line-through; color: var(--text-muted); }
+.step-text { flex: 1; line-height: 1.35; }
+.step-link {
+  color: var(--accent-blue);
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.step-link:hover { background: rgba(56, 189, 248, 0.18); }
+.checklist-footer { margin-top: 12px; display: flex; justify-content: flex-end; }
+
+/* ---------- Druck-Dialog ---------- */
+.modal-text { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; }
+.print-range { display: flex; gap: 14px; align-items: center; font-size: 12px; color: var(--text-secondary); }
+.print-range label { display: flex; align-items: center; gap: 6px; }
+.print-range input {
+  width: 74px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  color: #fff;
+  padding: 5px 7px;
+  font-size: 12px;
+}
+.print-status { margin-top: 10px; font-size: 11.5px; color: var(--accent-blue); min-height: 16px; }
+
+/* ---------- Tooltip ---------- */
+.tooltip-sub { color: #94a3b8; font-size: 10px; }
+
+/* ---------- Werkstatt-Vollbild ---------- */
+body.workshop-mode .brand,
+body.workshop-mode .header-center,
+body.workshop-mode .toggle-container,
+body.workshop-mode #btn-raw-pdf,
+body.workshop-mode #btn-shortcuts { display: none; }
+body.workshop-mode .app-sidebar { transform: translateX(-100%); margin-left: calc(-1 * var(--sidebar-width)); }
+body.workshop-mode .app-header { height: 44px; }
+body.workshop-mode .app-viewer { padding: 8px; }
+
+/* ---------- Tablet / kleine Bildschirme ---------- */
+@media (max-width: 1180px) {
+  :root { --sidebar-width: 320px; }
+  .doc-title-bar { max-width: 300px; }
+  .brand-sub { display: none; }
+  .toggle-label { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .app-sidebar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.55);
+  }
+  .app-sidebar.collapsed { margin-left: 0; transform: translateX(-100%); }
+  .header-center { display: none; }
+  .app-viewer { padding: 14px; }
+  .doc-title-bar { max-width: 220px; }
+}
+
+@media (max-width: 780px) {
+  .zoom-controls,
+  .toggle-container,
+  #btn-raw-pdf,
+  #btn-print { display: none; }
+  .app-viewer { padding: 8px; }
+  .modal-card { width: 94vw; }
+  .brand-badge { font-size: 11px; }
+}
+
+/* Touch-Geräte: größere Ziele, weniger Fehlklicks */
+@media (pointer: coarse) {
+  .btn-icon { width: 44px; height: 44px; }
+  .btn-icon-sm { width: 38px; height: 38px; }
+  .nav-item { padding: 12px 10px; }
+  .tab-btn { padding: 13px 6px; }
+  .input-jump { width: 64px; font-size: 14px; }
+  .checklist-step { padding: 12px 10px; }
+  .hotspot-link { min-width: 14px; min-height: 14px; }
+}
+
+/* ---------- Drucken: nur die Seite, ohne Bedienoberfläche ---------- */
+@media print {
+  .app-header,
+  .app-sidebar,
+  .notes-panel,
+  .loading-overlay,
+  .link-tooltip,
+  .toast,
+  .modal-backdrop { display: none !important; }
+  body { height: auto; overflow: visible; background: #fff; }
+  .app-layout { display: block; }
+  .app-viewer { display: block; overflow: visible; padding: 0; background: #fff; }
+  .page-wrapper { box-shadow: none; margin: 0; width: 100% !important; height: auto !important; }
+  #pdf-canvas { width: 100% !important; height: auto !important; }
+  .textLayer,
+  .hotspot-overlay { display: none !important; }
+}
+
+/* Die Seite darf im Flex-Container nicht schrumpfen – sonst passen der skalierte
+   Canvas und die Hotspot-Koordinaten nicht mehr zur tatsächlichen Seitengröße. */
+.page-wrapper {
+  flex: 0 0 auto;
+  max-width: none;
+}
