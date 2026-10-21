@@ -14,7 +14,28 @@ on a laptop or tablet in the workshop.
 > — a third-party site, not affiliated with this project. Availability and legality are not guaranteed;
 > all rights to the content remain with Mazda.
 
-**State:** v1.11.0 · October 2026
+**State:** v1.14.0 · October 2026
+
+---
+
+## How to run it
+
+The viewer exists in two forms that share the same code and the same PDFs. Pick the one that fits
+your machine:
+
+|  | **From source** (Node + browser) | **Desktop app** (Windows EXE) |
+|---|---|---|
+| You need | Node.js ≥ 18 and a browser | nothing but Windows (no Node, no browser setup) |
+| Start it with | `npm start`, then open http://localhost:3300 | double-click `Mazda-CX5-Viewer.exe` |
+| PDFs live in | `data\` inside the project folder | `data\` next to the EXE |
+| Build step | none | `npm run dist` once on a machine with Node |
+| Good for | development, testing, a quick look | workshop laptop/tablet, USB stick, PCs without Node |
+
+Both show exactly the same interface — chapters, search, fault codes, notes, checklists, printing.
+Notes and bookmarks are stored per browser respectively in the Electron profile.
+
+- **Source route:** sections 4–7 (data, first start, usage, configuration).
+- **Desktop route:** section 11 (build, install, first start).
 
 ---
 
@@ -33,9 +54,15 @@ on a laptop or tablet in the workshop.
 
 ## 2. Requirements
 
+**Source route (section 5):**
+
 - **Node.js ≥ 18** (tested with v24). No `npm install` needed to run: `dependencies` is empty.
 - Windows, Edge or Chrome (recommended), 4 GB RAM.
-- ~500 MB free disk space for the PDFs.
+
+**Desktop route (section 11):** Windows 10/11, no Node and no browser setup. Building the EXE still
+needs Node once.
+
+Both need ~500 MB free disk space for the PDFs.
 
 ## 3. Project structure
 
@@ -59,12 +86,15 @@ mazda-manual-viewer/
 ## 4. Data source and installation
 
 The PDFs come from the manual archive linked at the top of this README. They are **not** part of the
-repository (copyright, 451 MB). A fresh machine needs three steps:
+repository (copyright, 451 MB). For the **source route** a fresh machine needs three steps:
 
 1. Copy the project folder.
 2. Unpack the archive and put **all 7,294 PDFs directly into `data\`**
    (keep the file names, no subdirectories).
 3. `npm start` — on start-up the server checks that directory and index match.
+
+For the **desktop route** the steps are the same, except that `data\` goes next to the EXE and you
+double-click the EXE instead of running `npm start` — see section 11.
 
 The search index (`public/search_index.json`, ~4 MB) is part of the project and already included.
 It only has to be rebuilt when the PDFs change:
@@ -74,19 +104,22 @@ npm run index     # rebuild the index from data\ (~2–3 min)
 npm run packs     # derive the curated repair packs from the index
 ```
 
-## 5. First start
+## 5. Running from source (Node + browser)
+
+This is the development and quick-start route: a small Node server delivers the UI and the PDFs to
+your browser. It needs Node.js (≥ 18) and a browser — see section 11 for the standalone EXE.
 
 ```powershell
 npm start            # http://localhost:3300
 npm run start:open   # also opens the browser
 ```
 
-Alternatively double-click `START_VIEWER.bat`: it checks for Node, starts the server and shows the
-port used after shutdown.
+Alternatively double-click `START_VIEWER.bat`: it checks for Node, starts the server and keeps the
+window open while it runs.
 
 If port 3300 is taken, the server automatically moves to 3301, 3302 … and writes the active port to
-`.active_port`. `http://localhost:<port>/api/status` always reports port, data directory, PDF count
-and index coverage.
+`.active_port` (the file exists only while the server runs). `http://localhost:<port>/api/status`
+always reports port, data directory, PDF count and index coverage.
 
 ## 6. Usage
 
@@ -186,12 +219,14 @@ therefore subject to copyright (see section 12). Releases are tagged `v1.5.0` to
 
 ## 11. Desktop app (Windows EXE)
 
-For machines **without Node**: `npm install` once (pulls Electron and electron-builder as dev
-dependencies), then
+The desktop build is the same viewer wrapped in Electron, so the target machine needs neither Node
+nor a browser setup. Two separate steps: **building needs Node**, **running does not**.
+
+### Build it (machine with Node)
 
 ```powershell
-npm run app     # development mode (Electron window)
-npm run dist    # builds installer and portable folder
+npm install     # once: pulls Electron and electron-builder as dev dependencies
+npm run dist    # builds dist\win-unpacked\ and the installer
 ```
 
 Output in `dist\`:
@@ -213,7 +248,7 @@ If `data\` is missing, the app shows a dialog with the expected path and exits. 
 is a copy operation into `data\`, not a new build. Notes and bookmarks live in the Electron profile
 (`%APPDATA%\Mazda CX-5 Viewer`).
 
-### Installing and running it
+### Install and run it (target machine, no Node)
 
 **Portable (recommended for a USB stick).** Copy the whole `dist\win-unpacked\` folder to the target
 PC and put the PDFs next to the EXE:
@@ -250,6 +285,12 @@ version: chapters, search, fault codes, notes, print. No Node, no network, no ad
 first launch: click *More info → Run anyway*. If the app closes immediately instead of showing a
 window, check the environment variable `ELECTRON_RUN_AS_NODE` (must not be set — it makes Electron
 run as plain Node); details are written to `%APPDATA%\Mazda CX-5 Viewer\error.log`.
+
+### Develop the desktop UI
+
+`npm run app` starts the app straight from the source tree in an Electron window — same server, same
+`data\` folder as `npm start`, useful while working on the UI. It is not the distribution: end users
+get `npm run dist` output only.
 
 ## 12. Copyright
 
