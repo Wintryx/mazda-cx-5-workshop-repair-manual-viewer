@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.13.0 · 21.10.2026
+**Stand:** v1.14.0 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -395,6 +395,18 @@ Siehe Tabelle „Nächste Schritte" oben — es bleiben 6.5 (zweites Handbuch) u
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 in v1.13.0) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.14.0
+
+- [x] **Übersetzungslücken** — die letzten deutschen Bereiche kamen aus den Daten, nicht aus `i18n.js`:
+  - Sektionsbaum: `group.<key>` je Gruppe (`00`–`12`, `wiring`, `body`, `tech`, `misc`); der Server
+    liefert den Schlüssel, der Sprachwechsel tauscht nur die Labels (aufgeklappte Gruppen bleiben offen)
+  - Reparatur-Packs: `categoryEn` in `config/packs.json` (vom Generator geschrieben)
+  - Checklisten: `titleEn` + `textEn` je Schritt
+  - Trefferliste: Gruppennamen bei Dokumenten ohne Sektionscode werden übersetzt
+  - Browser-Test prüft alle drei Bereiche im EN-Modus: **39 Prüfungen**
 
 ---
 

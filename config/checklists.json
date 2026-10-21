@@ -2,40 +2,43 @@
   {
     "id": "injectors",
     "title": "Injektoren tauschen (2.2 Skyactiv-D)",
+    "titleEn": "Replace injectors (2.2 Skyactiv-D)",
     "vehicle": "CX-5 2.2D",
     "steps": [
-      { "text": "Kraftstoffdruck abbauen (Before Service)", "file": "mazda_cx5_workshop_manual1063.pdf" },
-      { "text": "Einspritzleitungen ausbauen", "file": "mazda_cx5_workshop_manual1090.pdf" },
-      { "text": "Injektor ausbauen, Kupferdichtung erneuern", "file": "mazda_cx5_workshop_manual1092.pdf" },
-      { "text": "Injektor einbauen (Anzugschema der Montageanleitung)", "file": "mazda_cx5_workshop_manual1094.pdf" },
-      { "text": "Klammer-Drehmoment nach Vorschrift prüfen", "file": "mazda_cx5_workshop_manual1095.pdf" },
-      { "text": "Injektor elektrisch prüfen (Widerstand)", "file": "mazda_cx5_workshop_manual1096.pdf" },
-      { "text": "Kraftstoffsystem entlüften (After Service)", "file": "mazda_cx5_workshop_manual1064.pdf" }
+      { "text": "Kraftstoffdruck abbauen (Before Service)", "textEn": "Release fuel pressure (before service)", "file": "mazda_cx5_workshop_manual1063.pdf" },
+      { "text": "Einspritzleitungen ausbauen", "textEn": "Remove injection pipes", "file": "mazda_cx5_workshop_manual1090.pdf" },
+      { "text": "Injektor ausbauen, Kupferdichtung erneuern", "textEn": "Remove injector, renew copper gasket", "file": "mazda_cx5_workshop_manual1092.pdf" },
+      { "text": "Injektor einbauen (Anzugschema der Montageanleitung)", "textEn": "Install injector (tightening sequence from the installation note)", "file": "mazda_cx5_workshop_manual1094.pdf" },
+      { "text": "Klammer-Drehmoment nach Vorschrift prüfen", "textEn": "Check clip torque to specification", "file": "mazda_cx5_workshop_manual1095.pdf" },
+      { "text": "Injektor elektrisch prüfen (Widerstand)", "textEn": "Check injector electrically (resistance)", "file": "mazda_cx5_workshop_manual1096.pdf" },
+      { "text": "Kraftstoffsystem entlüften (After Service)", "textEn": "Bleed the fuel system (after service)", "file": "mazda_cx5_workshop_manual1064.pdf" }
     ]
   },
   {
     "id": "brakes-front",
     "title": "Bremsen vorne: Beläge & Scheiben",
+    "titleEn": "Front brakes: pads & discs",
     "vehicle": "CX-5",
     "steps": [
-      { "text": "Bremsanlage: Übersicht und Aufbau", "file": "mazda_cx5_workshop_manual1672.pdf" },
-      { "text": "Sattel abnehmen, Belag und Scheibe ausbauen", "file": "mazda_cx5_workshop_manual1695.pdf" },
-      { "text": "Montagehinweise für Bremsbeläge beachten", "file": "mazda_cx5_workshop_manual1696.pdf" },
-      { "text": "Bremsscheibe: Seitenschlag prüfen", "file": "mazda_cx5_workshop_manual1693.pdf" },
-      { "text": "Bremsscheibe: Dicke / Verschleißmaß prüfen", "file": "mazda_cx5_workshop_manual1694.pdf" },
-      { "text": "Bremsflüssigkeitsstand prüfen", "file": "mazda_cx5_workshop_manual1675.pdf" }
+      { "text": "Bremsanlage: Übersicht und Aufbau", "textEn": "Brake system: overview and layout", "file": "mazda_cx5_workshop_manual1672.pdf" },
+      { "text": "Sattel abnehmen, Belag und Scheibe ausbauen", "textEn": "Remove caliper, take out pad and disc", "file": "mazda_cx5_workshop_manual1695.pdf" },
+      { "text": "Montagehinweise für Bremsbeläge beachten", "textEn": "Follow the brake pad installation notes", "file": "mazda_cx5_workshop_manual1696.pdf" },
+      { "text": "Bremsscheibe: Seitenschlag prüfen", "textEn": "Brake disc: check runout", "file": "mazda_cx5_workshop_manual1693.pdf" },
+      { "text": "Bremsscheibe: Dicke / Verschleißmaß prüfen", "textEn": "Brake disc: check thickness / wear limit", "file": "mazda_cx5_workshop_manual1694.pdf" },
+      { "text": "Bremsflüssigkeitsstand prüfen", "textEn": "Check brake fluid level", "file": "mazda_cx5_workshop_manual1675.pdf" }
     ]
   },
   {
     "id": "oil-change",
     "title": "Ölwechsel & Ölfilter (2.2 Skyactiv-D)",
+    "titleEn": "Oil change & oil filter (2.2 Skyactiv-D)",
     "vehicle": "CX-5 2.2D",
     "steps": [
-      { "text": "Ölstand vor dem Wechsel prüfen", "file": "mazda_cx5_workshop_manual840.pdf" },
-      { "text": "Motorölwechsel (Ablass, Füllmenge, Spezifikation)", "file": "mazda_cx5_workshop_manual843.pdf" },
-      { "text": "Ölfilter wechseln (Anzugpunkt beachten)", "file": "mazda_cx5_workshop_manual844.pdf" },
-      { "text": "Ölsieb prüfen (Kupferring-Rückstände)", "file": "mazda_cx5_workshop_manual842.pdf" },
-      { "text": "Öldruck nach dem Wechsel prüfen", "file": "mazda_cx5_workshop_manual846.pdf" }
+      { "text": "Ölstand vor dem Wechsel prüfen", "textEn": "Check oil level before the change", "file": "mazda_cx5_workshop_manual840.pdf" },
+      { "text": "Motorölwechsel (Ablass, Füllmenge, Spezifikation)", "textEn": "Engine oil change (drain, capacity, specification)", "file": "mazda_cx5_workshop_manual843.pdf" },
+      { "text": "Ölfilter wechseln (Anzugpunkt beachten)", "textEn": "Replace oil filter (observe tightening point)", "file": "mazda_cx5_workshop_manual844.pdf" },
+      { "text": "Ölsieb prüfen (Kupferring-Rückstände)", "textEn": "Inspect oil strainer (copper ring residue)", "file": "mazda_cx5_workshop_manual842.pdf" },
+      { "text": "Öldruck nach dem Wechsel prüfen", "textEn": "Check oil pressure after the change", "file": "mazda_cx5_workshop_manual846.pdf" }
     ]
   }
 ]

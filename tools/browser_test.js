@@ -197,6 +197,14 @@ function check(name, cond, detail) {
   check('Sprachwechsel ohne Neuladen', await page.evaluate(() => window.__noReload === true));
   const enChapter = ((await page.textContent('.chapter-title')) || '').trim();
   check('Kapitel auf Englisch', /General|Engine|Chassis|Driveline/.test(enChapter), enChapter);
+  const enGroup = ((await page.textContent('#section-tree .tree-group .tree-name')) || '').trim();
+  check('Sektionsbaum auf Englisch', /General|Engine|Suspension/.test(enGroup), enGroup);
+  await page.click('[data-tab="repairs"]');
+  const enPack = ((await page.textContent('.pack .section-header span')) || '').trim();
+  check('Reparatur-Packs auf Englisch', /injectors|Brake service|Oil change/.test(enPack), enPack);
+  await page.click('[data-tab="checklists"]');
+  const enChecklist = ((await page.textContent('.checklist-card-title')) || '').trim();
+  check('Checklisten auf Englisch', /Replace injectors|Front brakes|Oil change/.test(enChecklist), enChecklist);
   await page.click('#btn-lang');
   await page.click('#lang-menu [data-lang="de"]');
   await page.waitForFunction(() => document.documentElement.lang === 'de', null, { timeout: 10000 });

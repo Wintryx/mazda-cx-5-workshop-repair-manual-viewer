@@ -530,6 +530,18 @@
     });
   }
 
+  // Gruppenlabel aus dem Index für die Trefferliste übersetzen (Sektion fehlt selten)
+  const GROUP_KEYS = {
+    'Elektrische Schaltpläne': 'wiring',
+    'Karosserie-Handbuch': 'body',
+    'Technischer Leitfaden': 'tech',
+    'Allgemein': 'misc'
+  };
+  function groupLabel(grp) {
+    const key = GROUP_KEYS[grp] || (String(grp).match(/^(\d{2})\b/) || [])[1] || 'misc';
+    return t('group.' + key, null, grp);
+  }
+
   async function performSearch(query, append) {
     const q = (query || '').trim();
     state.searchQuery = q;
@@ -565,7 +577,7 @@
 
       const html = (data.results || []).map((item) => `
         <a href="#" class="nav-item ${item.f === state.currentFile ? 'active' : ''}" data-file="${esc(item.f)}">
-          <span class="nav-item-badge">${esc(item.sec || item.grp || 'DOC')}</span>
+          <span class="nav-item-badge">${esc(item.sec || groupLabel(item.grp) || 'DOC')}</span>
           <div class="nav-item-text" title="${esc(item.t || item.f)}">
             <div class="result-title">${markTerms(item.t || item.f, state.searchTerms)}</div>
             ${item.snippet ? `<div class="result-snippet">${markTerms(item.snippet, state.searchTerms)}</div>` : ''}
@@ -654,7 +666,7 @@
       <div class="tree-group">
         <button class="tree-head" data-kind="group" data-group="${gi}">
           <span class="tree-caret">▶</span>
-          <span class="tree-name">${esc(g.label)}</span>
+          <span class="tree-name">${esc(t('group.' + g.key, null, g.label))}</span>
           <span class="badge-count">${g.count}</span>
         </button>
         <div class="tree-body hidden"></div>
@@ -692,7 +704,7 @@
       const packs = await (await fetch('/api/favorites')).json();
       el.repairPacksContainer.innerHTML = packs.map((pack) => `
         <div class="sidebar-section pack">
-          <div class="section-header"><span>${esc(pack.category)}</span></div>
+          <div class="section-header"><span>${esc(pickText(pack.category, pack.categoryEn))}</span></div>
           <div class="nav-list">
             ${pack.items.map((item) => `
               <a href="#" class="nav-item" data-file="${esc(item.file)}">
@@ -733,7 +745,7 @@
       return `
         <div class="checklist-card" data-checklist="${esc(c.id)}">
           <div class="checklist-card-head">
-            <span class="checklist-card-title">${esc(c.title)}</span>
+            <span class="checklist-card-title">${esc(pickText(c.title, c.titleEn))}</span>
             <span class="badge-count">${p.done}/${p.total}</span>
           </div>
           <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
@@ -750,13 +762,13 @@
     if (!list) return;
     state.openChecklist = id;
     const done = new Set(state.checks[id] || []);
-    el.checklistTitle.textContent = list.title;
+    el.checklistTitle.textContent = pickText(list.title, list.titleEn);
     el.checklistBody.innerHTML = `
       <div class="checklist-steps">
         ${list.steps.map((step, i) => `
           <label class="checklist-step ${done.has(i) ? 'done' : ''}">
             <input type="checkbox" data-idx="${i}" ${done.has(i) ? 'checked' : ''}>
-            <span class="step-text">${esc(step.text)}</span>
+            <span class="step-text">${esc(pickText(step.text, step.textEn))}</span>
             <span class="step-link" data-load="${esc(step.file)}" title="${esc(t('checklist.openPage'))}">➜</span>
           </label>`).join('')}
       </div>
@@ -801,6 +813,15 @@
     renderNotes();
     renderChecklists();
     loadChapters();
+    loadPacks();
+    // Sektionsbaum: nur die Gruppenlabels tauschen, aufgeklappte Gruppen bleiben offen
+    if (treeData) {
+      document.querySelectorAll('#section-tree .tree-group').forEach((node, index) => {
+        const group = treeData[index];
+        const name = node.querySelector('.tree-name');
+        if (group && name) name.textContent = t('group.' + group.key, null, group.label);
+      });
+    }
     if (state.openChecklist) openChecklist(state.openChecklist);
     if (state.currentFile) {
       updateBookmarkState(state.currentFile);

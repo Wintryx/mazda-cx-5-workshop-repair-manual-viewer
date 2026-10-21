@@ -6,6 +6,23 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.14.0] - 2026-10-21
+
+### UI
+- **Übersetzungslücken geschlossen** — die letzten deutschen Bereiche kamen nicht aus `i18n.js`,
+  sondern aus den Daten:
+  - **Sektionsbaum**: Gruppenlabels werden über `group.<key>` übersetzt; der Server liefert dafür einen
+    Schlüssel (`00`–`12`, `wiring`, `body`, `tech`, `misc`) je Gruppe. Ein Sprachwechsel tauscht nur
+    die Labels, aufgeklappte Gruppen bleiben offen.
+  - **Reparatur-Packs**: `tools/build_packs.js` schreibt jetzt `categoryEn` mit nach
+    `config/packs.json`; die Oberfläche wählt per `pickText()`.
+  - **Checklisten**: `titleEn` und je Schritt `textEn` in `config/checklists.json`.
+  - **Trefferliste**: Dokumente ohne Sektionscode zeigen statt des deutschen Gruppennamens die
+    übersetzte Gruppe.
+- **Tests**: Browser-Test prüft die drei Bereiche im EN-Modus — **39 Prüfungen**, alle grün.
+
+---
+
 ## [1.13.0] - 2026-10-21
 
 ### Betrieb (P3)

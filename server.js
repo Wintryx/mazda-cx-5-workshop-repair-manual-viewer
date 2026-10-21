@@ -152,10 +152,11 @@ function buildTree() {
     const groupLabel = e.grp || 'Allgemein';
     let group = groups.get(groupLabel);
     if (!group) {
-      group = { label: groupLabel, count: 0, sections: new Map() };
+      group = { label: groupLabel, count: 0, sections: new Map(), types: new Set() };
       groups.set(groupLabel, group);
     }
     group.count++;
+    group.types.add(e.type || 'workshop');
 
     // Sektion = Kapitelteil des Codes ("01-14B-35" -> "01-14B"), nicht die Einzelseite
     const code = (String(e.sec || '').match(/^(\d{2}-\d{2}[A-Z]?)/) || [])[1] || '';
@@ -177,6 +178,15 @@ function buildTree() {
     return m ? parseInt(m[1], 10) : 0;
   };
 
+  // Schlüssel für die Übersetzung: Dokumentfamilie, sonst Kapitelnummer (00–12).
+  const FAMILY_KEYS = { wiring: 'wiring', bodyshop: 'body', technical: 'tech', root: 'misc' };
+  const groupKey = (g) => {
+    const types = [...g.types];
+    if (types.length === 1 && FAMILY_KEYS[types[0]]) return FAMILY_KEYS[types[0]];
+    const prefix = String(g.label).match(/^(\d{2})\b/);
+    return prefix ? prefix[1] : 'misc';
+  };
+
   const tree = [...groups.values()].map((g) => {
     const sections = [...g.sections.values()].map((s) => {
       // Nur eine wirklich homogene Sektion bekommt eine Bezeichnung; sonst
@@ -191,7 +201,7 @@ function buildTree() {
       return { code: s.code, label: label.slice(0, 60), count: s.docs.length, docs: s.docs };
     }).sort((a, b) => (a.code || 'zz').localeCompare(b.code || 'zz'));
 
-    return { key: String(g.label).slice(0, 2), label: g.label, count: g.count, sections };
+    return { key: groupKey(g), label: g.label, count: g.count, sections };
   }).sort((a, b) => groupRank(a.label) - groupRank(b.label) || a.label.localeCompare(b.label));
 
   treeCache = tree;

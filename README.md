@@ -28,7 +28,7 @@ on a laptop or tablet in the workshop.
 | Fault codes | 329 DTCs (P/B/C/U) from the diagnostic chapters; type a code → diagnostic sheet first |
 | Page | Hotspots from PDF links (including 254 rotated wiring diagrams), text selection, zoom, fit width, fullscreen |
 | Workshop | Notes per document, bookmarks, checklists (injectors, front brakes, oil change), printing a page range |
-| UI languages | German (default) and English — flag dropdown in the header, switches **live** (no reload), remembered per browser |
+| UI languages | German (default) and English — flag dropdown in the header, switches **live** (no reload). Covers the whole interface including section groups, repair packs and checklists; only manual content (document titles) stays as printed |
 | Operation | Port fallback, `--open`, `/api/status`, clear start-up check of the data directory, HTTP range requests for PDFs, request log (`LOG_REQUESTS=0` disables) |
 
 ## 2. Requirements
@@ -127,7 +127,7 @@ npm run validate     # index, chapters, packs, checklists against each other (of
 npm run test:smoke   # node:test smoke suite (10 checks, own server, ~2 s)
 npm test             # smoke + validate + own test server on port 3480–3539 + API and search tests
 npm run test:api     # API contract only, against a running server
-npm run test:browser # Playwright in Chrome: real UI (36 checks), starts the server itself
+npm run test:browser # Playwright in Chrome: real UI (39 checks), starts the server itself
 ```
 
 `npm test` and `npm run test:browser` start their own server (port 3480–3539) and leave a viewer
@@ -136,7 +136,7 @@ dependency) and an installed Google Chrome — no Playwright browsers are downlo
 (`channel: 'chrome'`). `npm run test:api` takes the address as an argument, default
 `http://127.0.0.1:3300`.
 
-Current state: 10 smoke checks, 59 API checks, 16 search checks, 36 browser checks — all green.
+Current state: 10 smoke checks, 59 API checks, 16 search checks, 39 browser checks — all green.
 
 ## 9. Known limits
 

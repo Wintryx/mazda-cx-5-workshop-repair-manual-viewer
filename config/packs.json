@@ -1,6 +1,7 @@
 [
   {
     "category": "🔧 Diesel-Injektoren (2.2 Skyactiv-D)",
+    "categoryEn": "🔧 Diesel injectors (2.2 Skyactiv-D)",
     "items": [
       {
         "file": "mazda_cx5_workshop_manual1092.pdf",
@@ -46,6 +47,7 @@
   },
   {
     "category": "🛑 Bremsen-Service (Vorder- & Hinterachse)",
+    "categoryEn": "🛑 Brake service (front & rear axle)",
     "items": [
       {
         "file": "mazda_cx5_workshop_manual1695.pdf",
@@ -91,6 +93,7 @@
   },
   {
     "category": "🛢️ Ölwechsel, Ölsieb & Schmiersystem (2.2D)",
+    "categoryEn": "🛢️ Oil change, oil strainer & lubrication (2.2D)",
     "items": [
       {
         "file": "mazda_cx5_workshop_manual843.pdf",
@@ -131,6 +134,7 @@
   },
   {
     "category": "⚙️ Steuerkette, Nockenwellen & Ventile (2.2D)",
+    "categoryEn": "⚙️ Timing chain, camshafts & valves (2.2D)",
     "items": [
       {
         "file": "mazda_cx5_workshop_manual720.pdf",
@@ -176,6 +180,7 @@
   },
   {
     "category": "💨 Turbolader, DPF & AGR (2.2D)",
+    "categoryEn": "💨 Turbocharger, DPF & EGR (2.2D)",
     "items": [
       {
         "file": "mazda_cx5_workshop_manual955.pdf",
@@ -221,6 +226,7 @@
   },
   {
     "category": "❄️ Klima & Heizung (HVAC)",
+    "categoryEn": "❄️ Air conditioning & heating (HVAC)",
     "items": [
       {
         "file": "mazda_cx5_workshop_manual2473.pdf",
@@ -261,6 +267,7 @@
   },
   {
     "category": "🛞 Fahrwerk & Radlager",
+    "categoryEn": "🛞 Chassis & wheel bearings",
     "items": [
       {
         "file": "mazda_cx5_workshop_manual1355.pdf",

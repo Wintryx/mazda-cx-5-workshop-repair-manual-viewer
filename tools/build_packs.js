@@ -22,6 +22,7 @@ const OUT = path.join(ROOT, 'config', 'packs.json');
 const PACKS = [
   {
     category: '🔧 Diesel-Injektoren (2.2 Skyactiv-D)',
+    categoryEn: '🔧 Diesel injectors (2.2 Skyactiv-D)',
     sections: ['01-14B'],
     core: /INJECTOR|INJECTION PIPE/i,
     match: /FUEL SYSTEM|FUEL LINE/i,
@@ -36,6 +37,7 @@ const PACKS = [
   },
   {
     category: '🛑 Bremsen-Service (Vorder- & Hinterachse)',
+    categoryEn: '🛑 Brake service (front & rear axle)',
     sections: ['04-11', '04-12'],
     core: /PAD|DISC|CALIPER|PARKING BRAKE/i,
     match: /BRAKE/i,
@@ -51,6 +53,7 @@ const PACKS = [
   },
   {
     category: '🛢️ Ölwechsel, Ölsieb & Schmiersystem (2.2D)',
+    categoryEn: '🛢️ Oil change, oil strainer & lubrication (2.2D)',
     sections: ['01-11B'],
     core: /OIL (REPLACEMENT|FILTER|LEVEL|PRESSURE)|STRAINER/i,
     match: /OIL|LUBRICATION/i,
@@ -65,6 +68,7 @@ const PACKS = [
   },
   {
     category: '⚙️ Steuerkette, Nockenwellen & Ventile (2.2D)',
+    categoryEn: '⚙️ Timing chain, camshafts & valves (2.2D)',
     sections: ['01-10B'],
     core: /TIMING CHAIN|CAMSHAFT|VALVE/i,
     match: /CYLINDER HEAD|ROCKER|ENGINE/i,
@@ -75,6 +79,7 @@ const PACKS = [
   },
   {
     category: '💨 Turbolader, DPF & AGR (2.2D)',
+    categoryEn: '💨 Turbocharger, DPF & EGR (2.2D)',
     sections: ['01-13B', '01-15B', '01-16B'],
     core: /TURBOCHARGER|PARTICULATE|EGR|INTERCOOLER/i,
     match: /INTAKE|EXHAUST|EMISSION/i,
@@ -87,6 +92,7 @@ const PACKS = [
   },
   {
     category: '❄️ Klima & Heizung (HVAC)',
+    categoryEn: '❄️ Air conditioning & heating (HVAC)',
     sections: ['07-11', '07-40', '07-10'],
     core: /COMPRESSOR|REFRIGERANT|BLOWER|EVAPORATOR|CONDENSER|HEATER/i,
     match: /AIR CONDITION|HVAC/i,
@@ -94,6 +100,7 @@ const PACKS = [
   },
   {
     category: '🛞 Fahrwerk & Radlager',
+    categoryEn: '🛞 Chassis & wheel bearings',
     sections: ['02-13', '02-14', '02-11'],
     core: /SHOCK ABSORBER|COIL SPRING|WHEEL BEARING|ALIGNMENT|CONTROL ARM/i,
     match: /SUSPENSION/i,
@@ -156,7 +163,7 @@ function main() {
     }
 
     if (items.length === 0) console.warn(`WARNUNG: Pack "${def.category}" hat keine Treffer.`);
-    packs.push({ category: def.category, items });
+    packs.push({ category: def.category, categoryEn: def.categoryEn, items });
   }
 
   fs.writeFileSync(OUT, JSON.stringify(packs, null, 2), 'utf8');

@@ -267,7 +267,25 @@ const I18N = {
     'chapterDesc.sst': 'Overview of the Mazda special service tools with part numbers',
     'chapterDesc.wiring': '277 diagrams, harness routing, connector pinouts and ground points',
     'chapterDesc.body': '161 body documents, panel gaps, welded seams, body dimensions',
-    'chapterDesc.tech': '1,790 documents on system structure, sensors and function'
+    'chapterDesc.tech': '1,790 documents on system structure, sensors and function',
+
+    'group.00': '00 General & maintenance',
+    'group.01': '01 Engine',
+    'group.02': '02 Suspension',
+    'group.03': '03 Driveline / Axle',
+    'group.04': '04 Brakes',
+    'group.05': '05 Transmission',
+    'group.06': '06 Steering',
+    'group.07': '07 HVAC',
+    'group.08': '08 Restraints',
+    'group.09': '09 Body & electrics',
+    'group.10': '10 Multiplex / CAN',
+    'group.11': '11 i-stop & start-stop',
+    'group.12': '12 Personalisation',
+    'group.wiring': 'Electrical wiring diagrams',
+    'group.body': 'Body repair (bodyshop manual)',
+    'group.tech': 'Technical guide',
+    'group.misc': 'General'
   }
 };
 
@@ -280,8 +298,7 @@ function currentLang() {
 }
 
 /** Text für einen Schlüssel, optional mit Platzhaltern {name} und Rückfalltext. */
-function t(key, vars, fallback) {
-  const lang = currentLang();
+function t(key, vars, fallback) {  const lang = currentLang();
   const dict = I18N[lang] || I18N.de;
   let text = dict[key];
   if (text === undefined) text = I18N.de[key];
@@ -292,6 +309,11 @@ function t(key, vars, fallback) {
     }
   }
   return text;
+}
+
+/** Wählt die deutsche oder englische Fassung eines Datenfelds (z. B. Pack-Titel). */
+function pickText(de, en) {
+  return currentLang() === 'en' && en ? en : de;
 }
 
 /** Setzt alle statischen Texte, Tooltips und Platzhalter. */
