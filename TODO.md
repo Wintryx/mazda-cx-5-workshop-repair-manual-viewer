@@ -399,6 +399,10 @@ daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
   - Größen: `win-unpacked` 362 MB, Installer 108 MB — die 451 MB PDFs bleiben draußen
   - **Fallstrick:** Ist `ELECTRON_RUN_AS_NODE=1` gesetzt, startet die EXE als Node und beendet sich
     sofort (in dieser Umgebung war die Variable gesetzt); auf einem normalen PC tritt das nicht auf
+- [x] **GitHub** — privates Repository `mazda-cx-5-workshop-repair-manual-viewer` angelegt, Remote per
+  SSH (`git@github.com:Wintryx/...`), `main` gepusht. 37 Dateien, 11 Commits, `.git` 4,8 MB; `data/`,
+  `node_modules/` und `dist/` bleiben draußen, `public/search_index.json` und `config/ocr_text.json`
+  sind enthalten.
 
 ---
 
