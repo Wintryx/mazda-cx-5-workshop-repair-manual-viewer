@@ -43,7 +43,11 @@ function filterText(text, vocab) {
   const source = String(text || '');
   if (!vocab || vocab.size < 1000) return source;
   const kept = [];
-  for (const word of source.split(/\s+/)) {
+  for (const raw of source.split(/\s+/)) {
+    // Satzzeichen an den Rändern abschneiden, nicht das ganze Wort verwerfen:
+    // "[GRAY]" soll als "GRAY" erhalten bleiben.
+    const word = raw.replace(/^[^A-Za-z0-9]+/, '').replace(/[^A-Za-z0-9]+$/, '');
+    if (!word) continue;
     const low = word.toLowerCase();
     if (!WORD.test(low)) continue;
     if (vocab.has(low) || /\d/.test(low) || low.length >= 8) kept.push(word);

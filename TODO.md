@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.16.0 · 21.10.2026
+**Stand:** v1.16.1 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -402,6 +402,14 @@ Siehe Tabelle „Nächste Schritte" oben — es bleiben 6.5 (zweites Handbuch) u
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 in v1.13.0) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.16.1
+
+- [x] **Korrektur am OCR-Filter** — Satzzeichen am Wortrand werden abgeschnitten statt das Wort zu
+  verwerfen („[GRAY]" → „GRAY"). Vorher verlor die Suche nach „gray" 67 Dokumente. Neue Bilanz:
+  182.298 → 133.205 Zeichen (−26,9 %), Datei 154 KB, alle echten Suchbegriffe unverändert.
 
 ---
 

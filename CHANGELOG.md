@@ -6,6 +6,20 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.16.1] - 2026-10-21
+
+### Korrektur zu 1.16.0
+- **Satzzeichen am Wortrand wurden mitverworfen.** „[GRAY]" fiel komplett weg, statt als „GRAY"
+  erhalten zu bleiben — dadurch verlor die Suche nach „gray" 67 Dokumente (75 → 8). Jetzt werden
+  führende und folgende Satzzeichen abgeschnitten, das Wort bleibt.
+- **Neue Bilanz:** OCR-Text 182.298 → 133.205 Zeichen (−26,9 %), `config/ocr_text.json` 203 → 154 KB.
+  Suchbegriffe unverändert: gray 75, 4wd 277, connector 1.697, fuse 444, relay 543, battery 836.
+  Streugut weiter entfernt: cray 36 → 0, baitery 39 → 0, gob 15 → 0, iaa 16 → 0.
+  Verbliebene Treffer für „ooc" (9) sind Codes wie `ooc-2`, für „igi" (77) Wortbestandteile
+  wie „original" oder „checkdigit".
+
+---
+
 ## [1.16.0] - 2026-10-21
 
 ### Datenqualität
