@@ -402,7 +402,8 @@ daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
 - [x] **GitHub** — privates Repository `mazda-cx-5-workshop-repair-manual-viewer` angelegt, Remote per
   SSH (`git@github.com:Wintryx/...`), `main` gepusht. 37 Dateien, 11 Commits, `.git` 4,8 MB; `data/`,
   `node_modules/` und `dist/` bleiben draußen, `public/search_index.json` und `config/ocr_text.json`
-  sind enthalten.
+  sind enthalten. Tags `v1.5.0`–`v1.10.0` gesetzt und gepusht; Beschreibung und Topics
+  (`nodejs`, `electron`, `pdf`, `offline`, `mazda`, `workshop-manual`) über die API gepflegt.
 
 ---
 

@@ -170,7 +170,8 @@ git push -u origin main
 Das Repository liegt unter
 [github.com/Wintryx/mazda-cx-5-workshop-repair-manual-viewer](https://github.com/Wintryx/mazda-cx-5-workshop-repair-manual-viewer)
 und ist **privat**: Der Index enthält Titel und Stichworte, die aus dem Mazda-Handbuch extrahiert
-wurden, und unterliegt damit dem Urheberrecht (siehe Abschnitt 12).
+wurden, und unterliegt damit dem Urheberrecht (siehe Abschnitt 12). Die Releases sind mit den Tags
+`v1.5.0` bis `v1.10.0` markiert.
 
 ## 11. Desktop-App (Windows-EXE)
 
