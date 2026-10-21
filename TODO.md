@@ -268,7 +268,7 @@ Mindestens diese Begriffe liefern heute 0 oder falsche Treffer:
 - [x] unbenutzte Imports in `server.js` entfernt (neu: nur `http`, `fs`, `path`)
 - [x] Favicon: `public/favicon.png` (App-Icon), ausgeliefert unter `/favicon.ico` und `/favicon.png`,
   verlinkt im HTML
-- [ ] CHANGELOG: „1,02 MB" ([`CHANGELOG.md`](file:///C:/Projekte/Tools/mazda-manual-viewer/CHANGELOG.md)) → für v1.1 historisch korrekt, in v1.4.0 bereits richtiggestellt
+- [x] CHANGELOG: „1,02 MB" ([`CHANGELOG.md`](file:///C:/Projekte/Tools/mazda-manual-viewer/CHANGELOG.md)) → für v1.1 historisch korrekt, in v1.4.0 bereits richtiggestellt
 - [x] Range-Requests (`206`) für PDFs — offene und Suffix-Bereiche, `416` bei Fehlern, `HEAD` ohne Body
 - [x] einfaches Request-Log (Methode, Pfad, Status, Dauer) für API/PDF/Fehler, `LOG_REQUESTS=0` schaltet ab
 - [x] `hashchange`-Listener, damit manuelle `#datei.pdf`-Eingaben funktionieren
@@ -353,13 +353,14 @@ erzeugen eine kleinere EXE, öffnen aber kein eigenes Fenster und brauchen weite
 - Notizen/Lesezeichen liegen im Electron-Profil (`%APPDATA%\Mazda-CX5-Viewer`), nicht neben der EXE.
 - Auflösung bleibt: `MANUAL_DIR` → `config/settings.json` → `data\`.
 
-**Abnahmekriterien**
-- [ ] `npm run dist` erzeugt Installer und portablen Ordner
-- [ ] Frisches Windows ohne Node: Installation ohne Adminrechte, Start in unter 10 s
-- [ ] Kapitelbaum, Suche (inkl. `P0301`), PDF-Anzeige, Hotspots, Notizen, Checklisten und Druck laufen
-- [ ] Ohne `data\` erscheint eine verständliche Meldung statt einer 404-Serie
-- [ ] Beenden hinterlässt keinen laufenden Prozess und keinen belegten Port
-- [ ] Installer ≤ 550 MB, installiert ≤ 700 MB (die PDFs dominieren)
+**Abnahmekriterien** — alle erfüllt (Stand v1.14.0)
+- [x] `npm run dist` erzeugt Installer und portablen Ordner
+- [x] Frisches Windows ohne Node: Installation ohne Adminrechte, Start in unter 10 s
+  *(vom Nutzer auf einem Zweitrechner bestätigt, 21.10.2026)*
+- [x] Kapitelbaum, Suche (inkl. `P0301`), PDF-Anzeige, Hotspots, Notizen, Checklisten und Druck laufen
+- [x] Ohne `data\` erscheint eine verständliche Meldung statt einer 404-Serie
+- [x] Beenden hinterlässt keinen laufenden Prozess und keinen belegten Port
+- [x] Installer ≤ 550 MB, installiert ≤ 700 MB (107,9 MB / 362 MB)
 
 **Risiken**
 - Unsignierte EXE → SmartScreen-Warnung; ein Code-Signing-Zertifikat kostet Geld und ist für den
