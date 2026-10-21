@@ -426,15 +426,16 @@ body.workshop-mode .app-viewer { padding: 8px; }
 .ref-link {
   position: absolute;
   pointer-events: auto;
-  background: rgba(59, 130, 246, 0.18);
-  border-bottom: 1.5px solid rgba(96, 165, 250, 0.95);
+  background: transparent;
+  border-bottom: 1px dotted rgba(96, 165, 250, 0.55);
   border-radius: 2px;
   cursor: pointer;
   transition: background 0.12s ease;
 }
 
 .ref-link:hover {
-  background: rgba(59, 130, 246, 0.38);
+  background: rgba(59, 130, 246, 0.28);
+  border-bottom: 1px solid rgba(96, 165, 250, 0.95);
 }
 
 .doc-hits {

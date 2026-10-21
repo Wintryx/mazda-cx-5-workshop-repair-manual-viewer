@@ -6,6 +6,15 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.17.1] - 2026-10-21
+
+### Feinschliff
+- **Verweis-Marker dezenter**: Auf Indexseiten stehen Dutzende Verweise untereinander — die gefüllten
+  blauen Flächen machten die Seite unlesbar. Jetzt nur eine gepunktete Unterlinie; die Fläche erscheint
+  erst beim Überfahren mit der Maus.
+
+---
+
 ## [1.17.0] - 2026-10-21
 
 ### Werkstatt-Workflow

@@ -409,6 +409,14 @@ Siehe Tabelle „Nächste Schritte" oben — es bleiben 6.5 (zweites Handbuch) u
 
 ---
 
+## ✅ Erledigt in v1.17.1
+
+- [x] **Verweis-Marker dezenter** — statt gefüllter blauer Flächen nur eine gepunktete Unterlinie;
+  die Hintergrundfläche erscheint beim Überfahren. Auf Indexseiten mit Dutzenden Verweisen bleibt
+  die Seite lesbar.
+
+---
+
 ## ✅ Erledigt in v1.17.0
 
 - [x] **Werkstatt-Workflow** — drei Funktionen aus der Verbesserungsliste:
