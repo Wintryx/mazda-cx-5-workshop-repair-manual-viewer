@@ -91,7 +91,23 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
       </a>
 
-      <button id="btn-lang" class="btn-icon btn-lang" data-i18n-title="header.lang" title="Auf Englisch umschalten">EN</button>
+      <div class="lang-switch" id="lang-switch">
+        <button id="btn-lang" class="lang-toggle" aria-haspopup="listbox" aria-expanded="false" data-i18n-title="header.lang" title="Sprache wählen">
+          <span id="lang-flag" class="flag-wrap"></span>
+          <span id="lang-code" class="lang-code">DE</span>
+          <span class="lang-caret" aria-hidden="true">▾</span>
+        </button>
+        <div id="lang-menu" class="lang-menu hidden" role="listbox">
+          <button class="lang-item" data-lang="de" role="option">
+            <svg class="flag" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#000"/><rect y="4.67" width="20" height="4.66" fill="#dd0000"/><rect y="9.33" width="20" height="4.67" fill="#ffce00"/></svg>
+            <span>Deutsch</span>
+          </button>
+          <button class="lang-item" data-lang="en" role="option">
+            <svg class="flag" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#012169"/><path d="M0 0 20 14M20 0 0 14" stroke="#fff" stroke-width="3"/><path d="M0 0 20 14M20 0 0 14" stroke="#c8102e" stroke-width="1.4"/><path d="M10 0v14M0 7h20" stroke="#fff" stroke-width="4.4"/><path d="M10 0v14M0 7h20" stroke="#c8102e" stroke-width="2.4"/></svg>
+            <span>English</span>
+          </button>
+        </div>
+      </div>
 
       <button id="btn-shortcuts" class="btn-icon" data-i18n-title="header.shortcuts" title="Tastatur-Kürzel (?)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>

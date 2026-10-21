@@ -6,6 +6,21 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.12.0] - 2026-10-21
+
+### UI
+- **Sprach-Dropdown mit Flaggen**: kleiner Umschalter im Header (Flagge + Kürzel + Menü mit
+  „Deutsch"/„English"). Die Flaggen sind eingebettete SVGs — Windows zeigt Emoji-Flaggen nicht an.
+- **Live-Umschaltung statt Neuladen**: `setLanguage()` tauscht die Texte im DOM und schickt ein
+  `languagechange`-Event; `app.js` rendert daraufhin Lesezeichen, Notizen, Checklisten, Kapitelkarten
+  und die laufende Suche neu. Eine offene Checkliste bleibt offen.
+- **Kapitelkarten zweisprachig**: Titel und Beschreibung liegen als `chapter.*`/`chapterDesc.*` im
+  Wörterbuch (englisch) und fallen auf `config/chapters.json` zurück, wenn keine Übersetzung existiert.
+- **Tests**: Browser-Test jetzt 36 Prüfungen — neu sind „Sprachwechsel ohne Neuladen" (Merker im
+  `window` überlebt nur ohne Reload) und „Kapitel auf Englisch".
+
+---
+
 ## [1.11.0] - 2026-10-21
 
 ### UI & Dokumentation

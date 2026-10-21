@@ -606,8 +606,8 @@
             <div class="chapter-header" data-file="${esc(c.startFile)}">
               <span class="chapter-icon">${c.icon || '📄'}</span>
               <div class="chapter-info">
-                <div class="chapter-title">${esc(c.title)}</div>
-                <div class="chapter-desc">${esc(c.description || '')}</div>
+                <div class="chapter-title">${esc(t('chapter.' + c.id, null, c.title))}</div>
+                <div class="chapter-desc">${esc(t('chapterDesc.' + c.id, null, c.description || ''))}</div>
               </div>
               ${hasSub ? '<span class="chapter-arrow">▶</span>' : ''}
             </div>
@@ -748,6 +748,7 @@
   function openChecklist(id) {
     const list = state.checklists.find((c) => c.id === id);
     if (!list) return;
+    state.openChecklist = id;
     const done = new Set(state.checks[id] || []);
     el.checklistTitle.textContent = list.title;
     el.checklistBody.innerHTML = `
@@ -788,10 +789,25 @@
   }
 
   function closeChecklist() {
+    state.openChecklist = null;
     el.checklistDetail.classList.add('hidden');
     el.checklistsList.classList.remove('hidden');
     renderChecklists();
   }
+
+  // Sprachwechsel: alle aus JavaScript gerenderten Bereiche sofort neu beschriften
+  document.addEventListener('languagechange', () => {
+    renderBookmarks();
+    renderNotes();
+    renderChecklists();
+    loadChapters();
+    if (state.openChecklist) openChecklist(state.openChecklist);
+    if (state.currentFile) {
+      updateBookmarkState(state.currentFile);
+      updateNoteState(state.currentFile);
+    }
+    if (state.searchQuery) performSearch(state.searchQuery, false);
+  });
 
   // ---------------------------------------------------------------- Druck
   function openPrintModal() {
@@ -924,10 +940,6 @@
 
     el.btnFullscreen.addEventListener('click', toggleFullscreen);
     el.checklistBack.addEventListener('click', closeChecklist);
-
-    // Sprachwechsel: neu laden, damit alle gerenderten Listen konsistent sind
-    const langBtn = document.getElementById('btn-lang');
-    if (langBtn) langBtn.addEventListener('click', toggleLanguage);
 
     // Ein einziger Delegate-Handler für alle klickbaren Listenpunkte
     document.addEventListener('click', (e) => {

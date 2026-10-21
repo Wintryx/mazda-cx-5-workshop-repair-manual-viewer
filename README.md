@@ -28,7 +28,7 @@ on a laptop or tablet in the workshop.
 | Fault codes | 329 DTCs (P/B/C/U) from the diagnostic chapters; type a code → diagnostic sheet first |
 | Page | Hotspots from PDF links (including 254 rotated wiring diagrams), text selection, zoom, fit width, fullscreen |
 | Workshop | Notes per document, bookmarks, checklists (injectors, front brakes, oil change), printing a page range |
-| UI languages | German (default) and English — switch in the header, stored per browser |
+| UI languages | German (default) and English — flag dropdown in the header, switches **live** (no reload), remembered per browser |
 | Operation | Port fallback, `--open`, `/api/status`, clear start-up check of the data directory |
 
 ## 2. Requirements
@@ -103,7 +103,7 @@ and index coverage.
 | Checklists | “Checklists” tab, progress per document |
 | Print / export | `Ctrl+P` or the button, page range e.g. `1573–1575` |
 | Keyboard help | `?` |
-| Language | `EN` / `DE` button in the header (defaults to German) |
+| Language | flag dropdown in the header (🇩🇪 Deutsch / 🇬🇧 English) — switches live, no reload |
 
 ## 7. Configuration
 

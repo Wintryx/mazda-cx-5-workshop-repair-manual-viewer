@@ -185,12 +185,21 @@ function check(name, cond, detail) {
   const firstBadge = ((await page.textContent('#search-results-list .nav-item-badge')) || '').trim();
   check('Fehlercode führt zum Diagnoseblatt', /^01-02/.test(firstBadge), firstBadge);
 
-  // ---------- 10c) Sprachumschaltung (v1.11.0) ----------
+  // ---------- 10c) Sprachumschaltung (v1.12.0) ----------
+  await page.evaluate(() => { window.__noReload = true; });
   await page.click('#btn-lang');
-  await page.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 15000 });
+  await page.waitForSelector('#lang-menu:not(.hidden)', { timeout: 5000 });
+  await page.click('#lang-menu [data-lang="en"]');
+  await page.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 10000 });
   const enTab = ((await page.textContent('.sidebar-tabs .tab-btn span')) || '').trim();
   check('Sprachwechsel auf Englisch', enTab.includes('Assemblies'), enTab);
   check('Fenstertitel auf Englisch', (await page.title()).includes('Service Manual Portal'));
+  check('Sprachwechsel ohne Neuladen', await page.evaluate(() => window.__noReload === true));
+  const enChapter = ((await page.textContent('.chapter-title')) || '').trim();
+  check('Kapitel auf Englisch', /General|Engine|Chassis|Driveline/.test(enChapter), enChapter);
+  await page.click('#btn-lang');
+  await page.click('#lang-menu [data-lang="de"]');
+  await page.waitForFunction(() => document.documentElement.lang === 'de', null, { timeout: 10000 });
 
   // ---------- 11) Konsole ----------
   check('keine Konsolen-/Seitenfehler', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));

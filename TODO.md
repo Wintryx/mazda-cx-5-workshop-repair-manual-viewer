@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.11.0 · 21.10.2026
+**Stand:** v1.12.0 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -25,6 +25,8 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.10.0 umgesetzt:** 7.1 Desktop-App (Windows-EXE, Electron).
 >
 > **v1.11.0 umgesetzt:** Zweisprachige Oberfläche (de/en) und englisches README.
+>
+> **v1.12.0 umgesetzt:** Sprach-Dropdown mit Flaggen, Live-Umschaltung ohne Neuladen.
 
 ---
 
@@ -391,6 +393,16 @@ daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 offen) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.12.0
+
+- [x] **Sprach-Dropdown mit Flaggen** — Flagge + Kürzel + Menü im Header, Flaggen als eingebettete SVGs
+  (Windows rendert keine Emoji-Flaggen). Umschalten **live** über ein `languagechange`-Event: app.js
+  zeichnet Lesezeichen, Notizen, Checklisten, Kapitelkarten und die laufende Suche neu, ohne Reload.
+  Kapitelkarten haben englische Titel/Beschreibungen, Rückfall auf `config/chapters.json`.
+  Browser-Test 36 Prüfungen (neu: „ohne Neuladen", „Kapitel auf Englisch").
 
 ---
 

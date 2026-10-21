@@ -31,8 +31,7 @@ const I18N = {
     'header.fullscreen': 'Werkstatt-Vollbild',
     'header.rawPdf': 'Original-PDF in neuem Tab öffnen',
     'header.shortcuts': 'Tastatur-Kürzel (?)',
-    'header.lang': 'Auf Englisch umschalten',
-    'lang.button': 'EN',
+    'header.lang': 'Sprache wählen',
 
     'sidebar.search': 'Suchen (Bremse, Öl, 1092, 01-14B …)',
     'tabs.chapters': '🗂️ Baugruppen',
@@ -145,8 +144,7 @@ const I18N = {
     'header.fullscreen': 'Workshop fullscreen',
     'header.rawPdf': 'Open original PDF in a new tab',
     'header.shortcuts': 'Keyboard shortcuts (?)',
-    'header.lang': 'Switch to German',
-    'lang.button': 'DE',
+    'header.lang': 'Choose language',
 
     'sidebar.search': 'Search (brake, oil, 1092, 01-14B …)',
     'tabs.chapters': '🗂️ Assemblies',
@@ -235,21 +233,59 @@ const I18N = {
     'shortcuts.help': 'This overview',
     'shortcuts.close': 'Close dialogs',
     'shortcuts.hint': 'On a tablet: swipe left/right to page.',
-    'shortcuts.ok': 'Got it'
+    'shortcuts.ok': 'Got it',
+
+    'chapter.00': '00 General & maintenance',
+    'chapter.01': '01 Engine (2.2D & 2.0G)',
+    'chapter.02': '02 Chassis & suspension',
+    'chapter.03': '03 Driveline & AWD',
+    'chapter.04': '04 Brakes & control systems',
+    'chapter.05': '05 Transmission',
+    'chapter.06': '06 Steering',
+    'chapter.07': '07 Heating & air conditioning (HVAC)',
+    'chapter.08': '08 Airbag & restraints',
+    'chapter.09': '09 Body, lighting & electrics',
+    'chapter.can': '10 Multiplex / CAN & diagnostic buses',
+    'chapter.istop': '11 i-stop & start-stop system',
+    'chapter.sst': 'Special service tools',
+    'chapter.wiring': 'Electrical wiring diagrams',
+    'chapter.body': 'Body repair (bodyshop manual)',
+    'chapter.tech': 'Technical guide',
+
+    'chapterDesc.00': 'Vehicle identification, service intervals, lubricants, fill quantities, lifting and towing points',
+    'chapterDesc.01': 'Complete mechanicals: timing chain, camshafts, cylinder head, valves',
+    'chapterDesc.02': 'Struts, control arms, stabilisers, wheel alignment, wheel bearings',
+    'chapterDesc.03': 'Drive shafts, propeller shaft, rear differential, all-wheel drive',
+    'chapterDesc.04': 'Front and rear brakes, discs, pads, parking brake',
+    'chapterDesc.05': '6-speed manual (D66M-R) and 6-speed automatic transaxle',
+    'chapterDesc.06': 'Electric power steering (EPS), steering gear, tie rods',
+    'chapterDesc.07': 'A/C compressor, condenser, evaporator, blower motor',
+    'chapterDesc.08': 'Driver and passenger airbags, side airbags, belt tensioners, crash sensors',
+    'chapterDesc.09': 'Headlights, rear lights, doors, window regulators, central locking',
+    'chapterDesc.can': 'CAN bus, control unit networking, communication DTCs',
+    'chapterDesc.istop': 'i-stop function, battery current sensor, starter-generator, relays',
+    'chapterDesc.sst': 'Overview of the Mazda special service tools with part numbers',
+    'chapterDesc.wiring': '277 diagrams, harness routing, connector pinouts and ground points',
+    'chapterDesc.body': '161 body documents, panel gaps, welded seams, body dimensions',
+    'chapterDesc.tech': '1,790 documents on system structure, sensors and function'
   }
 };
 
 const LANG_KEY = 'mazda_lang';
+const LANG_META = { de: { code: 'DE', name: 'Deutsch' }, en: { code: 'EN', name: 'English' } };
 
 function currentLang() {
   const stored = localStorage.getItem(LANG_KEY);
   return stored === 'en' || stored === 'de' ? stored : 'de';
 }
 
-/** Text für einen Schlüssel, optional mit Platzhaltern {name}. */
-function t(key, vars) {
+/** Text für einen Schlüssel, optional mit Platzhaltern {name} und Rückfalltext. */
+function t(key, vars, fallback) {
   const lang = currentLang();
-  let text = (I18N[lang] && I18N[lang][key]) || (I18N.de[key]) || key;
+  const dict = I18N[lang] || I18N.de;
+  let text = dict[key];
+  if (text === undefined) text = I18N.de[key];
+  if (text === undefined) text = fallback !== undefined ? fallback : key;
   if (vars) {
     for (const [name, value] of Object.entries(vars)) {
       text = text.replace(new RegExp(`\\{${name}\\}`, 'g'), String(value));
@@ -273,17 +309,73 @@ function applyStaticTexts() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach((node) => {
     node.placeholder = t(node.dataset.i18nPlaceholder);
   });
-  const toggle = document.getElementById('btn-lang');
-  if (toggle) {
-    toggle.textContent = t('lang.button');
-    toggle.title = t('header.lang');
-  }
+  updateLangSwitch();
 }
 
-/** Wechselt die Sprache und lädt die Seite neu (rendert alle Listen frisch). */
-function toggleLanguage() {
-  localStorage.setItem(LANG_KEY, currentLang() === 'de' ? 'en' : 'de');
-  location.reload();
+/** Zeigt Flagge und Kürzel der aktiven Sprache und markiert den Menüeintrag. */
+function updateLangSwitch() {
+  const button = document.getElementById('btn-lang');
+  const menu = document.getElementById('lang-menu');
+  if (!button || !menu) return;
+
+  const lang = currentLang();
+  const active = menu.querySelector(`[data-lang="${lang}"]`);
+  const flag = document.getElementById('lang-flag');
+  const code = document.getElementById('lang-code');
+
+  if (flag && active) flag.innerHTML = active.querySelector('.flag').outerHTML;
+  if (code) code.textContent = LANG_META[lang].code;
+  button.title = t('header.lang');
+  button.setAttribute('aria-label', t('header.lang'));
+
+  menu.querySelectorAll('[data-lang]').forEach((item) => {
+    const selected = item.dataset.lang === lang;
+    item.classList.toggle('active', selected);
+    item.setAttribute('aria-selected', String(selected));
+  });
 }
 
-document.addEventListener('DOMContentLoaded', applyStaticTexts);
+/** Wechselt die Sprache ohne Neuladen; app.js rendert seine Listen neu. */
+function setLanguage(lang) {
+  if (!I18N[lang] || lang === currentLang()) return;
+  localStorage.setItem(LANG_KEY, lang);
+  applyStaticTexts();
+  document.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
+}
+
+function closeLangMenu() {
+  const menu = document.getElementById('lang-menu');
+  const button = document.getElementById('btn-lang');
+  if (menu) menu.classList.add('hidden');
+  if (button) button.setAttribute('aria-expanded', 'false');
+}
+
+function setupLangSwitch() {
+  const button = document.getElementById('btn-lang');
+  const menu = document.getElementById('lang-menu');
+  if (!button || !menu) return;
+
+  button.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const open = menu.classList.toggle('hidden');
+    button.setAttribute('aria-expanded', String(!open));
+  });
+
+  menu.querySelectorAll('[data-lang]').forEach((item) => {
+    item.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setLanguage(item.dataset.lang);
+      closeLangMenu();
+    });
+  });
+
+  document.addEventListener('click', closeLangMenu);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeLangMenu();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupLangSwitch();
+  applyStaticTexts();
+});
