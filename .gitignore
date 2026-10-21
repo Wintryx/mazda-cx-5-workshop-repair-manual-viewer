@@ -1,7 +1,7 @@
 # Handbuch-PDFs (451 MB) – nicht versionieren, werden aus dem ZIP entpackt
 data/
 
-# Abhängigkeiten (npm test / test:browser)
+# Abhängigkeiten (npm test / test:browser / Desktop-Build)
 node_modules/
 
 # Laufzeit-Info des Port-Fallbacks
@@ -9,6 +9,9 @@ node_modules/
 
 # Lokale Sicherungen vor größeren Umbauten
 _backup/
+
+# Build-Ausgabe von electron-builder
+dist/
 
 # Logs
 *.log

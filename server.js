@@ -828,6 +828,7 @@ function startServer(port, maxAttempts) {
   });
 
   srv.listen(port, '127.0.0.1');
+  return srv;
 }
 
 if (require.main === module) {
@@ -835,4 +836,14 @@ if (require.main === module) {
   startServer(START_PORT);
 }
 
-module.exports = { search, safeJoin, extractPdfLinks, loadCatalog, byFile, get catalog() { return catalog; }, SYNONYMS };
+module.exports = {
+  search,
+  safeJoin,
+  extractPdfLinks,
+  loadCatalog,
+  startServer,
+  preflight,
+  byFile,
+  get catalog() { return catalog; },
+  SYNONYMS
+};

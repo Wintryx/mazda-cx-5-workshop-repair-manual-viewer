@@ -1,24 +1,68 @@
 {
   "name": "mazda-cx5-manual-viewer",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "private": true,
   "description": "Offline-Viewer für das Mazda CX-5 (2012–2013) Werkstatthandbuch: 7.294 PDFs, zweisprachige Suche, Hotspots, Notizen und Checklisten.",
   "license": "UNLICENSED",
+  "main": "electron/main.js",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
     "start": "node server.js",
     "start:open": "node server.js --open",
+    "app": "electron .",
     "index": "node build_index.js",
     "packs": "node tools/build_packs.js",
     "validate": "node tools/validate.js",
     "test": "node tools/run_tests.js",
     "test:api": "node tools/api_contract_test.js",
-    "test:browser": "node tools/run_browser_test.js"
+    "test:browser": "node tools/run_browser_test.js",
+    "dist": "electron-builder --win nsis"
   },
-  "dependencies": {},
   "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.15.3",
     "playwright": "^1.64.0"
+  },
+  "build": {
+    "appId": "de.wintryx.mazda-cx5-viewer",
+    "productName": "Mazda CX-5 Viewer",
+    "copyright": "Privates Werkstatt-Hilfsmittel – Handbuchinhalte © Mazda",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "server.js",
+      "lib/**/*",
+      "public/**/*",
+      "config/**/*",
+      "!config/ocr_text.json",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "executableName": "Mazda-CX5-Viewer",
+      "artifactName": "Mazda-CX5-Viewer-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Mazda CX-5 Viewer"
+    }
   }
 }

@@ -7,7 +7,7 @@ zweisprachiger Suche (Deutsch ⇄ Englisch), Lesezeichen, Notizen, Reparatur-Che
 Läuft ohne Internet und ohne externe Laufzeit-Abhängigkeiten (reines Node.js + lokal eingebundenes PDF.js)
 auf Laptop oder Tablet im Werkstattbetrieb.
 
-**Stand:** v1.9.0 · Oktober 2026
+**Stand:** v1.10.0 · Oktober 2026
 
 ---
 
@@ -39,9 +39,11 @@ mazda-manual-viewer/
 ├─ config/                chapters.json, packs.json, checklists.json, settings.json
 ├─ public/                Frontend (index.html, app.js, style.css), PDF.js, search_index.json
 ├─ tools/                 validate.js, run_tests.js, titles.js, ocr_*.{py,ps1,js}, Tests
+├─ electron/main.js       Desktop-Hülle (Fenster + Server im selben Prozess)
+├─ build/icon.png         App-Icon für den Desktop-Build
 ├─ data/                  7.294 PDFs (nicht versioniert, siehe .gitignore)
 ├─ START_VIEWER.bat       Doppelklick-Start mit Node-Prüfung
-├─ package.json           Scripts: start, index, packs, validate, test
+├─ package.json           Scripts: start, app, dist, index, packs, validate, test
 └─ TODO.md / CHANGELOG.md Roadmap und Versionshistorie
 ```
 
@@ -155,7 +157,40 @@ npm run index
 Voraussetzungen: Python 3 mit `pymupdf` (`pip install pymupdf`) und ein Windows-OCR-Sprachpaket
 (hier de-DE). Der Viewer selbst braucht weder Python noch Netz — nur dieser Wartungsschritt.
 
-## 11. Rechtehinweis
+## 11. Desktop-App (Windows-EXE)
+
+Für Rechner **ohne Node**: einmalig `npm install` (holt Electron und electron-builder als
+Dev-Abhängigkeiten), dann
+
+```powershell
+npm run app     # Entwicklungsmodus (Electron-Fenster)
+npm run dist    # baut Installer und portablen Ordner
+```
+
+Ergebnis in `dist\`:
+
+| Datei | Größe | Zweck |
+|---|---|---|
+| `win-unpacked\Mazda-CX5-Viewer.exe` | 362 MB (Ordner) | portabel — Ordner auf USB kopieren, EXE starten |
+| `Mazda-CX5-Viewer-Setup-<Version>.exe` | 108 MB | Installer, pro Benutzer, ohne Adminrechte |
+
+**Wichtig:** Der Ordner `data\` mit den 7.294 PDFs gehört **neben die EXE**, nicht in den Build —
+die PDFs werden bewusst nicht eingebacken. Auf dem Zielrechner also:
+
+```
+Mazda-CX5-Viewer.exe
+data\            <- 7.294 PDFs
+```
+
+Fehlt `data\`, zeigt die App einen Dialog mit dem erwarteten Pfad und beendet sich. Ein Handbuch-Update
+ist ein Kopiervorgang in `data\`, kein neuer Build. Notizen und Lesezeichen liegen im
+Electron-Profil (`%APPDATA%\Mazda CX-5 Viewer`).
+
+Zwei Hinweise: Die EXE ist nicht signiert, Windows SmartScreen warnt beim ersten Start („Weitere
+Informationen" → „Trotzdem ausführen"). Und ist die Umgebungsvariable `ELECTRON_RUN_AS_NODE=1`
+gesetzt, startet die EXE als Node und beendet sich sofort — auf normalen PCs ist sie nicht gesetzt.
+
+## 12. Rechtehinweis
 
 Die Handbuch-PDFs sind urheberrechtlich geschütztes Material von Mazda. Dieses Projekt ist ein
 privates Werkstatt-Hilfsmittel: **nicht öffentlich hosten, nicht weitergeben, nicht kommerziell nutzen.**

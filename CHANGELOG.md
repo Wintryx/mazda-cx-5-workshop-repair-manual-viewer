@@ -6,6 +6,27 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.10.0] - 2026-10-21
+
+### Desktop-App (P4)
+- **Electron-Hülle** (TODO 7.1): `electron/main.js` sucht einen freien Port, setzt `MANUAL_DIR` auf
+  `<exe-Ordner>\data`, startet den bestehenden Server im selben Prozess und zeigt ihn im Fenster
+  (1280×900, kein Menü, `contextIsolation`/`sandbox` an). Beim Schließen wird der Server beendet —
+  kein Zombie-Prozess, kein belegter Port.
+- **Build**: `npm run app` startet im Entwicklungsmodus, `npm run dist` baut mit electron-builder
+  `dist/win-unpacked/` (portabel, 362 MB) und `dist/Mazda-CX5-Viewer-Setup-1.10.0.exe` (NSIS, 108 MB,
+  pro Benutzer, ohne Adminrechte). Die 451 MB PDFs werden nicht eingebacken.
+- **Daten**: `data\` liegt neben der EXE; ein Handbuch-Update ist ein Kopiervorgang, kein neuer Build.
+  Fehlt der Ordner, erscheint ein Dialog mit dem erwarteten Pfad und die App beendet sich mit Code 1.
+- **Smoke-Test**: `MAZDA_SMOKE=1` startet die App kopflos, fragt `/api/status` ab und schreibt das
+  Ergebnis nach `%TEMP%\mazda-viewer-smoke.json` — geprüft: 7.294 PDFs, Exit 0; ohne `data\` Exit 1.
+- **Verifiziert**: gepackte EXE öffnet das Fenster „Mazda CX-5 (2012–2013) Werkstatthandbuch Portal",
+  Server läuft auf einem freien Port, Datenpfad wird korrekt neben der EXE aufgelöst.
+- **Fallstrick**: Ist `ELECTRON_RUN_AS_NODE=1` gesetzt, startet die EXE als Node und beendet sich sofort.
+  Auf normalen PCs ist die Variable nicht gesetzt.
+
+---
+
 ## [1.9.0] - 2026-10-20
 
 ### Fehlercodes (P3)

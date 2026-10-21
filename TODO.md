@@ -302,7 +302,13 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 
 ## 🟣 P4 – Auslieferung als Desktop-App
 
-### [ ] 7.1 Windows-EXE mit Electron
+### [x] 7.1 Windows-EXE mit Electron *(v1.10.0)*
+**Umgesetzt:** `electron/main.js` startet den bestehenden Server im selben Prozess und zeigt ihn im
+Fenster; `npm run dist` baut `dist/win-unpacked/` (362 MB, portabel) und
+`dist/Mazda-CX5-Viewer-Setup-1.10.0.exe` (108 MB, NSIS, pro Benutzer). Die PDFs bleiben außerhalb
+(`data\` neben der EXE), ein Datenupdate ist ein Kopiervorgang. `MAZDA_SMOKE=1` startet die App
+kopflos, prüft `/api/status` und meldet PDF-Anzahl und Datenpfad.
+
 **Ziel:** `npm run dist` erzeugt eine ausführbare Windows-App, die auf einem PC **ohne Node**, ohne
 Internet und ohne weitere Installation läuft — Doppelklick, Fenster, fertig.
 
@@ -379,6 +385,20 @@ daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 offen) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.10.0
+
+- [x] **7.1 Windows-EXE** — Electron 45 + electron-builder 26 als Dev-Abhängigkeiten; `npm run app`
+  startet die App im Entwicklungsmodus, `npm run dist` baut Installer und portablen Ordner.
+  - `electron/main.js`: freier Port, `MANUAL_DIR` = `<exe-Ordner>\data`, Server im selben Prozess,
+    Fenster 1280×900 ohne Menü, `contextIsolation`/`sandbox` an; sauberes Beenden ohne Zombie-Prozess
+  - Fehlt `data\`, erscheint ein Dialog mit Pfad und Hinweis, die App beendet sich mit Code 1
+  - `MAZDA_SMOKE=1` prüft die gepackte App kopflos: 7.294 PDFs erkannt, Exit 0; ohne `data\` Exit 1
+  - Größen: `win-unpacked` 362 MB, Installer 108 MB — die 451 MB PDFs bleiben draußen
+  - **Fallstrick:** Ist `ELECTRON_RUN_AS_NODE=1` gesetzt, startet die EXE als Node und beendet sich
+    sofort (in dieser Umgebung war die Variable gesetzt); auf einem normalen PC tritt das nicht auf
 
 ---
 
