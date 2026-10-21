@@ -4,6 +4,10 @@
   "private": true,
   "description": "Offline-Viewer für das Mazda CX-5 (2012–2013) Werkstatthandbuch: 7.294 PDFs, zweisprachige Suche, Hotspots, Notizen und Checklisten.",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Wintryx/mazda-cx5-viewer.git"
+  },
   "main": "electron/main.js",
   "engines": {
     "node": ">=18"
