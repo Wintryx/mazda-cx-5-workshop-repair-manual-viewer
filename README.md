@@ -203,7 +203,9 @@ npm run index
 ```
 
 Requirements: Python 3 with `pymupdf` (`pip install pymupdf`) and a Windows OCR language pack
-(de-DE here). The viewer itself needs neither Python nor a network — only this maintenance step.
+(en-US is preferred, the script falls back to the user's language). Measured on this corpus, the
+German and English models read the drawings identically — the remaining errors come from line art,
+not from the language. The viewer itself needs neither Python nor a network — only this step.
 
 **Versioning:** the project is a Git repository on `main`. Not versioned: `data\` (451 MB of PDFs),
 `node_modules\`, `dist\` and `_backup\`; part of the repository: `public/search_index.json` and
