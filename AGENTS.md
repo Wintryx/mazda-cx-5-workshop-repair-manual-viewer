@@ -34,8 +34,8 @@ runtime dependencies; an Electron shell provides a Windows desktop build.
 - The manual directory resolves as `MANUAL_DIR` → `config/settings.json` → `data/` (`lib/paths.js`).
 - `public/search_index.json` and `config/ocr_text.json` **are** versioned — the viewer does not run
   without them. Rebuild with `npm run index` (needs the PDFs in `data/`).
-- OCR (`tools/ocr_pages.py`, `tools/ocr_batch.ps1`, `tools/ocr_merge.js`) needs Python 3 + PyMuPDF
-  and a Windows OCR language pack; it is only required when the PDFs change.
+- OCR (`tools/ocr_pages.py`, `tools/ocr_batch.ps1`, `tools/ocr_merge.js`, `tools/ocr_clean.js`) needs
+  Python 3 + PyMuPDF and a Windows OCR language pack; it is only required when the PDFs change.
 
 ## Security
 

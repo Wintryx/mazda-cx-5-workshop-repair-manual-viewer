@@ -6,6 +6,22 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.16.0] - 2026-10-21
+
+### Datenqualität
+- **Streugut aus den OCR-Texten entfernt** (`tools/ocr_clean.js`): Die Windows-OCR liest auf den
+  Zeichnungsseiten auch Linien und Beschriftungsfragmente — „igi", „ooc", „cord-", „cray". Ein Token
+  bleibt jetzt nur, wenn es im Wortschatz der Textseiten vorkommt (25.446 Tokens), eine Ziffer enthält
+  (Codes wie `c-14`, `0318-103`) oder mindestens 8 Zeichen lang ist.
+- **Ergebnis:** OCR-Text 182.298 → 118.099 Zeichen (−35 %), `config/ocr_text.json` 203 → 140 KB,
+  Index 4,30 → 4,29 MB. Stichwörter weiter bei 7.292 (100 %), Titel unverändert 78,5 %; die
+  Fehltokens (`ooc`, `igi`, `cray`, `baitery`) kommen im Index nicht mehr vor, die echten
+  Beschriftungen (`ELECTRONIC 4WD CONTROL SYSTEM`, `DIFFERENTIAL TEMPERATURE SENSOR`) bleiben.
+- `tools/ocr_merge.js` wendet den Filter künftig automatisch an; `node tools/ocr_clean.js` bereinigt
+  eine bereits vorhandene Datei ohne neue OCR.
+
+---
+
 ## [1.15.0] - 2026-10-21
 
 ### Datenqualität

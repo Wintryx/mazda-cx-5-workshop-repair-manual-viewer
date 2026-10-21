@@ -11,6 +11,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { buildVocab, filterText } = require('./ocr_clean');
 
 const ROOT = path.join(__dirname, '..');
 const resultsFile = process.argv[2] || path.join(require('os').tmpdir(), 'mazda-ocr', 'results.json');
@@ -44,11 +45,13 @@ function titleFromLines(lines) {
 }
 
 const results = JSON.parse(fs.readFileSync(resultsFile, 'utf8').replace(/^\uFEFF/, ''));
+const ocrFiles = new Set(results.map((r) => r.file));
+const vocab = buildVocab(undefined, ocrFiles);
 const out = {};
 let chars = 0;
 
 for (const r of results) {
-  const text = clean((r.lines || []).join(' '));
+  const text = filterText(clean((r.lines || []).join(' ')), vocab);
   if (text.length < 25) continue;                    // reine Kopf-/Fußzeile
   out[r.file] = { t: text.slice(0, 1200), title: titleFromLines(r.lines) };
   chars += text.length;

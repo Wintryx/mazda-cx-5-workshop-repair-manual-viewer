@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.15.0 · 21.10.2026
+**Stand:** v1.16.0 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -29,10 +29,16 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.12.0 umgesetzt:** Sprach-Dropdown mit Flaggen, Live-Umschaltung ohne Neuladen.
 >
 > **v1.13.0 umgesetzt:** 5.5 Smoke-Test, 5.6 `.active_port`, 5.8 Range/Log/Favicon.
+>
+> **v1.14.0 umgesetzt:** Übersetzungslücken geschlossen (Sektionsbaum, Packs, Checklisten).
+>
+> **v1.15.0 umgesetzt:** Titelabdeckung 76,9 % → 78,5 %.
+>
+> **v1.16.0 umgesetzt:** OCR-Streugut gefiltert (`tools/ocr_clean.js`).
 
 ---
 
-## 🎯 Nächste Schritte (v1.14.0)
+## 🎯 Nächste Schritte (v1.17.0)
 
 Alle geplanten Pakete (A–D, Kapitelbaum, Fehlercodes, Desktop-App, Sprachumschaltung, Betrieb) sind
 erledigt. Offen sind nur noch zwei Ausbau-Punkte:
@@ -396,6 +402,16 @@ Siehe Tabelle „Nächste Schritte" oben — es bleiben 6.5 (zweites Handbuch) u
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 in v1.13.0) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.16.0
+
+- [x] **OCR-Streugut gefiltert** — `tools/ocr_clean.js`: Ein OCR-Token bleibt nur, wenn es im
+  Wortschatz der Textseiten (25.446 Tokens) vorkommt, eine Ziffer enthält oder ≥ 8 Zeichen lang ist.
+  OCR-Text −35 % (182.298 → 118.099 Zeichen), Datei 203 → 140 KB; Stichwörter weiter 100 %,
+  Titel unverändert, Fehltokens (`ooc`, `igi`, `cray`, `baitery`) verschwunden.
+  `ocr_merge.js` filtert künftig automatisch.
 
 ---
 

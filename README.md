@@ -198,7 +198,8 @@ versioned):
 python tools/ocr_pages.py        # renders the pages without text (200 dpi)
 powershell -NoProfile -File tools/ocr_batch.ps1 `
   -Manifest "$env:TEMP\mazda-ocr\manifest.json" -Out "$env:TEMP\mazda-ocr\results.json"
-node tools/ocr_merge.js "$env:TEMP\mazda-ocr\results.json"
+node tools/ocr_merge.js "$env:TEMP\mazda-ocr\results.json"   # filters fragments automatically
+node tools/ocr_clean.js                                      # optional: clean an existing file
 npm run index
 ```
 
