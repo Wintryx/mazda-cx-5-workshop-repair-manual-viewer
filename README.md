@@ -213,9 +213,43 @@ If `data\` is missing, the app shows a dialog with the expected path and exits. 
 is a copy operation into `data\`, not a new build. Notes and bookmarks live in the Electron profile
 (`%APPDATA%\Mazda CX-5 Viewer`).
 
-Two notes: the EXE is unsigned, so Windows SmartScreen warns on first launch (“More info” →
-“Run anyway”). And if the environment variable `ELECTRON_RUN_AS_NODE=1` is set, the EXE starts as
-Node and exits immediately — it is not set on normal PCs.
+### Installing and running it
+
+**Portable (recommended for a USB stick).** Copy the whole `dist\win-unpacked\` folder to the target
+PC and put the PDFs next to the EXE:
+
+```
+Mazda-CX5-Viewer\
+├─ Mazda-CX5-Viewer.exe
+├─ resources\ …
+└─ data\             <- 7,294 PDFs (451 MB)
+```
+
+Double-click `Mazda-CX5-Viewer.exe`. Nothing is installed, nothing is written outside the folder
+except the Electron profile in `%APPDATA%\Mazda CX-5 Viewer` (notes, bookmarks, window state).
+Removing the folder removes the program.
+
+**Installer.** Run `dist\Mazda-CX5-Viewer-Setup-1.14.0.exe`. It installs per user without admin
+rights — default target `%LOCALAPPDATA%\Programs\Mazda CX-5 Viewer` — and creates Start-menu and
+desktop shortcuts. Afterwards copy the `data\` folder into that install directory:
+
+```
+%LOCALAPPDATA%\Programs\Mazda CX-5 Viewer\
+├─ Mazda-CX5-Viewer.exe
+└─ data\             <- 7,294 PDFs
+```
+
+Then start it from the Start menu. Uninstall via *Settings → Apps* or the `Uninstall` shortcut —
+`data\` is left behind and can be deleted manually.
+
+**First start.** A window opens, the local server picks a free port (not shown in the UI;
+`http://localhost:<port>/api/status` reports it), and the viewer behaves exactly like the browser
+version: chapters, search, fault codes, notes, print. No Node, no network, no admin rights needed.
+
+**If Windows warns.** The EXE is unsigned, so SmartScreen shows “Windows protected your PC” on the
+first launch: click *More info → Run anyway*. If the app closes immediately instead of showing a
+window, check the environment variable `ELECTRON_RUN_AS_NODE` (must not be set — it makes Electron
+run as plain Node); details are written to `%APPDATA%\Mazda CX-5 Viewer\error.log`.
 
 ## 12. Copyright
 
