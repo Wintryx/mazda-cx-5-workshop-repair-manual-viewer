@@ -1,6 +1,6 @@
 {
   "name": "mazda-cx5-manual-viewer",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "private": true,
   "description": "Offline-Viewer für das Mazda CX-5 (2012–2013) Werkstatthandbuch: 7.294 PDFs, zweisprachige Suche, Hotspots, Notizen und Checklisten.",
   "license": "UNLICENSED",
@@ -19,7 +19,8 @@
     "index": "node build_index.js",
     "packs": "node tools/build_packs.js",
     "validate": "node tools/validate.js",
-    "test": "node tools/run_tests.js",
+    "test": "node --test test/smoke.test.js && node tools/run_tests.js",
+    "test:smoke": "node --test test/smoke.test.js",
     "test:api": "node tools/api_contract_test.js",
     "test:browser": "node tools/run_browser_test.js",
     "dist": "electron-builder --win nsis"

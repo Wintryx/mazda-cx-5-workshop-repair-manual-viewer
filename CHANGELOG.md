@@ -6,6 +6,28 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.13.0] - 2026-10-21
+
+### Betrieb (P3)
+- **Smoke-Test mit `node:test`** (TODO 5.5): `test/smoke.test.js` prüft in zehn Fällen Status,
+  Suche, Fehlercode-Route, Link-Extraktion, Sektionsbaum, Index-Invarianten (7.294 Einträge, gültige
+  Sektionscodes, alle PDFs vorhanden), Traversal-Schutz, Range-Antwort, 416 und Favicon.
+  `npm run test:smoke`; `npm test` führt ihn vor der ausführlichen Suite aus (~10 s gesamt).
+- **`.active_port` räumt auf** (TODO 5.6): Die Datei entsteht beim Start und verschwindet beim
+  Beenden (`exit`, Strg+C/SIGINT, SIGTERM). Testserver schreiben sie gar nicht mehr
+  (`MAZDA_PORT_FILE=0`), damit ein Testlauf den echten Port nicht überschreibt.
+  `START_VIEWER.bat` zeigt deshalb keinen „zuletzt genutzten Port" mehr an.
+- **Range-Requests** (TODO 5.8): `/pdf/` beantwortet `Range` mit `206 Partial Content` samt
+  `Content-Range`, unterstützt offene (`bytes=100-`) und Suffix-Bereiche (`bytes=-500`), liefert
+  `416` bei unbrauchbaren Bereichen und beantwortet `HEAD` ohne Body.
+- **Request-Log**: eine Zeile je API-, PDF- oder Fehler-Request (`METHODE PFAD STATUS MS`),
+  abschaltbar mit `LOG_REQUESTS=0`. Statische Dateien werden nicht geloggt.
+- **Favicon**: `public/favicon.png` (dasselbe Icon wie die Desktop-App), verlinkt im HTML und
+  ausgeliefert unter `/favicon.ico` und `/favicon.png`.
+- **Tests**: `npm test` = 10 Smoke- + 59 API- + 16 Suchprüfungen, alle grün.
+
+---
+
 ## [1.12.0] - 2026-10-21
 
 ### UI

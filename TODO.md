@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.12.0 · 21.10.2026
+**Stand:** v1.13.0 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -27,20 +27,18 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.11.0 umgesetzt:** Zweisprachige Oberfläche (de/en) und englisches README.
 >
 > **v1.12.0 umgesetzt:** Sprach-Dropdown mit Flaggen, Live-Umschaltung ohne Neuladen.
+>
+> **v1.13.0 umgesetzt:** 5.5 Smoke-Test, 5.6 `.active_port`, 5.8 Range/Log/Favicon.
 
 ---
 
-## 🎯 Nächste Schritte (v1.10.0)
+## 🎯 Nächste Schritte (v1.14.0)
 
-Die vier großen Pakete **A–D**, der Kapitelbaum und die Fehlercode-Suche sind erledigt (siehe unten).
-Offen, nach Nutzen sortiert:
+Alle geplanten Pakete (A–D, Kapitelbaum, Fehlercodes, Desktop-App, Sprachumschaltung, Betrieb) sind
+erledigt. Offen sind nur noch zwei Ausbau-Punkte:
 
 | Punkt | Inhalt | Aufwand | Bringt |
 |---|---|---|---|
-| **7.1** | Windows-EXE mit Electron (ohne Node lauffähig) | ~1 Tag | Weitergabe an Werkstatt-PC ohne Installation |
-| **5.5** | Smoke-Test mit `node --test` | ~1 h | schnellere Rückmeldung als die jetzigen Skripte |
-| **5.6** | `.active_port` beim Beenden aufräumen | ~15 min | keine irreführende Datei |
-| **5.8** | Range-Requests (206), Request-Log | ~1 h | sauberes HTTP und Fehlersuche |
 | **6.5** | Zweites Handbuch (L8/LF/L3) | ~3 h | Motorenreihe L |
 | **6.6** | Reparaturprotokoll | ~4 h | Historie für Wiederverkauf |
 
@@ -255,19 +253,24 @@ Mindestens diese Begriffe liefern heute 0 oder falsche Treffer:
 
 ## 🔵 P3 – Betrieb, Wartbarkeit & Projekt-Hygiene
 
-### [ ] 5.5 Smoke-Test (`node --test`)
-- Tests: `/api/status` 200, Suche liefert Treffer, `/api/links` parst eine Referenzseite, Index-Invarianten (7.294 Einträge, alle Sektionen valide, alle kuratierten Dateien vorhanden), Traversal-Varianten → 403
-- **Fertig, wenn:** `npm test` in unter 10 s grün ist
+### [x] 5.5 Smoke-Test (`node --test`) *(v1.13.0)*
+- **Umgesetzt:** `test/smoke.test.js` mit zehn Prüfungen — Status, Suche, Fehlercode-Route,
+  `/api/links`, Sektionsbaum, Index-Invarianten (7.294 Einträge, gültige Sektionscodes, alle PDFs
+  vorhanden), Traversal-Schutz, Range-Antwort, 416 und Favicon. `npm test` führt ihn vor der
+  ausführlichen Suite aus; `npm run test:smoke` allein braucht ~2 s.
 
-### [ ] 5.6 `.active_port` aufräumen
-- Enthält aktuell `3301`, obwohl kein Server lief → irreführend. Beim Start neu schreiben, beim Beenden löschen oder als reine Info kennzeichnen
+### [x] 5.6 `.active_port` aufräumen *(v1.13.0)*
+- Die Datei wird beim Start geschrieben und beim Beenden entfernt (`exit`, Strg+C/SIGINT, SIGTERM);
+  steht nur noch da, solange der Server läuft. Testserver schreiben sie nicht (`MAZDA_PORT_FILE=0`).
+  Bei einem harten Kill (Task-Manager) bleibt sie liegen und wird beim nächsten Start überschrieben.
 
 ### [x] 5.8 Kleinigkeiten
 - [x] unbenutzte Imports in `server.js` entfernt (neu: nur `http`, `fs`, `path`)
-- [x] Favicon beantwortet (204 statt 404)
+- [x] Favicon: `public/favicon.png` (App-Icon), ausgeliefert unter `/favicon.ico` und `/favicon.png`,
+  verlinkt im HTML
 - [ ] CHANGELOG: „1,02 MB" ([`CHANGELOG.md`](file:///C:/Projekte/Tools/mazda-manual-viewer/CHANGELOG.md)) → für v1.1 historisch korrekt, in v1.4.0 bereits richtiggestellt
-- [ ] Range-Requests (`206`) für PDFs — unkritisch, da alle Dateien < 1 MB, aber sauber
-- [ ] einfaches Request-Log (Methode, Pfad, Dauer) für Fehlersuche
+- [x] Range-Requests (`206`) für PDFs — offene und Suffix-Bereiche, `416` bei Fehlern, `HEAD` ohne Body
+- [x] einfaches Request-Log (Methode, Pfad, Status, Dauer) für API/PDF/Fehler, `LOG_REQUESTS=0` schaltet ab
 - [x] `hashchange`-Listener, damit manuelle `#datei.pdf`-Eingaben funktionieren
 
 ### [x] 5.9 Playwright als Dev-Setup *(v1.8.0)*
@@ -378,10 +381,9 @@ erzeugen eine kleinere EXE, öffnen aber kein eigenes Fenster und brauchen weite
 
 ## Empfohlene Reihenfolge
 
-### v1.10.0 (als Nächstes)
+### v1.14.0 (als Nächstes)
 
-Siehe Tabelle „Nächste Schritte" oben. **7.1** (Desktop-Build) ist ein eigener Block von ~1 Tag;
-daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
+Siehe Tabelle „Nächste Schritte" oben — es bleiben 6.5 (zweites Handbuch) und 6.6 (Reparaturprotokoll).
 
 ### Abgeschlossene Sprints (v1.4.0)
 
@@ -391,8 +393,21 @@ daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
 | 2 | 1.1, 1.2, 2.1, 4.3, 4.4 | ✅ |
 | 3 | 2.2, 2.3, 2.5, 3.1, 3.2 | ✅ (2.2 vollständig in v1.6.0) |
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
-| 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 offen) |
+| 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 in v1.13.0) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.13.0
+
+- [x] **5.5 Smoke-Test** — `test/smoke.test.js` mit `node:test`, zehn Prüfungen (Status, Suche,
+  Fehlercode-Route, Links, Sektionsbaum, Index-Invarianten, Traversal, Range, 416, Favicon).
+  `npm test` = Smoke + ausführliche Suite; `npm run test:smoke` allein ~2 s.
+- [x] **5.6 `.active_port`** — entsteht beim Start, verschwindet beim Beenden (auch Strg+C); Testserver
+  schreiben sie nicht (`MAZDA_PORT_FILE=0`). Nach `npm test` bleibt keine Datei zurück.
+- [x] **5.8 Range, Log, Favicon** — `/pdf/` beantwortet Range mit 206/Content-Range (offen und Suffix,
+  416 bei Fehlern, HEAD ohne Body); Request-Log für API/PDF/Fehler (`LOG_REQUESTS=0` schaltet ab);
+  `public/favicon.png` als Icon in Tab und Favoriten.
 
 ---
 

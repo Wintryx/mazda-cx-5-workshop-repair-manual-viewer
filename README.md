@@ -29,7 +29,7 @@ on a laptop or tablet in the workshop.
 | Page | Hotspots from PDF links (including 254 rotated wiring diagrams), text selection, zoom, fit width, fullscreen |
 | Workshop | Notes per document, bookmarks, checklists (injectors, front brakes, oil change), printing a page range |
 | UI languages | German (default) and English — flag dropdown in the header, switches **live** (no reload), remembered per browser |
-| Operation | Port fallback, `--open`, `/api/status`, clear start-up check of the data directory |
+| Operation | Port fallback, `--open`, `/api/status`, clear start-up check of the data directory, HTTP range requests for PDFs, request log (`LOG_REQUESTS=0` disables) |
 
 ## 2. Requirements
 
@@ -123,9 +123,10 @@ and index coverage.
 
 ```powershell
 npm run validate     # index, chapters, packs, checklists against each other (offline, exit code for CI)
-npm test             # validate + own test server on port 3480–3539 + API and search tests
+npm run test:smoke   # node:test smoke suite (10 checks, own server, ~2 s)
+npm test             # smoke + validate + own test server on port 3480–3539 + API and search tests
 npm run test:api     # API contract only, against a running server
-npm run test:browser # Playwright in Chrome: real UI (34 checks), starts the server itself
+npm run test:browser # Playwright in Chrome: real UI (36 checks), starts the server itself
 ```
 
 `npm test` and `npm run test:browser` start their own server (port 3480–3539) and leave a viewer
@@ -134,7 +135,7 @@ dependency) and an installed Google Chrome — no Playwright browsers are downlo
 (`channel: 'chrome'`). `npm run test:api` takes the address as an argument, default
 `http://127.0.0.1:3300`.
 
-Current state: 59 API checks, 16 search checks, 34 browser checks — all green.
+Current state: 10 smoke checks, 59 API checks, 16 search checks, 36 browser checks — all green.
 
 ## 9. Known limits
 
@@ -150,7 +151,7 @@ Current state: 59 API checks, 16 search checks, 34 browser checks — all green.
 ## 10. Maintenance
 
 - After PDF changes: `npm run index && npm run packs && npm run validate`
-- `.active_port` is informational only and overwritten on every start.
+- `.active_port` exists only while the server runs — written on start, removed on exit; test runs never touch it (`MAZDA_PORT_FILE=0`).
 - Backups before larger changes live in `_backup/` (not versioned).
 - `TODO.md` lists open items, `CHANGELOG.md` the version history.
 

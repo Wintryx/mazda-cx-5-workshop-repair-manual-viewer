@@ -59,7 +59,7 @@ async function main() {
   console.log('\n=== 2/3  Server starten ===');
   const server = spawn(NODE, ['server.js'], {
     cwd: ROOT,
-    env: { ...process.env, PORT: String(FIRST_PORT) },
+    env: { ...process.env, PORT: String(FIRST_PORT), MAZDA_PORT_FILE: '0' },
     stdio: 'ignore'
   });
   let exited = false;

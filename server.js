@@ -23,8 +23,42 @@ const MANUAL_ROOT = MANUAL_DIR;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const CONFIG_DIR = path.join(__dirname, 'config');
 const INDEX_FILE = path.join(PUBLIC_DIR, 'search_index.json');
+const PORT_FILE = path.join(__dirname, '.active_port');
+
+// Request-Log: API- und PDF-Aufrufe sowie alle Fehler; mit LOG_REQUESTS=0 abschaltbar.
+const REQUEST_LOG = process.env.LOG_REQUESTS !== '0';
+// Testläufe dürfen die echte .active_port nicht überschreiben (MAZDA_PORT_FILE=0).
+const WRITE_PORT_FILE = process.env.MAZDA_PORT_FILE !== '0';
 
 let CURRENT_PORT = START_PORT;
+let portFileWritten = false;
+
+/** Schreibt den aktiven Port – nur solange der Server läuft. */
+function writePortFile(port) {
+  if (!WRITE_PORT_FILE) return;
+  try {
+    fs.writeFileSync(PORT_FILE, String(port), 'utf8');
+    portFileWritten = true;
+  } catch (e) {
+    // z. B. im asar-Archiv der Desktop-App nicht schreibbar
+  }
+}
+
+/** Entfernt die Datei beim Beenden, damit kein veralteter Port stehen bleibt. */
+function clearPortFile() {
+  if (!portFileWritten) return;
+  portFileWritten = false;
+  try {
+    if (fs.readFileSync(PORT_FILE, 'utf8').trim() === String(CURRENT_PORT)) fs.unlinkSync(PORT_FILE);
+  } catch (e) {
+    // Datei existiert nicht mehr oder gehört einem anderen Prozess
+  }
+}
+
+process.on('exit', clearPortFile);
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGBREAK']) {
+  process.on(signal, () => { clearPortFile(); process.exit(0); });
+}
 
 // ---------------------------------------------------------------------------
 // Hilfsfunktionen
@@ -647,8 +681,20 @@ function sendJson(res, status, obj) {
 }
 
 function handleRequest(req, res) {
+  const started = process.hrtime.bigint();
   const parsedUrl = new URL(req.url, `http://${req.headers.host || ('localhost:' + CURRENT_PORT)}`);
   const pathname = parsedUrl.pathname;
+
+  if (REQUEST_LOG) {
+    res.on('finish', () => {
+      const ms = Math.round(Number(process.hrtime.bigint() - started) / 1e6);
+      const interesting = pathname.startsWith('/api/') || pathname.startsWith('/pdf/') || res.statusCode >= 400;
+      if (!interesting) return;
+      let url = req.url;
+      try { url = decodeURIComponent(req.url); } catch (e) { /* roh lassen */ }
+      console.log(`${req.method} ${url} ${res.statusCode} ${ms} ms`);
+    });
+  }
 
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
   if (req.method !== 'GET' && req.method !== 'HEAD') { send(res, 405, 'Method Not Allowed'); return; }
@@ -660,7 +706,17 @@ function handleRequest(req, res) {
     return;
   }
 
-  if (pathname === '/favicon.ico') { res.writeHead(204); res.end(); return; }
+  if (pathname === '/favicon.ico' || pathname === '/favicon.png') {
+    const icon = path.join(PUBLIC_DIR, 'favicon.png');
+    if (fs.existsSync(icon)) {
+      res.writeHead(200, { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' });
+      fs.createReadStream(icon).pipe(res);
+      return;
+    }
+    res.writeHead(204);
+    res.end();
+    return;
+  }
 
   // Statische Dateien
   if (pathname.startsWith('/vendor/') || pathname.startsWith('/public/')) {
@@ -678,7 +734,7 @@ function handleRequest(req, res) {
     return;
   }
 
-  // PDF
+  // PDF – mit Range-Unterstützung (206), damit PDF.js und Browser Teilbereiche laden können
   if (pathname.startsWith('/pdf/')) {
     const fileName = pathname.slice('/pdf/'.length);
     const filePath = safeJoin(MANUAL_ROOT, fileName);
@@ -687,12 +743,47 @@ function handleRequest(req, res) {
       return;
     }
     const stat = fs.statSync(filePath);
-    res.writeHead(200, {
+    const baseHeaders = {
       'Content-Type': 'application/pdf',
-      'Content-Length': stat.size,
+      'Accept-Ranges': 'bytes',
       'Cache-Control': 'public, max-age=3600',
       'X-Content-Type-Options': 'nosniff'
-    });
+    };
+
+    const rangeHeader = req.headers.range;
+    if (rangeHeader) {
+      const match = /^bytes=(\d*)-(\d*)$/.exec(String(rangeHeader).trim());
+      let start = match && match[1] ? parseInt(match[1], 10) : null;
+      let end = match && match[2] ? parseInt(match[2], 10) : null;
+      if (!match || (start === null && end === null)) {
+        res.writeHead(416, { ...baseHeaders, 'Content-Range': `bytes */${stat.size}` });
+        res.end();
+        return;
+      }
+      if (start === null) {
+        // Suffix-Form "bytes=-500": die letzten 500 Bytes
+        start = Math.max(0, stat.size - end);
+        end = stat.size - 1;
+      } else if (end === null || end >= stat.size) {
+        end = stat.size - 1;
+      }
+      if (start >= stat.size || start > end) {
+        res.writeHead(416, { ...baseHeaders, 'Content-Range': `bytes */${stat.size}` });
+        res.end();
+        return;
+      }
+      res.writeHead(206, {
+        ...baseHeaders,
+        'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+        'Content-Length': end - start + 1
+      });
+      if (req.method === 'HEAD') { res.end(); return; }
+      fs.createReadStream(filePath, { start, end }).pipe(res);
+      return;
+    }
+
+    res.writeHead(200, { ...baseHeaders, 'Content-Length': stat.size });
+    if (req.method === 'HEAD') { res.end(); return; }
     fs.createReadStream(filePath).pipe(res);
     return;
   }
@@ -821,7 +912,7 @@ function startServer(port, maxAttempts) {
   srv.once('listening', () => {
     CURRENT_PORT = port;
     console.log(`Mazda CX-5 Service Manual Viewer: http://localhost:${port}`);
-    try { fs.writeFileSync(path.join(__dirname, '.active_port'), String(port), 'utf8'); } catch (_) {}
+    writePortFile(port);
     if (process.argv.includes('--open')) {
       require('child_process').exec(`start http://localhost:${port}`);
     }

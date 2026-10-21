@@ -18,11 +18,8 @@ echo.
 node server.js --open
 set "EXITCODE=%errorlevel%"
 
-if exist ".active_port" (
-    set /p "PORT="<.active_port
-    echo.
-    echo Server beendet. Zuletzt genutzter Port: !PORT!
-)
+echo.
+echo Server beendet.
 
 if not "%EXITCODE%"=="0" (
     echo Hinweis: Beendet mit Code %EXITCODE% - bei Strg+C ist das normal.
