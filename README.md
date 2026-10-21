@@ -52,6 +52,7 @@ mazda-manual-viewer/
 ├─ data/                  7,294 PDFs (not versioned, see .gitignore)
 ├─ START_VIEWER.bat       double-click launcher with Node check
 ├─ package.json           scripts: start, app, dist, index, packs, validate, test
+├─ AGENTS.md              conventions for coding agents (commit language, tests, data)
 └─ TODO.md / CHANGELOG.md roadmap and version history
 ```
 
