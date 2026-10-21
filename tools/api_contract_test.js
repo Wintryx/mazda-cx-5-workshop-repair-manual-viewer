@@ -48,6 +48,13 @@ async function main() {
   ok('Baum enthält alle 7.294 Dokumente', treeDocs === 7294, String(treeDocs));
   ok('Gruppen 10–12 vorhanden', ['10', '11', '12'].every((k) => tree.body.some((g) => g.label.startsWith(k + ' '))));
 
+  // --- Textverweise (v1.17.0) ---
+  const lookup = await json('/api/lookup?codes=01-14B-35,99-99-99');
+  ok('GET /api/lookup 200', lookup.status === 200);
+  ok('Verweis 01-14B-35 löst auf', Boolean(lookup.body['01-14B-35'] && lookup.body['01-14B-35'].f));
+  ok('Unbekannter Verweis bleibt leer', !lookup.body['99-99-99']);
+  ok('Verweis nennt Titel', typeof (lookup.body['01-14B-35'] || {}).t === 'string');
+
   // --- Packs ---
   const packs = await json('/api/favorites');
   ok('GET /api/favorites 200', packs.status === 200);

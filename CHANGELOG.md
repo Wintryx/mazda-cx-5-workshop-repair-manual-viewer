@@ -6,6 +6,23 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.17.0] - 2026-10-21
+
+### Werkstatt-Workflow
+- **Textverweise klickbar**: Verweise wie „(See 01-13B-7 …)" sind im PDF nur Text. Der Viewer sucht
+  sie in der Textschicht, löst sie über den neuen Endpunkt `GET /api/lookup?codes=…` gegen den Index
+  auf und legt einen Marker exakt über die Ziffern (Tooltip mit Code und Zieltitel, Klick öffnet die
+  Seite). Das Handbuch setzt den Trenner oft als Gedankenstrich („01-13B–2") — beide Formen werden
+  erkannt. 962 Seiten enthalten solche Verweise.
+- **Suchtreffer im PDF**: Die Trefferzeilen werden gelb markiert, die Seite scrollt beim Öffnen zum
+  ersten Treffer, und neben dem Dateinamen steht „3 Treffer" (`doc.hits`, de/en).
+- **Letzte Seite**: Der Viewer merkt sich die zuletzt gelesene Seite (`localStorage`) und öffnet sie
+  beim nächsten Start; ein `#datei.pdf`-Link in der URL hat weiter Vorrang.
+- **Tests**: API-Vertrag jetzt 63 Prüfungen (Verweis-Auflösung), Browser-Test 45 (Verweise,
+  Markierung, letzte Seite).
+
+---
+
 ## [1.16.1] - 2026-10-21
 
 ### Korrektur zu 1.16.0

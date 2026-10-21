@@ -25,6 +25,9 @@ const CONFIG_DIR = path.join(__dirname, 'config');
 const INDEX_FILE = path.join(PUBLIC_DIR, 'search_index.json');
 const PORT_FILE = path.join(__dirname, '.active_port');
 
+// Sektionscode einer Handbuchseite, z. B. "01-14B-35"
+const SEC_RE = /^\d{2}-\d{2}[A-Z]?-\d+$/;
+
 // Request-Log: API- und PDF-Aufrufe sowie alle Fehler; mit LOG_REQUESTS=0 abschaltbar.
 const REQUEST_LOG = process.env.LOG_REQUESTS !== '0';
 // Testläufe dürfen die echte .active_port nicht überschreiben (MAZDA_PORT_FILE=0).
@@ -117,6 +120,7 @@ const MIME = {
 
 let catalog = [];
 const byFile = new Map();
+const bySec = new Map();
 let docs = [];
 let treeCache = null;
 
@@ -127,7 +131,12 @@ function loadCatalog() {
     catalog = [];
   }
   byFile.clear();
-  for (const e of catalog) byFile.set(e.f, e);
+  bySec.clear();
+  for (const e of catalog) {
+    byFile.set(e.f, e);
+    // Erste Seite je Sektionscode – Ziel für Textverweise wie "(See 01-14B-35 …)"
+    if (e.sec && !bySec.has(e.sec)) bySec.set(e.sec, e);
+  }
   treeCache = null;
   dtcCache = null;
   console.log(`Katalog geladen: ${catalog.length} Dokumente.`);
@@ -823,6 +832,25 @@ function handleRequest(req, res) {
 
   if (pathname === '/api/tree') {
     sendJson(res, 200, buildTree());
+    return;
+  }
+
+  // Textverweise "(See 01-14B-35 …)" auflösen: Code → Dokument
+  if (pathname === '/api/lookup') {
+    const raw = parsedUrl.searchParams.get('codes') || '';
+    const wanted = raw.split(',').map((s) => s.trim()).filter((s) => SEC_RE.test(s)).slice(0, 20);
+    const found = {};
+    for (const code of wanted) {
+      let hit = bySec.get(code);
+      if (!hit) {
+        // Verweis ohne letzte Ziffer ("01-14B") → erste Seite der Sektion
+        for (const [sec, entry] of bySec) {
+          if (sec.startsWith(code + '-')) { hit = entry; break; }
+        }
+      }
+      if (hit) found[code] = { f: hit.f, t: hit.t || '', sec: hit.sec };
+    }
+    sendJson(res, 200, found);
     return;
   }
 

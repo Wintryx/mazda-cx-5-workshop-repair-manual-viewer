@@ -43,6 +43,7 @@ const I18N = {
     'search.empty': 'Keine Treffer.',
     'search.failed': 'Suche fehlgeschlagen',
     'search.fuzzy': 'Keine exakten Treffer – ähnliche Begriffe angezeigt',
+    'doc.hits': '{n} Treffer',
     'dtc.found': 'Fehlercode {code}: {n} Dokumente – Diagnoseblätter zuerst',
     'dtc.unknown': 'Fehlercode {code} ist im Handbuch nicht dokumentiert',
 
@@ -156,6 +157,7 @@ const I18N = {
     'search.empty': 'No matches.',
     'search.failed': 'Search failed',
     'search.fuzzy': 'No exact matches – showing similar terms',
+    'doc.hits': '{n} hits',
     'dtc.found': 'Fault code {code}: {n} documents – diagnostic sheets first',
     'dtc.unknown': 'Fault code {code} is not documented in this manual',
 

@@ -209,6 +209,46 @@ function check(name, cond, detail) {
   await page.click('#lang-menu [data-lang="de"]');
   await page.waitForFunction(() => document.documentElement.lang === 'de', null, { timeout: 10000 });
 
+  // ---------- 10d) Textverweise (v1.17.0) ----------
+  await page.evaluate(() => { location.hash = 'mazda_cx5_workshop_manual924.pdf'; });
+  await page.waitForFunction(
+    () => (document.getElementById('doc-name-badge').textContent || '').includes('924'),
+    null, { timeout: 15000 });
+  await page.waitForFunction(() => document.querySelectorAll('.ref-link').length > 0, null, { timeout: 10000 });
+  const refCount = await page.locator('.ref-link').count();
+  check('Textverweise erkannt', refCount > 0, `${refCount} Marker`);
+  const refInfo = await page.evaluate(() => {
+    const links = [...document.querySelectorAll('.ref-link')];
+    const current = location.hash;
+    const link = links.find((a) => a.getAttribute('href') !== current) || links[0];
+    return link ? { href: link.getAttribute('href'), title: link.title } : null;
+  });
+  check('Textverweis nennt Ziel', /^\d{2}-\d{2}[A-Z]?-\d+ – /.test((refInfo && refInfo.title) || ''), refInfo && refInfo.title);
+  await page.click(`.ref-link[href="${refInfo.href}"]`);
+  await page.waitForFunction((href) => location.hash === href, refInfo.href, { timeout: 15000 });
+  check('Textverweis navigiert', true, refInfo.href);
+
+  // ---------- 10e) Suchtreffer im PDF (v1.17.0) ----------
+  // Seite mit bekanntem Begriff öffnen, dann suchen: die Markierung muss ohne
+  // weiteres Zutun auf der aktuellen Seite erscheinen.
+  await page.evaluate(() => { location.hash = 'mazda_cx5_workshop_manual5.pdf'; });
+  await page.waitForFunction(() => location.hash.includes('manual5'), null, { timeout: 15000 });
+  await page.waitForTimeout(1500);
+  await page.fill('#sidebar-search-input', 'diesel');
+  await page.waitForFunction(() => document.querySelectorAll('.textLayer .search-highlight').length > 0, null, { timeout: 15000 });
+  const marked = await page.locator('.textLayer .search-highlight').count();
+  check('Treffer im PDF markiert', marked > 0, `${marked} markierte Zeilen`);
+  const hitsText = ((await page.locator('#doc-hit-count').textContent()) || '').trim();
+  check('Trefferzähler sichtbar', /\d+/.test(hitsText), hitsText);
+
+  // ---------- 10f) Letzte Seite merken (v1.17.0) ----------
+  const lastDoc = ((await page.locator('#doc-name-badge').textContent()) || '').trim();
+  await page.goto(BASE);
+  await page.waitForFunction(
+    (file) => (document.getElementById('doc-name-badge').textContent || '').trim() === file,
+    lastDoc, { timeout: 20000 });
+  check('Letzte Seite beim Start wiederhergestellt', true, lastDoc);
+
   // ---------- 11) Konsole ----------
   check('keine Konsolen-/Seitenfehler', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
 

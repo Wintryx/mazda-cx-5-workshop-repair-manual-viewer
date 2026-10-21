@@ -18,8 +18,8 @@ runtime dependencies; an Electron shell provides a Windows desktop build.
 
 ## Before every commit
 
-1. `npm test` must be green (10 smoke + 59 API + 16 search checks).
-2. `npm run test:browser` if the frontend changed (39 checks, runs Chrome, starts its own server).
+1. `npm test` must be green (10 smoke + 63 API + 16 search checks).
+2. `npm run test:browser` if the frontend changed (45 checks, runs Chrome, starts its own server).
 3. Bump `version` in `package.json` for user-visible changes and add a `CHANGELOG.md` entry.
 4. Tick the matching items in `TODO.md` (or move them to the current "Erledigt in vX.Y.Z" section).
 

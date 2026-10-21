@@ -47,7 +47,9 @@ Notes and bookmarks are stored per browser respectively in the Electron profile.
 | Sections | Tree built from the index: 17 groups → 238 sections → all 7,294 documents, three clicks to any page |
 | Search | Word boundaries, IDF weighting, phrase synonyms, typo tolerance, umlaut normalisation, paging |
 | Fault codes | 329 DTCs (P/B/C/U) from the diagnostic chapters; type a code → diagnostic sheet first |
-| Page | Hotspots from PDF links (including 254 rotated wiring diagrams), text selection, zoom, fit width, fullscreen |
+| Cross references | Every reference printed in the page (“See 01-13B-7 …”) becomes a clickable marker, resolved against the index |
+| Page | Hotspots from PDF links (including 254 rotated wiring diagrams), search terms marked in yellow, text selection, zoom, fit width, fullscreen |
+| Session | Remembers the last opened page; `#file.pdf` in the URL still wins |
 | Workshop | Notes per document, bookmarks, checklists (injectors, front brakes, oil change), printing a page range |
 | UI languages | German (default) and English — flag dropdown in the header, switches **live** (no reload). Covers the whole interface including section groups, repair packs and checklists; only manual content (document titles) stays as printed |
 | Operation | Port fallback, `--open`, `/api/status`, clear start-up check of the data directory, HTTP range requests for PDFs, request log (`LOG_REQUESTS=0` disables) |
@@ -129,7 +131,7 @@ always reports port, data directory, PDF count and index coverage.
 | Zoom | + / −, Ctrl + mouse wheel, double click |
 | Fit width | `W` or the “Fit width” button |
 | Fullscreen / workshop mode | `F` |
-| Search | search field at the top, `Enter`; “load more” for further hits |
+| Search | search field at the top, `Enter`; “load more” for further hits; hits are marked on the page |
 | Fault code | type the code into the search field (`P0301`, `U0100:87`) → diagnostic sheets first; 329 codes in the index (`/api/dtc`) |
 | Jump to file number | jump field (e.g. `1092` → `mazda_cx5_workshop_manual1092.pdf`) |
 | Chapters / sections | sidebar: quick-access cards, below them the “All sections” tree (group → section → document) |
@@ -160,7 +162,7 @@ npm run validate     # index, chapters, packs, checklists against each other (of
 npm run test:smoke   # node:test smoke suite (10 checks, own server, ~2 s)
 npm test             # smoke + validate + own test server on port 3480–3539 + API and search tests
 npm run test:api     # API contract only, against a running server
-npm run test:browser # Playwright in Chrome: real UI (39 checks), starts the server itself
+npm run test:browser # Playwright in Chrome: real UI (45 checks), starts the server itself
 ```
 
 `npm test` and `npm run test:browser` start their own server (port 3480–3539) and leave a viewer
@@ -169,7 +171,7 @@ dependency) and an installed Google Chrome — no Playwright browsers are downlo
 (`channel: 'chrome'`). `npm run test:api` takes the address as an argument, default
 `http://127.0.0.1:3300`.
 
-Current state: 10 smoke checks, 59 API checks, 16 search checks, 39 browser checks — all green.
+Current state: 10 smoke checks, 63 API checks, 16 search checks, 45 browser checks — all green.
 
 ## 9. Known limits
 

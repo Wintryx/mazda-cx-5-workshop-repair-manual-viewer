@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.16.1 · 21.10.2026
+**Stand:** v1.17.0 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -35,6 +35,10 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.15.0 umgesetzt:** Titelabdeckung 76,9 % → 78,5 %.
 >
 > **v1.16.0 umgesetzt:** OCR-Streugut gefiltert (`tools/ocr_clean.js`).
+>
+> **v1.16.1 umgesetzt:** Korrektur am OCR-Filter (Satzzeichen am Wortrand).
+>
+> **v1.17.0 umgesetzt:** Textverweise klickbar, Suchtreffer markiert, letzte Seite gemerkt.
 
 ---
 
@@ -402,6 +406,19 @@ Siehe Tabelle „Nächste Schritte" oben — es bleiben 6.5 (zweites Handbuch) u
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 in v1.13.0) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.17.0
+
+- [x] **Werkstatt-Workflow** — drei Funktionen aus der Verbesserungsliste:
+  - **Textverweise klickbar**: „(See 01-13B-7 …)" wird über `GET /api/lookup` gegen den Index
+    aufgelöst und als Marker über die Ziffern gelegt (962 Seiten mit Verweisen; Gedankenstrich-Variante
+    „01-13B–2" wird erkannt)
+  - **Suchtreffer im PDF**: gelbe Markierung der Trefferzeilen, Scrollen zum ersten Treffer,
+    Trefferzähler neben dem Dateinamen
+  - **Letzte Seite**: `localStorage` merkt den zuletzt gelesenen Dokumentnamen; `#datei.pdf` hat Vorrang
+  - Tests: 63 API-Prüfungen (+4), 45 Browser-Prüfungen (+6)
 
 ---
 

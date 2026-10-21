@@ -408,3 +408,46 @@ body.workshop-mode .app-viewer { padding: 8px; }
 .lang-item.active {
   background: rgba(59, 130, 246, 0.16);
 }
+/* ---------- Textverweise und Trefferanzeige (v1.17.0) ---------- */
+
+/* Die Textschicht liegt über dem Canvas; die Verweis-Marker darüber,
+   die PDF-Hotspots bleiben die oberste Ebene. */
+.ref-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.hotspot-overlay {
+  z-index: 3;
+}
+
+.ref-link {
+  position: absolute;
+  pointer-events: auto;
+  background: rgba(59, 130, 246, 0.18);
+  border-bottom: 1.5px solid rgba(96, 165, 250, 0.95);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.ref-link:hover {
+  background: rgba(59, 130, 246, 0.38);
+}
+
+.doc-hits {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 9px;
+  background: rgba(234, 179, 8, 0.16);
+  border: 1px solid rgba(234, 179, 8, 0.45);
+  color: #fbbf24;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}

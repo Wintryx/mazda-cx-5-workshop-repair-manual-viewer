@@ -39,6 +39,7 @@
     searchOffset: 0,
     searchLimit: 60,
     searchTotal: 0,
+    highlightScroll: false,
     bookmarks: loadJSON('mazda_bookmarks', []),
     notes: loadJSON('mazda_notes', {}),
     notesDirty: false,
@@ -50,6 +51,7 @@
   const el = {
     canvas: $('pdf-canvas'),
     textLayer: $('text-layer'),
+    refOverlay: $('ref-overlay'),
     hotspotOverlay: $('hotspot-overlay'),
     linkTooltip: $('link-tooltip'),
     viewerContainer: $('viewer-container'),
@@ -64,6 +66,7 @@
     docSecBadge: $('doc-sec-badge'),
     docNameBadge: $('doc-name-badge'),
     docTitleBar: $('doc-title-bar'),
+    docHitCount: $('doc-hit-count'),
     inputJumpDoc: $('input-jump-doc'),
     btnPrevPage: $('btn-prev-page'),
     btnNextPage: $('btn-next-page'),
@@ -180,6 +183,20 @@
   }
 
   // ---------------------------------------------------------------- Navigation
+  /** Merkt sich die zuletzt gelesene Seite für den nächsten Start. */
+  function rememberLastFile(fileName) {
+    try { localStorage.setItem('mazda_last_file', fileName); } catch (e) { /* Speicher voll */ }
+  }
+
+  function lastFile() {
+    try {
+      const file = localStorage.getItem('mazda_last_file');
+      return file && file.endsWith('.pdf') ? file : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
   async function loadPdf(fileName, pushToHistory) {
     if (!fileName) return;
     if (state.isRendering) {
@@ -226,6 +243,8 @@
       await renderTextLayer(page, viewport);
       renderHotspots(viewport);
       applySearchHighlight();
+      renderTextRefs();
+      rememberLastFile(fileName);
       prefetchNeighbours(fileName);
     } catch (err) {
       console.error('PDF konnte nicht geladen werden:', err);
@@ -523,11 +542,118 @@
   function applySearchHighlight() {
     el.textLayer.querySelectorAll('.search-highlight').forEach((n) => n.classList.remove('search-highlight'));
     const terms = (state.searchTerms || []).filter((t) => t.length > 1).map((t) => t.toLowerCase());
-    if (terms.length === 0) return;
+    if (terms.length === 0) {
+      updateHitCount(0);
+      return;
+    }
+    let hits = 0;
     el.textLayer.querySelectorAll('span').forEach((span) => {
       const txt = span.textContent.toLowerCase();
-      if (terms.some((t) => txt.includes(t))) span.classList.add('search-highlight');
+      if (terms.some((t) => txt.includes(t))) {
+        span.classList.add('search-highlight');
+        hits++;
+      }
     });
+    updateHitCount(hits);
+    if (hits && state.highlightScroll) {
+      state.highlightScroll = false;
+      scrollToFirstHighlight();
+    }
+  }
+
+  /** Zeigt "3 Treffer" neben dem Dokumentnamen, sobald eine Suche aktiv ist. */
+  function updateHitCount(hits) {
+    if (!el.docHitCount) return;
+    if (!hits || !(state.searchTerms || []).length) {
+      el.docHitCount.classList.add('hidden');
+      el.docHitCount.textContent = '';
+      return;
+    }
+    el.docHitCount.textContent = t('doc.hits', { n: hits });
+    el.docHitCount.classList.remove('hidden');
+  }
+
+  /** Scrollt den ersten markierten Treffer in den sichtbaren Bereich. */
+  function scrollToFirstHighlight() {
+    const first = el.textLayer.querySelector('.search-highlight');
+    if (!first) return;
+    const rect = first.getBoundingClientRect();
+    const box = el.viewerContainer.getBoundingClientRect();
+    if (rect.top < box.top || rect.bottom > box.bottom) {
+      el.viewerContainer.scrollTop += rect.top - box.top - 48;
+    }
+  }
+
+  // ---------------------------------------------------------------- Textverweise
+  // "(See 01-14B-35 …)" steht im PDF nur als Text. Wir suchen die Codes in der
+  // Textschicht, fragen den Server nach dem Zieldokument und legen einen Link
+  // exakt über die Ziffern – ohne den Text selbst umzubauen.
+  async function renderTextRefs() {
+    el.refOverlay.innerHTML = '';
+    const codes = new Map();
+    for (const span of el.textLayer.querySelectorAll('span')) {
+      const text = span.textContent || '';
+      // Das Handbuch setzt den Trenner oft als Gedankenstrich: "01-13B–2"
+      const re = /\d{2}[-–—]\d{2}[A-Z]?[-–—]\d+/g;
+      let m;
+      while ((m = re.exec(text))) {
+        const code = m[0].replace(/[–—]/g, '-');
+        if (!codes.has(code)) codes.set(code, []);
+        codes.get(code).push({ span, index: m.index, length: m[0].length });
+      }
+    }
+    if (!codes.size) return;
+
+    let found = {};
+    try {
+      const res = await fetch(`/api/lookup?codes=${encodeURIComponent([...codes.keys()].slice(0, 12).join(','))}`);
+      if (res.ok) found = await res.json();
+    } catch (e) {
+      return;                                  // Server nicht erreichbar – Verweise bleiben Text
+    }
+    if (!Object.keys(found).length) return;
+
+    const base = el.pageWrapper.getBoundingClientRect();
+    for (const [code, spots] of codes) {
+      const target = found[code];
+      if (!target) continue;
+      for (const spot of spots) {
+        for (const rect of textRects(spot.span, spot.index, spot.length)) {
+          const link = document.createElement('a');
+          link.className = 'ref-link';
+          link.href = `#${target.f}`;
+          link.title = `${code} – ${target.t || target.f}`;
+          link.style.left = `${rect.left - base.left}px`;
+          link.style.top = `${rect.top - base.top}px`;
+          link.style.width = `${rect.width}px`;
+          link.style.height = `${rect.height}px`;
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            loadPdf(target.f);
+          });
+          el.refOverlay.appendChild(link);
+        }
+      }
+    }
+  }
+
+  /** Bildschirm-Rechtecke eines Textausschnitts innerhalb eines Spans. */
+  function textRects(span, start, length) {
+    let node = null;
+    for (const child of span.childNodes) {
+      if (child.nodeType === 3 && child.length >= start + length) { node = child; break; }
+    }
+    if (!node) node = span.firstChild;
+    if (!node || node.nodeType !== 3) return [];
+    try {
+      const range = document.createRange();
+      range.setStart(node, Math.min(start, node.length));
+      range.setEnd(node, Math.min(start + length, node.length));
+      return [...range.getClientRects()].filter((r) => r.width > 1 && r.height > 1);
+    } catch (e) {
+      return [];
+    }
   }
 
   // Gruppenlabel aus dem Index für die Trefferliste übersetzen (Sektion fehlt selten)
@@ -558,6 +684,7 @@
       state.searchTerms = data.terms || [];
       state.searchTotal = data.total || 0;
       state.searchOffset = offset;
+      state.highlightScroll = true;
 
       el.searchCount.textContent = data.total || 0;
       el.searchResultsSection.classList.remove('hidden');
@@ -1118,7 +1245,9 @@
     initSectionTree();
 
     const hash = location.hash.replace('#', '').trim();
-    await loadPdf(hash && hash.endsWith('.pdf') ? hash : state.currentFile);
+    // Reihenfolge: expliziter Sprungmarken-Link → zuletzt gelesene Seite → Deckblatt
+    const startFile = hash && hash.endsWith('.pdf') ? hash : (lastFile() || state.currentFile);
+    await loadPdf(startFile);
 
     document.body.classList.add('highlight-links');
   }
