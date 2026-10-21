@@ -186,6 +186,56 @@ function topHeading(lines) {
 }
 
 /**
+ * Kopfzeile einer DTC-Seite: "DTC P0223:00 [SKYACTIV-G 2.0]".
+ * Die normale Bewertung verwirft sie, weil der Buchstabenanteil zu klein ist.
+ */
+function dtcHeading(lines) {
+  for (const l of lines) {
+    if (l.y < 700 || l.y >= HEADER_Y) continue;
+    if (l.x > 90) continue;
+    const t = l.text;
+    if (/^DTC\s+[PBCU]\d{4}/i.test(t) && t.length <= 70) return t;
+  }
+  return '';
+}
+
+/**
+ * Überschrift mit Sektionscode davor: "09-80C BODY STRUCTURE", "03-11 FRONT AXLE".
+ * Diese Zeilen verwirft die normale Bewertung wegen des Codes am Anfang.
+ */
+function sectionHeading(lines) {
+  for (const l of lines) {
+    if (l.y < 650 || l.y >= HEADER_Y) continue;
+    if (l.x > 90) continue;
+    const m = l.text.match(/^(\d{2}-\d{2}[A-Z]?)\s+(.+)$/);
+    if (!m) continue;
+    const rest = m[2].replace(/\[[^\]]*$/, '').trim();
+    if (rest.length < 8 || rest.length > 80) continue;
+    if (upperRatio(rest) < 0.85) continue;
+    if (!/[A-Za-z]{4}/.test(rest)) continue;
+    if (/^END OF SIE/i.test(rest)) continue;
+    return `${m[1]} ${rest}`;
+  }
+  return '';
+}
+
+/** Zentrierte Großbuchstaben-Überschrift: "FOREWORD", "SYSTEM INDEX". */
+function centeredHeading(lines) {
+  for (const l of lines) {
+    if (l.y < 600 || l.y >= HEADER_Y) continue;
+    const t = l.text;
+    if (t.length < 4 || t.length > 40) continue;
+    if (l.x < 100 || l.x > 500) continue;
+    if (upperRatio(t) < 0.9) continue;
+    if (letterRatio(t) < 0.8) continue;
+    if (/\d/.test(t)) continue;
+    if (l.h < 11) continue;
+    return t;
+  }
+  return '';
+}
+
+/**
  * Liest eine Seite einmal und liefert Überschrift und Volltext.
  * Der Volltext dient als Rückfallebene für Seiten, bei denen die eigene
  * Stream-Extraktion (build_index.extractText) leer bleibt — z. B. bei
@@ -229,7 +279,13 @@ async function readPage(filePath) {
     }
     // Ein Verfahrensbegriff am Zeilenende ist das stärkere Signal als die
     // oberste Zeile – sonst gewinnt z. B. "Sub side" gegen "TWC INSTALLATION".
-    return { title: best ? best.line.text : topHeading(lines), text };
+    if (best) return { title: best.line.text, text };
+
+    // Gezielte Nachlese für Kopfzeilen, die die allgemeinen Filter verwerfen
+    return {
+      title: topHeading(lines) || dtcHeading(lines) || sectionHeading(lines) || centeredHeading(lines),
+      text
+    };
   } catch (e) {
     return { title: '', text: '' };
   } finally {

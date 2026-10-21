@@ -6,6 +6,22 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.15.0] - 2026-10-21
+
+### Datenqualität
+- **Titelabdeckung 76,9 % → 78,5 %** (5.608 → 5.725 von 7.294). Analyse der 1.686 Seiten ohne Titel
+  ergab drei klar abgrenzbare Gruppen, die die allgemeinen Filter verworfen hatten:
+  - **DTC-Kopfzeilen** („DTC P0223:00 [SKYACTIV-G 2.0]", 95 Seiten): zu geringer Buchstabenanteil
+  - **Überschriften mit Sektionscode** („09-80C BODY STRUCTURE", „03-11 FRONT AXLE", 15 Seiten):
+    der Code am Zeilenanfang führte zur Ablehnung
+  - **zentrierte Großbuchstaben** („FOREWORD", „SYSTEM INDEX", 7 Seiten): standen nicht am linken Rand
+- Bewusst **nicht** übernommen: gelockerte Filter für Tabellenköpfe und Fortsetzungsseiten — im Test
+  lieferten sie zu ~50 % Unsinn („Point Hole diameter", „No. Part Name tension s (mm)", „End Of Sie").
+  Die 1.569 verbleibenden Seiten haben wirklich keine eigene Überschrift; ihr Titel bleibt leer.
+- Index 4,30 MB, Build 181 s; Layout-Titel 4.522 (vorher 4.362).
+
+---
+
 ## [1.14.0] - 2026-10-21
 
 ### UI

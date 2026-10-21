@@ -173,8 +173,10 @@ Current state: 10 smoke checks, 59 API checks, 16 search checks, 39 browser chec
 
 ## 9. Known limits
 
-- **Title coverage 76.9 %** (5,608 of 7,294): the rest are pages without their own heading
+- **Title coverage 78.5 %** (5,725 of 7,294): the rest are pages without their own heading
   (continuation pages, drawings without captions) — the title stays empty instead of being guessed.
+  Three extra passes catch headings the general rules reject: DTC pages (“DTC P0223:00 [SKYACTIV-G 2.0]”),
+  headings prefixed with a section code (“09-80C BODY STRUCTURE”) and centred capitals (“FOREWORD”).
 - **OCR text** of the 253 drawing pages (wiring diagrams, bodyshop) is machine-read and contains
   errors (“BAITERY”, “[CRAY]”). Good for keywords, not for quoting; the pages themselves are
   authoritative.

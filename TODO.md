@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.14.0 · 21.10.2026
+**Stand:** v1.15.0 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -396,6 +396,15 @@ Siehe Tabelle „Nächste Schritte" oben — es bleiben 6.5 (zweites Handbuch) u
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 in v1.13.0) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.15.0
+
+- [x] **Titelabdeckung 76,9 % → 78,5 %** — Analyse der 1.686 Seiten ohne Titel, drei gezielte Nachlese-
+  Regeln in `tools/titles.js`: DTC-Kopfzeilen (`DTC P0223:00 [SKYACTIV-G 2.0]`, 95 Seiten),
+  Überschriften mit Sektionscode (`09-80C BODY STRUCTURE`, 15) und zentrierte Großbuchstaben
+  (`FOREWORD`, 7). Gelockerte Filter für Tabellenköpfe wurden verworfen (≈50 % Unsinn im Test).
 
 ---
 
