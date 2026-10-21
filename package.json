@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Wintryx/mazda-cx5-viewer.git"
+    "url": "git+ssh://git@github.com/Wintryx/mazda-cx-5-workshop-repair-manual-viewer.git"
   },
   "main": "electron/main.js",
   "engines": {

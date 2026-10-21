@@ -163,12 +163,14 @@ Voraussetzungen: Python 3 mit `pymupdf` (`pip install pymupdf`) und ein Windows-
 (~5 MB). Push über SSH:
 
 ```powershell
-git remote add origin git@github.com:<benutzer>/mazda-cx5-viewer.git   # einmalig
+git remote add origin git@github.com:Wintryx/mazda-cx-5-workshop-repair-manual-viewer.git   # einmalig
 git push -u origin main
 ```
 
-Das Repository sollte **privat** bleiben: Der Index enthält Titel und Stichworte, die aus dem
-Mazda-Handbuch extrahiert wurden, und unterliegt damit dem Urheberrecht (siehe Abschnitt 12).
+Das Repository liegt unter
+[github.com/Wintryx/mazda-cx-5-workshop-repair-manual-viewer](https://github.com/Wintryx/mazda-cx-5-workshop-repair-manual-viewer)
+und ist **privat**: Der Index enthält Titel und Stichworte, die aus dem Mazda-Handbuch extrahiert
+wurden, und unterliegt damit dem Urheberrecht (siehe Abschnitt 12).
 
 ## 11. Desktop-App (Windows-EXE)
 
