@@ -157,6 +157,19 @@ npm run index
 Voraussetzungen: Python 3 mit `pymupdf` (`pip install pymupdf`) und ein Windows-OCR-Sprachpaket
 (hier de-DE). Der Viewer selbst braucht weder Python noch Netz — nur dieser Wartungsschritt.
 
+**Versionierung:** Das Projekt ist ein Git-Repository auf `main`. Nicht versioniert sind `data\`
+(451 MB PDFs), `node_modules\`, `dist\` und `_backup\`; Teil des Repos sind dagegen
+`public/search_index.json` und `config/ocr_text.json`, weil der Viewer ohne sie nicht läuft
+(~5 MB). Push über SSH:
+
+```powershell
+git remote add origin git@github.com:<benutzer>/mazda-cx5-viewer.git   # einmalig
+git push -u origin main
+```
+
+Das Repository sollte **privat** bleiben: Der Index enthält Titel und Stichworte, die aus dem
+Mazda-Handbuch extrahiert wurden, und unterliegt damit dem Urheberrecht (siehe Abschnitt 12).
+
 ## 11. Desktop-App (Windows-EXE)
 
 Für Rechner **ohne Node**: einmalig `npm install` (holt Electron und electron-builder als

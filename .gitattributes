@@ -1,0 +1,13 @@
+# Zeilenenden vereinheitlichen: Quelltext LF, Windows-Starter CRLF.
+# Verhindert die "LF will be replaced by CRLF"-Hinweise und macht Checkouts
+# auf jedem Rechner gleich.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binärdateien nicht anfassen
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.pdf binary
