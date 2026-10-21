@@ -185,6 +185,13 @@ function check(name, cond, detail) {
   const firstBadge = ((await page.textContent('#search-results-list .nav-item-badge')) || '').trim();
   check('Fehlercode führt zum Diagnoseblatt', /^01-02/.test(firstBadge), firstBadge);
 
+  // ---------- 10c) Sprachumschaltung (v1.11.0) ----------
+  await page.click('#btn-lang');
+  await page.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 15000 });
+  const enTab = ((await page.textContent('.sidebar-tabs .tab-btn span')) || '').trim();
+  check('Sprachwechsel auf Englisch', enTab.includes('Assemblies'), enTab);
+  check('Fenstertitel auf Englisch', (await page.title()).includes('Service Manual Portal'));
+
   // ---------- 11) Konsole ----------
   check('keine Konsolen-/Seitenfehler', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
 

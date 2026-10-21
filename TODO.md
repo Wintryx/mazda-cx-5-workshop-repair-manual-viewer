@@ -1,6 +1,6 @@
 # Roadmap & TODOs – Mazda CX-5 Service Manual Viewer
 
-**Stand:** v1.9.0 · 20.10.2026
+**Stand:** v1.11.0 · 21.10.2026
 **Grundlage:** vollständige Code- und Datenanalyse (7.294 PDFs, alle API-Endpunkte, Index-Auswertung, Testinstanz auf Port 3399)
 
 Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am Werkstattarbeitsplatz (Tablet/Laptop am Auto) universell nutzbar zu machen. Abgehakte Punkte wandern nach unten in die Versionshistorie.
@@ -21,6 +21,10 @@ Diese Liste enthält alle offenen Punkte, um den Viewer sicher, korrekt und am W
 > **v1.8.0 umgesetzt:** 6.1 Sektionsbaum, 6.2 Gruppen 10–12, 5.9 Playwright-Test ohne Vorbereitung.
 >
 > **v1.9.0 umgesetzt:** 6.3 Fehlercode-Suche (P0301 → Diagnoseblatt) inkl. `/api/dtc`.
+>
+> **v1.10.0 umgesetzt:** 7.1 Desktop-App (Windows-EXE, Electron).
+>
+> **v1.11.0 umgesetzt:** Zweisprachige Oberfläche (de/en) und englisches README.
 
 ---
 
@@ -293,7 +297,9 @@ Mindestens diese Begriffe liefern heute 0 oder falsche Treffer:
 - Siehe **2.4** — dort stehen Befund (1.007 Bildseiten), Aufwand und Abbruchkriterien.
 
 ### [ ] 6.5 Weiteres Handbuch einbinden
-In `Downloads` liegt `mazda-l8-lf-l3-engine-workshop-manual.pdf` (L8/LF/L3-Motoren, 33 MB) — derzeit ungenutzt. Als zusätzliche Dokumentfamilie mit eigenem Index-Zweig aufnehmen, sobald 2.1–2.3 stehen
+In `Downloads` liegt `mazda-l8-lf-l3-engine-workshop-manual.pdf` (L8/LF/L3-Motoren, 33 MB) — derzeit ungenutzt.
+Quelle (Chrome-Historie, 20.10.2026): `https://en.mazdaclub.cz/manual_download_act.php?id=2918`.
+Als zusätzliche Dokumentfamilie mit eigenem Index-Zweig aufnehmen, sobald 2.1–2.3 stehen
 
 ### [ ] 6.6 Reparaturprotokoll
 Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalStorage/JSON-Export) — Mehrwert für Wiederverkauf und Wartungshistorie
@@ -385,6 +391,16 @@ daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
 | 4 | 4.1, 4.2, 4.5–4.9 | ✅ (+ Flex-Shrink-Fix) |
 | 5 | 5.2–5.7, 6.1, 6.2 | ✅ (5.5/5.6 offen) |
 | 6 | 4.10–4.12, 6.3 | ✅ (6.3 in v1.9.0) |
+
+---
+
+## ✅ Erledigt in v1.11.0
+
+- [x] **Zweisprachige Oberfläche** — `public/i18n.js` mit Wörterbuch (de/en) und `data-i18n`-Attributen;
+  dynamische Texte über `t()`. Umschalter `EN`/`DE` im Header, Wahl in `localStorage`, Neuladen beim
+  Wechsel. Standard Deutsch; Kapitel- und Sektionsnamen bleiben Daten (zweisprachig im Handbuch).
+- [x] **README auf Englisch** — inklusive hervorgehobener Download-Quelle des Handbuchs und
+  Urheberrechtshinweis; Testzahlen aktualisiert (59 API, 16 Suche, 34 Browser).
 
 ---
 

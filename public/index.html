@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Mazda CX-5 (2012–2013) Werkstatthandbuch Portal</title>
+  <title data-i18n="app.title">Mazda CX-5 (2012–2013) Werkstatthandbuch Portal</title>
   <link rel="stylesheet" href="/public/style.css">
   <link rel="stylesheet" href="/public/style-v14.css">
   <script src="/vendor/pdf.min.js"></script>
+  <script src="/public/i18n.js"></script>
 </head>
 <body class="dark-theme">
   <header class="app-header">
     <div class="header-left">
-      <button id="btn-toggle-sidebar" class="btn-icon" title="Seitenleiste ein-/ausklappen (S)">
+      <button id="btn-toggle-sidebar" class="btn-icon" data-i18n-title="header.toggleSidebar" title="Seitenleiste ein-/ausklappen (S)">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
 
@@ -21,13 +22,13 @@
       </div>
 
       <div class="nav-history">
-        <button id="btn-back" class="btn-icon" title="Zurück (Alt + Links)" disabled>
+        <button id="btn-back" class="btn-icon" data-i18n-title="header.back" title="Zurück (Alt + Links)" disabled>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
-        <button id="btn-forward" class="btn-icon" title="Vorwärts (Alt + Rechts)" disabled>
+        <button id="btn-forward" class="btn-icon" data-i18n-title="header.forward" title="Vorwärts (Alt + Rechts)" disabled>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
-        <button id="btn-home" class="btn-icon" title="Kapitelübersicht 00 (Allgemein)">
+        <button id="btn-home" class="btn-icon" data-i18n-title="header.home" title="Kapitelübersicht 00 (Allgemein)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         </button>
       </div>
@@ -37,10 +38,10 @@
       <div class="doc-badge" id="current-doc-badge">
         <span class="doc-sec" id="doc-sec-badge">01-14B-35</span>
         <span class="doc-name" id="doc-name-badge">mazda_cx5_workshop_manual1092.pdf</span>
-        <button id="btn-bookmark" class="btn-icon-sm" title="Lesezeichen setzen (B)">
+        <button id="btn-bookmark" class="btn-icon-sm" data-i18n-title="header.bookmarkAdd" title="Lesezeichen setzen (B)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
         </button>
-        <button id="btn-note" class="btn-icon-sm" title="Notiz hinzufügen (N)">
+        <button id="btn-note" class="btn-icon-sm" data-i18n-title="header.noteAdd" title="Notiz hinzufügen (N)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
           <span id="note-badge-dot" class="note-dot hidden"></span>
         </button>
@@ -50,47 +51,49 @@
 
     <div class="header-right">
       <div class="doc-pager">
-        <button id="btn-prev-page" class="btn-icon" title="Vorheriges Dokument (←)">
+        <button id="btn-prev-page" class="btn-icon" data-i18n-title="header.prevDoc" title="Vorheriges Dokument (←)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
-        <input type="text" id="input-jump-doc" class="input-jump" title="Dokumentnummer (z. B. 1092)" placeholder="1092">
-        <button id="btn-next-page" class="btn-icon" title="Nächstes Dokument (→)">
+        <input type="text" id="input-jump-doc" class="input-jump" data-i18n-title="header.jump" title="Dokumentnummer (z. B. 1092)" placeholder="1092">
+        <button id="btn-next-page" class="btn-icon" data-i18n-title="header.nextDoc" title="Nächstes Dokument (→)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
       </div>
 
       <div class="zoom-controls">
-        <button id="btn-zoom-out" class="btn-icon" title="Verkleinern (-)">
+        <button id="btn-zoom-out" class="btn-icon" data-i18n-title="header.zoomOut" title="Verkleinern (-)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
         </button>
         <span id="zoom-level-text" class="zoom-text">125 %</span>
-        <button id="btn-zoom-in" class="btn-icon" title="Vergrößern (+)">
+        <button id="btn-zoom-in" class="btn-icon" data-i18n-title="header.zoomIn" title="Vergrößern (+)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
         </button>
-        <button id="btn-fit-width" class="btn-icon" title="Breite anpassen (W)">
+        <button id="btn-fit-width" class="btn-icon" data-i18n-title="header.fitWidth" title="Breite anpassen (W)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 8 1 12 4 16"></polyline><polyline points="20 8 23 12 20 16"></polyline><line x1="1" y1="12" x2="23" y2="12"></line></svg>
         </button>
       </div>
 
-      <label class="toggle-container" title="Klickbare Bereiche im PDF hervorheben">
+      <label class="toggle-container" data-i18n-title="header.links" title="Klickbare Bereiche im PDF hervorheben">
         <input type="checkbox" id="chk-highlight-links" checked>
         <span class="toggle-slider"></span>
         <span class="toggle-label">Links</span>
       </label>
 
-      <button id="btn-print" class="btn-icon" title="Drucken / Bereich exportieren (P)">
+      <button id="btn-print" class="btn-icon" data-i18n-title="header.print" title="Drucken / Bereich exportieren (P)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
       </button>
 
-      <button id="btn-fullscreen" class="btn-icon" title="Werkstatt-Vollbild">
+      <button id="btn-fullscreen" class="btn-icon" data-i18n-title="header.fullscreen" title="Werkstatt-Vollbild">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
       </button>
 
-      <a id="btn-raw-pdf" class="btn-icon" target="_blank" rel="noopener" title="Original-PDF in neuem Tab öffnen">
+      <a id="btn-raw-pdf" class="btn-icon" target="_blank" rel="noopener" data-i18n-title="header.rawPdf" title="Original-PDF in neuem Tab öffnen">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
       </a>
 
-      <button id="btn-shortcuts" class="btn-icon" title="Tastatur-Kürzel (?)">
+      <button id="btn-lang" class="btn-icon btn-lang" data-i18n-title="header.lang" title="Auf Englisch umschalten">EN</button>
+
+      <button id="btn-shortcuts" class="btn-icon" data-i18n-title="header.shortcuts" title="Tastatur-Kürzel (?)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
       </button>
     </div>
@@ -101,41 +104,42 @@
       <div class="sidebar-search">
         <div class="search-box">
           <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="sidebar-search-input" placeholder="Suchen (Bremse, Öl, 1092, 01-14B …)">
+          <input type="text" id="sidebar-search-input" data-i18n-placeholder="sidebar.search" placeholder="Suchen (Bremse, Öl, 1092, 01-14B …)">
           <button id="btn-clear-search" class="btn-clear-search hidden">&times;</button>
         </div>
       </div>
 
       <div class="sidebar-tabs">
-        <button class="tab-btn active" data-tab="chapters"><span>🗂️ Baugruppen</span></button>
-        <button class="tab-btn" data-tab="repairs"><span>⭐ Favoriten</span></button>
-        <button class="tab-btn" data-tab="checklists"><span>✅ Checklisten</span></button>
+        <button class="tab-btn active" data-tab="chapters"><span data-i18n="tabs.chapters">🗂️ Baugruppen</span></button>
+        <button class="tab-btn" data-tab="repairs"><span data-i18n="tabs.favorites">⭐ Favoriten</span></button>
+        <button class="tab-btn" data-tab="checklists"><span data-i18n="tabs.checklists">✅ Checklisten</span></button>
       </div>
 
       <div class="sidebar-content">
         <div id="search-results-section" class="sidebar-section hidden">
           <div class="section-header">
-            <span>Suchergebnisse</span>
+            <span data-i18n="search.results">Suchergebnisse</span>
             <span id="search-count" class="badge-count">0</span>
           </div>
           <div id="dtc-hint" class="dtc-hint hidden"></div>
           <div id="search-results-list" class="nav-list"></div>
-          <button id="search-more" class="btn-more hidden">Weitere laden</button>        </div>
+          <button id="search-more" class="btn-more hidden">Weitere laden</button>
+        </div>
 
         <div id="tab-content-chapters" class="tab-content active">
-          <div class="section-header"><span>Baugruppen-Übersicht (00–12)</span></div>
+          <div class="section-header"><span data-i18n="chapters.heading">Baugruppen-Übersicht (00–12)</span></div>
           <div id="chapters-tree-list" class="chapters-tree"></div>
 
-          <div class="section-header section-tree-header"><span>Alle Sektionen (aus dem Index)</span></div>
+          <div class="section-header section-tree-header"><span data-i18n="tree.heading">Alle Sektionen (aus dem Index)</span></div>
           <div id="section-tree" class="section-tree">
-            <div class="tree-loading">wird geladen …</div>
+            <div class="tree-loading" data-i18n="tree.loading">wird geladen …</div>
           </div>
         </div>
 
         <div id="tab-content-repairs" class="tab-content">
           <div class="sidebar-section">
             <div class="section-header">
-              <span>★ Meine Lesezeichen</span>
+              <span data-i18n="bookmarks.heading">★ Meine Lesezeichen</span>
               <span id="bookmarks-count" class="badge-count">0</span>
             </div>
             <div id="user-bookmarks-list" class="nav-list"></div>
@@ -143,7 +147,7 @@
 
           <div class="sidebar-section">
             <div class="section-header">
-              <span>📝 Meine Werkstatt-Notizen</span>
+              <span data-i18n="notes.heading">📝 Meine Werkstatt-Notizen</span>
               <span id="notes-count" class="badge-count">0</span>
             </div>
             <div id="user-notes-list" class="nav-list"></div>
@@ -152,16 +156,16 @@
           <div class="quick-card">
             <div class="quick-card-title">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-              2.2D Injektor-Drehmomente
+              <span data-i18n="quick.title">2.2D Injektor-Drehmomente</span>
             </div>
             <div class="quick-card-content">
-              <div class="torque-row"><span class="torque-label">Mutter 1 – Voranzug:</span><span class="torque-vals"><span class="torque-val">1,8–2,2 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1094.pdf" title="01-14B-37, Schritt 4">01-14B-37</a></span></div>
-              <div class="torque-row"><span class="torque-label">Mutter 1 – Lösen:</span><span class="torque-vals"><span class="torque-val">-30° bis -150°</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1094.pdf" title="01-14B-37, Schritt 5">01-14B-37</a></span></div>
-              <div class="torque-row highlight-row"><span class="torque-label">Mutter 2 – Endzug:</span><span class="torque-vals"><span class="torque-val">1,8–2,2 Nm + 177–183°</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" title="01-14B-38, Schritt 6">01-14B-38</a></span></div>
-              <div class="torque-row"><span class="torque-label">Einspritzleitungen:</span><span class="torque-vals"><span class="torque-val">32–42 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" title="01-14B-38, Schritte 7–8">01-14B-38</a></span></div>
-              <div class="torque-row"><span class="torque-label">Common Rail:</span><span class="torque-vals"><span class="torque-val">20–26 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" title="01-14B-38, Schritt 9">01-14B-38</a></span></div>
-              <div class="torque-row"><span class="torque-label">Rücklaufleitung:</span><span class="torque-vals"><span class="torque-val">22–26 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" title="01-14B-38, Schritt 10">01-14B-38</a></span></div>
-              <div class="quick-card-hint">Geprüft gegen Original: <a href="#" class="inline-link" data-file="mazda_cx5_workshop_manual1094.pdf">01-14B-37</a> · <a href="#" class="inline-link" data-file="mazda_cx5_workshop_manual1095.pdf">01-14B-38</a> · <a href="#" class="inline-link" data-file="mazda_cx5_workshop_manual1091.pdf">01-14B-34</a></div>
+              <div class="torque-row"><span class="torque-label" data-i18n="torque.nut1">Mutter 1 – Voranzug:</span><span class="torque-vals"><span class="torque-val">1,8–2,2 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1094.pdf" data-i18n-title="torque.src4" title="01-14B-37, Schritt 4">01-14B-37</a></span></div>
+              <div class="torque-row"><span class="torque-label" data-i18n="torque.nut1Loosen">Mutter 1 – Lösen:</span><span class="torque-vals"><span class="torque-val">-30° bis -150°</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1094.pdf" data-i18n-title="torque.src5" title="01-14B-37, Schritt 5">01-14B-37</a></span></div>
+              <div class="torque-row highlight-row"><span class="torque-label" data-i18n="torque.nut2">Mutter 2 – Endzug:</span><span class="torque-vals"><span class="torque-val">1,8–2,2 Nm + 177–183°</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" data-i18n-title="torque.src6" title="01-14B-38, Schritt 6">01-14B-38</a></span></div>
+              <div class="torque-row"><span class="torque-label" data-i18n="torque.pipes">Einspritzleitungen:</span><span class="torque-vals"><span class="torque-val">32–42 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" data-i18n-title="torque.src78" title="01-14B-38, Schritte 7–8">01-14B-38</a></span></div>
+              <div class="torque-row"><span class="torque-label" data-i18n="torque.rail">Common Rail:</span><span class="torque-vals"><span class="torque-val">20–26 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" data-i18n-title="torque.src9" title="01-14B-38, Schritt 9">01-14B-38</a></span></div>
+              <div class="torque-row"><span class="torque-label" data-i18n="torque.return">Rücklaufleitung:</span><span class="torque-vals"><span class="torque-val">22–26 Nm</span><a href="#" class="inline-link torque-src" data-file="mazda_cx5_workshop_manual1095.pdf" data-i18n-title="torque.src10" title="01-14B-38, Schritt 10">01-14B-38</a></span></div>
+              <div class="quick-card-hint"><span data-i18n="quick.verified">Geprüft gegen Original</span>: <a href="#" class="inline-link" data-file="mazda_cx5_workshop_manual1094.pdf">01-14B-37</a> · <a href="#" class="inline-link" data-file="mazda_cx5_workshop_manual1095.pdf">01-14B-38</a> · <a href="#" class="inline-link" data-file="mazda_cx5_workshop_manual1091.pdf">01-14B-34</a></div>
             </div>
           </div>
 
@@ -172,7 +176,7 @@
           <div id="checklists-container"></div>
           <div id="checklist-detail" class="hidden">
             <div class="checklist-detail-head">
-              <button id="btn-checklist-back" class="btn-icon" title="Zurück zur Liste">
+              <button id="btn-checklist-back" class="btn-icon" data-i18n-title="checklist.back" title="Zurück zur Liste">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
               </button>
               <span id="checklist-title" class="checklist-detail-title"></span>
@@ -195,21 +199,21 @@
         <div class="notes-panel-header">
           <div class="notes-panel-title">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            Eigene Werkstatt-Notiz
+            <span data-i18n="notes.panel">Eigene Werkstatt-Notiz</span>
           </div>
-          <button id="btn-close-notes" class="btn-icon" title="Schließen">&times;</button>
+          <button id="btn-close-notes" class="btn-icon" data-i18n-title="notes.close" title="Schließen">&times;</button>
         </div>
         <div class="notes-panel-doc" id="notes-panel-doc"></div>
-        <textarea id="notes-textarea" class="notes-textarea" placeholder="Teilenummern, Drehmomente, Besonderheiten … (wird beim Wechsel automatisch gesichert)"></textarea>
+        <textarea id="notes-textarea" class="notes-textarea" data-i18n-placeholder="notes.placeholder" placeholder="Teilenummern, Drehmomente, Besonderheiten … (wird beim Wechsel automatisch gesichert)"></textarea>
         <div class="notes-panel-footer">
-          <button id="btn-save-note" class="btn-action-primary">Speichern</button>
-          <button id="btn-delete-note" class="btn-action-danger">Löschen</button>
+          <button id="btn-save-note" class="btn-action-primary" data-i18n="notes.save">Speichern</button>
+          <button id="btn-delete-note" class="btn-action-danger" data-i18n="notes.delete">Löschen</button>
         </div>
       </div>
 
       <div id="loading-overlay" class="loading-overlay hidden">
         <div class="spinner"></div>
-        <div class="loading-text" id="loading-text">Dokument wird geladen …</div>
+        <div class="loading-text" id="loading-text" data-i18n="loading.doc">Dokument wird geladen …</div>
       </div>
     </main>
   </div>
@@ -219,34 +223,34 @@
   <div id="shortcuts-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">Tastatur-Kürzel</div>
+        <div class="modal-title" data-i18n="shortcuts.title">Tastatur-Kürzel</div>
         <button id="btn-close-shortcuts" class="btn-icon" title="Schließen (Esc)">&times;</button>
       </div>
       <div class="modal-body">
         <div class="shortcuts-group">
-          <div class="shortcuts-group-title">Navigation &amp; Blättern</div>
-          <div class="shortcut-row"><span class="shortcut-desc">Nächstes / vorheriges Dokument</span><span class="shortcut-keys"><kbd>→</kbd> / <kbd>←</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Verlauf zurück / vor</span><span class="shortcut-keys"><kbd>Alt</kbd>+<kbd>←</kbd> / <kbd>→</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Seitenleiste ein-/ausklappen</span><span class="shortcut-keys"><kbd>S</kbd></span></div>
+          <div class="shortcuts-group-title" data-i18n="shortcuts.nav">Navigation &amp; Blättern</div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.nextDoc">Nächstes / vorheriges Dokument</span><span class="shortcut-keys"><kbd>→</kbd> / <kbd>←</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.history">Verlauf zurück / vor</span><span class="shortcut-keys"><kbd>Alt</kbd>+<kbd>←</kbd> / <kbd>→</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.sidebar">Seitenleiste ein-/ausklappen</span><span class="shortcut-keys"><kbd>S</kbd></span></div>
         </div>
         <div class="shortcuts-group">
-          <div class="shortcuts-group-title">Ansicht</div>
-          <div class="shortcut-row"><span class="shortcut-desc">Vergrößern / verkleinern</span><span class="shortcut-keys"><kbd>+</kbd> / <kbd>-</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Breite anpassen</span><span class="shortcut-keys"><kbd>W</kbd></span></div>
+          <div class="shortcuts-group-title" data-i18n="shortcuts.view">Ansicht</div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.zoom">Vergrößern / verkleinern</span><span class="shortcut-keys"><kbd>+</kbd> / <kbd>-</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.fit">Breite anpassen</span><span class="shortcut-keys"><kbd>W</kbd></span></div>
         </div>
         <div class="shortcuts-group">
-          <div class="shortcuts-group-title">Werkstatt</div>
-          <div class="shortcut-row"><span class="shortcut-desc">Lesezeichen setzen / löschen</span><span class="shortcut-keys"><kbd>B</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Notiz öffnen</span><span class="shortcut-keys"><kbd>N</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Drucken / Bereich exportieren</span><span class="shortcut-keys"><kbd>P</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Suche fokussieren</span><span class="shortcut-keys"><kbd>F</kbd> / <kbd>/</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Diese Übersicht</span><span class="shortcut-keys"><kbd>?</kbd></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Dialoge schließen</span><span class="shortcut-keys"><kbd>Esc</kbd></span></div>
+          <div class="shortcuts-group-title" data-i18n="shortcuts.workshop">Werkstatt</div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.bookmark">Lesezeichen setzen / löschen</span><span class="shortcut-keys"><kbd>B</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.note">Notiz öffnen</span><span class="shortcut-keys"><kbd>N</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.print">Drucken / Bereich exportieren</span><span class="shortcut-keys"><kbd>P</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.search">Suche fokussieren</span><span class="shortcut-keys"><kbd>F</kbd> / <kbd>/</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.help">Diese Übersicht</span><span class="shortcut-keys"><kbd>?</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc" data-i18n="shortcuts.close">Dialoge schließen</span><span class="shortcut-keys"><kbd>Esc</kbd></span></div>
         </div>
       </div>
       <div class="modal-footer">
-        <span class="modal-hint">Auf Tablet: nach links/rechts wischen blättert.</span>
-        <button id="btn-modal-ok" class="btn-action-primary">Verstanden</button>
+        <span class="modal-hint" data-i18n="shortcuts.hint">Auf Tablet: nach links/rechts wischen blättert.</span>
+        <button id="btn-modal-ok" class="btn-action-primary" data-i18n="shortcuts.ok">Verstanden</button>
       </div>
     </div>
   </div>
@@ -254,20 +258,20 @@
   <div id="print-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">Drucken / Bereich exportieren</div>
+        <div class="modal-title" data-i18n="print.title">Drucken / Bereich exportieren</div>
         <button class="btn-icon" onclick="document.getElementById('print-modal').classList.add('hidden')">&times;</button>
       </div>
       <div class="modal-body">
-        <p class="modal-text">Die Seiten werden als Bildfolge in ein Druckfenster gerendert (max. 20 Seiten).</p>
+        <p class="modal-text" data-i18n="print.text">Die Seiten werden als Bildfolge in ein Druckfenster gerendert (max. 20 Seiten).</p>
         <div class="print-range">
-          <label>Von <input type="number" id="print-from" min="1" max="9999"></label>
-          <label>Bis <input type="number" id="print-to" min="1" max="9999"></label>
+          <label><span data-i18n="print.from">Von</span> <input type="number" id="print-from" min="1" max="9999"></label>
+          <label><span data-i18n="print.to">Bis</span> <input type="number" id="print-to" min="1" max="9999"></label>
         </div>
         <div id="print-status" class="print-status"></div>
       </div>
       <div class="modal-footer">
-        <button id="btn-print-cancel" class="btn-action-danger">Abbrechen</button>
-        <button id="btn-print-start" class="btn-action-primary">Drucken</button>
+        <button id="btn-print-cancel" class="btn-action-danger" data-i18n="print.cancel">Abbrechen</button>
+        <button id="btn-print-start" class="btn-action-primary" data-i18n="print.start">Drucken</button>
       </div>
     </div>
   </div>

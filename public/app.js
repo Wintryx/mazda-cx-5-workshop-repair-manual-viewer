@@ -172,7 +172,7 @@
 
   // ---------------------------------------------------------------- Loading
   function showLoading(text) {
-    el.loadingText.textContent = text || 'Dokument wird geladen …';
+    el.loadingText.textContent = text || t('loading.doc');
     el.loadingOverlay.classList.remove('hidden');
   }
   function hideLoading() {
@@ -229,7 +229,7 @@
       prefetchNeighbours(fileName);
     } catch (err) {
       console.error('PDF konnte nicht geladen werden:', err);
-      toast(`Fehler beim Laden von ${fileName}`);
+      toast(t('loading.error', { file: fileName }));
     } finally {
       state.isRendering = false;
       hideLoading();
@@ -340,7 +340,7 @@
     const raw = String(value || '').trim();
     if (!raw) return;
     if (raw.endsWith('.pdf')) { loadPdf(raw); return; }
-    if (!/^\d{1,5}$/.test(raw)) { toast('Bitte eine Dokumentnummer eingeben'); return; }
+    if (!/^\d{1,5}$/.test(raw)) { toast(t('jump.invalid')); return; }
 
     let prefix = 'mazda_cx5_workshop_manual';
     const m = state.currentFile.match(/^(.*?)(\d+)\.pdf$/);
@@ -354,7 +354,7 @@
 
   function navigateOffset(offset) {
     const m = state.currentFile.match(/^(.*?)(\d+)\.pdf$/);
-    if (!m) { toast('Blättern ist für dieses Dokument nicht möglich'); return; }
+    if (!m) { toast(t('paging.unavailable')); return; }
     const num = parseInt(m[2], 10) + offset;
     if (num < 1) return;
     loadPdf(`${m[1]}${num}.pdf`);
@@ -403,7 +403,7 @@
   function updateBookmarkState(fileName) {
     const active = state.bookmarks.some((b) => b.file === fileName);
     el.btnBookmark.classList.toggle('bookmarked', active);
-    el.btnBookmark.title = active ? 'Lesezeichen entfernen (B)' : 'Lesezeichen setzen (B)';
+    el.btnBookmark.title = active ? t('header.bookmarkRemove') : t('header.bookmarkAdd');
   }
 
   function toggleBookmark() {
@@ -411,7 +411,7 @@
     const idx = state.bookmarks.findIndex((b) => b.file === file);
     if (idx !== -1) {
       state.bookmarks.splice(idx, 1);
-      toast('Lesezeichen entfernt');
+      toast(t('bookmarks.removed'));
     } else {
       state.bookmarks.push({
         file,
@@ -419,7 +419,7 @@
         title: el.docTitleBar.textContent,
         date: new Date().toLocaleDateString('de-DE')
       });
-      toast('Lesezeichen gesetzt');
+      toast(t('bookmarks.added'));
     }
     saveJSON('mazda_bookmarks', state.bookmarks);
     updateBookmarkState(file);
@@ -438,7 +438,7 @@
   function renderBookmarks() {
     el.bookmarksCount.textContent = state.bookmarks.length;
     if (state.bookmarks.length === 0) {
-      el.userBookmarksList.innerHTML = '<div class="empty-state">Noch keine Lesezeichen. Stern (★) im Kopfbereich setzen.</div>';
+      el.userBookmarksList.innerHTML = `<div class="empty-state">${esc(t('bookmarks.empty'))}</div>`;
       return;
     }
     el.userBookmarksList.innerHTML = state.bookmarks.map((b) => `
@@ -457,7 +457,7 @@
   function updateNoteState(fileName) {
     const note = currentNote(fileName);
     el.noteBadgeDot.classList.toggle('hidden', !note);
-    el.btnNote.title = note ? 'Notiz bearbeiten (N)' : 'Notiz hinzufügen (N)';
+    el.btnNote.title = note ? t('header.noteEdit') : t('header.noteAdd');
     el.notesPanelDoc.textContent = fileName;
     if (!state.notesDirty) {
       el.notesTextarea.value = note ? note.text : '';
@@ -486,7 +486,7 @@
     renderNotes();
     if (!silent) {
       el.notesPanel.classList.add('hidden');
-      toast('Notiz gespeichert');
+      toast(t('notes.saved'));
     }
   }
 
@@ -494,7 +494,7 @@
     const keys = Object.keys(state.notes);
     el.notesCount.textContent = keys.length;
     if (keys.length === 0) {
-      el.userNotesList.innerHTML = '<div class="empty-state">Noch keine Notizen. Stift (📝) im Kopfbereich öffnet das Notizfeld.</div>';
+      el.userNotesList.innerHTML = `<div class="empty-state">${esc(t('notes.empty'))}</div>`;
       return;
     }
     el.userNotesList.innerHTML = keys.map((key) => {
@@ -555,8 +555,8 @@
       if (dtcHint) {
         if (data.dtc) {
           dtcHint.textContent = data.dtc.total
-            ? `Fehlercode ${data.dtc.code}: ${data.dtc.total} Dokumente – Diagnoseblätter zuerst`
-            : `Fehlercode ${data.dtc.code} ist im Handbuch nicht dokumentiert`;
+            ? t('dtc.found', { code: data.dtc.code, n: data.dtc.total })
+            : t('dtc.unknown', { code: data.dtc.code });
           dtcHint.classList.remove('hidden');
         } else {
           dtcHint.classList.add('hidden');
@@ -575,23 +575,23 @@
       if (append) {
         el.searchResultsList.insertAdjacentHTML('beforeend', html);
       } else {
-        el.searchResultsList.innerHTML = html || '<div class="empty-state">Keine Treffer.</div>';
+        el.searchResultsList.innerHTML = html || `<div class="empty-state">${esc(t('search.empty'))}</div>`;
       }
 
       const shown = state.searchOffset + (data.results || []).length;
       const remaining = state.searchTotal - shown;
       if (remaining > 0) {
         el.searchMore.classList.remove('hidden');
-        el.searchMore.textContent = `Weitere ${Math.min(remaining, state.searchLimit)} von ${remaining} laden`;
+        el.searchMore.textContent = t('search.more', { n: Math.min(remaining, state.searchLimit), total: remaining });
       } else {
         el.searchMore.classList.add('hidden');
       }
 
       applySearchHighlight();
-      if (data.fuzzy) toast('Keine exakten Treffer – ähnliche Begriffe angezeigt');
+      if (data.fuzzy) toast(t('search.fuzzy'));
     } catch (err) {
       console.error('Suche fehlgeschlagen:', err);
-      toast('Suche fehlgeschlagen');
+      toast(t('search.failed'));
     }
   }
 
@@ -647,7 +647,7 @@
       treeData = await (await fetch('/api/tree')).json();
     } catch (err) {
       console.warn('Sektionsbaum nicht verfügbar:', err);
-      box.innerHTML = '<div class="tree-loading">Kapitelbaum nicht verfügbar</div>';
+      box.innerHTML = `<div class="tree-loading">${esc(t('tree.error'))}</div>`;
       return;
     }
     box.innerHTML = treeData.map((g, gi) => `
@@ -724,7 +724,7 @@
 
   function renderChecklists() {
     if (!state.checklists.length) {
-      el.checklistsList.innerHTML = '<div class="empty-state">Keine Checklisten hinterlegt.</div>';
+      el.checklistsList.innerHTML = `<div class="empty-state">${esc(t('checklist.empty'))}</div>`;
       return;
     }
     el.checklistsList.innerHTML = state.checklists.map((c) => {
@@ -756,11 +756,11 @@
           <label class="checklist-step ${done.has(i) ? 'done' : ''}">
             <input type="checkbox" data-idx="${i}" ${done.has(i) ? 'checked' : ''}>
             <span class="step-text">${esc(step.text)}</span>
-            <span class="step-link" data-load="${esc(step.file)}" title="Seite öffnen">➜</span>
+            <span class="step-link" data-load="${esc(step.file)}" title="${esc(t('checklist.openPage'))}">➜</span>
           </label>`).join('')}
       </div>
       <div class="checklist-footer">
-        <button class="btn-action-danger" id="btn-checklist-reset">Zurücksetzen</button>
+        <button class="btn-action-danger" id="btn-checklist-reset">${esc(t('checklist.reset'))}</button>
       </div>`;
 
     el.checklistDetail.classList.remove('hidden');
@@ -807,22 +807,22 @@
     const fromRaw = parseInt(el.printFrom.value, 10);
     let to = parseInt(el.printTo.value, 10);
     let from = fromRaw;
-    if (!Number.isFinite(from) || !Number.isFinite(to)) { el.printStatus.textContent = 'Bitte gültige Nummern eingeben.'; return; }
-    if (to < from) { const t = to; to = from; from = t; }
-    if (to - from > 19) { el.printStatus.textContent = 'Maximal 20 Seiten auf einmal.'; return; }
+    if (!Number.isFinite(from) || !Number.isFinite(to)) { el.printStatus.textContent = t('print.invalid'); return; }
+    if (to < from) { const swap = to; to = from; from = swap; }
+    if (to - from > 19) { el.printStatus.textContent = t('print.max'); return; }
 
     const prefixMatch = state.currentFile.match(/^(.*?)\d+\.pdf$/);
     const prefix = prefixMatch ? prefixMatch[1] : 'mazda_cx5_workshop_manual';
 
     const win = window.open('', '_blank');
-    if (!win) { el.printStatus.textContent = 'Popup blockiert – bitte erlauben.'; return; }
-    win.document.write('<html><head><title>Mazda CX-5 – Ausdruck</title><style>' +
+    if (!win) { el.printStatus.textContent = t('print.blocked'); return; }
+    win.document.write(`<html><head><title>${esc(t('print.windowTitle'))}</title><style>` +
       'body{font-family:Arial,sans-serif;margin:0}img{width:100%;display:block;page-break-after:always}' +
-      '</style></head><body><p style="padding:10px">Seiten werden vorbereitet …</p></body></html>');
+      `</style></head><body><p style="padding:10px">${esc(t('print.preparing'))}</p></body></html>`);
 
     for (let n = from; n <= to; n++) {
       const file = `${prefix}${n}.pdf`;
-      el.printStatus.textContent = `Rendere ${n} von ${to} …`;
+      el.printStatus.textContent = t('print.progress', { n, total: to });
       try {
         const { pdfDoc } = await getDoc(file);
         const page = await pdfDoc.getPage(1);
@@ -839,7 +839,7 @@
       }
     }
     win.document.close();
-    el.printStatus.textContent = 'Druckdialog wird geöffnet …';
+    el.printStatus.textContent = t('print.opening');
     setTimeout(() => { try { win.focus(); win.print(); } catch (e) { /* abgebrochen */ } }, 600);
     el.printModal.classList.add('hidden');
   }
@@ -924,6 +924,10 @@
 
     el.btnFullscreen.addEventListener('click', toggleFullscreen);
     el.checklistBack.addEventListener('click', closeChecklist);
+
+    // Sprachwechsel: neu laden, damit alle gerenderten Listen konsistent sind
+    const langBtn = document.getElementById('btn-lang');
+    if (langBtn) langBtn.addEventListener('click', toggleLanguage);
 
     // Ein einziger Delegate-Handler für alle klickbaren Listenpunkte
     document.addEventListener('click', (e) => {

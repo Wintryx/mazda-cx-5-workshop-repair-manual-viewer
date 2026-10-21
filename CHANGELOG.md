@@ -6,6 +6,20 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
 
+## [1.11.0] - 2026-10-21
+
+### UI & Dokumentation
+- **Zweisprachige Oberfläche** (Deutsch/Englisch): neu `public/i18n.js` mit Wörterbuch und
+  `data-i18n`-Attributen für statische Texte; dynamische Texte in `app.js` laufen über `t()`
+  (Toasts, Trefferzähler, Druckstatus, Checklisten, Leerzustände). Umschalter `EN`/`DE` im Header,
+  Wahl wird pro Browser in `localStorage` gespeichert; der Wechsel lädt die Seite neu, damit alle
+  gerenderten Listen konsistent sind. Standard bleibt Deutsch.
+- **README auf Englisch** übersetzt, mit hervorgehobener Download-Quelle des Handbuchs
+  (manuale.clubmazda.ro, Stand 2026-10-20) und Hinweis auf Urheberrecht/Drittquelle.
+- **Tests**: Browser-Test prüft jetzt zusätzlich den Sprachwechsel (34 Prüfungen, vorher 32).
+
+---
+
 ## [1.10.0] - 2026-10-21
 
 ### Desktop-App (P4)

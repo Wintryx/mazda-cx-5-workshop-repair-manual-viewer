@@ -1,213 +1,222 @@
 # Mazda CX-5 Service Manual Viewer
 
-Offline-Viewer für das Mazda-CX-5-Werkstatthandbuch (Modelljahr 2012–2013, 2.2 Skyactiv-D und 2.0 G).
-7.294 PDF-Seiten aus Werkstatthandbuch, Schaltplänen, Bodyshop Manual und Technical Guide — mit Hotspots,
-zweisprachiger Suche (Deutsch ⇄ Englisch), Lesezeichen, Notizen, Reparatur-Checklisten und Druck/Export.
+Offline viewer for the Mazda CX-5 workshop manual (model years 2012–2013, 2.2 Skyactiv-D and 2.0 G).
+7,294 PDF pages from the workshop manual, wiring diagrams, bodyshop manual and technical guide — with
+clickable hotspots, bilingual search (German ⇄ English), bookmarks, notes, repair checklists and
+print/export.
 
-Läuft ohne Internet und ohne externe Laufzeit-Abhängigkeiten (reines Node.js + lokal eingebundenes PDF.js)
-auf Laptop oder Tablet im Werkstattbetrieb.
+Runs without internet and without runtime dependencies (plain Node.js plus a locally bundled PDF.js)
+on a laptop or tablet in the workshop.
 
-**Stand:** v1.10.0 · Oktober 2026
+> **Download source of the manual:** the archive `mazda_cx5_2012_2.2d_service_manual.zip` was
+> downloaded on 2026-10-20 from
+> **[manuale.clubmazda.ro/cx5/mazda_cx5_2012_2.2d_service_manual.zip](https://manuale.clubmazda.ro/cx5/mazda_cx5_2012_2.2d_service_manual.zip)**
+> — a third-party site, not affiliated with this project. Availability and legality are not guaranteed;
+> all rights to the content remain with Mazda.
+
+**State:** v1.11.0 · October 2026
 
 ---
 
-## 1. Was das Projekt kann
+## 1. What this project does
 
-| Bereich | Funktion |
+| Area | Feature |
 |---|---|
-| Kapitel | 15 Kapitelkarten 00–09 plus Schaltpläne, Karosserie, Technical Guide; Reparatur-Packs als Direkteinstieg |
-| Sektionen | Baum aus dem Index: 17 Gruppen → 238 Sektionen → alle 7.294 Dokumente, drei Klicks bis zur Seite |
-| Suche | Wortgrenzen, IDF-Gewichtung, Phrasen-Synonyme, Tippfehler-Toleranz, Umlaut-Normalisierung, Paging |
-| Fehlercodes | 329 DTCs (P/B/C/U) aus den Diagnosekapiteln; Code eingeben → Diagnoseblatt zuerst |
-| Seite | Hotspots aus PDF-Links (auch auf 254 quer liegenden Schaltplänen), Textauswahl, Zoom, Fit-Breite, Vollbild |
-| Werkstatt | Notizen pro Dokument, Lesezeichen, Checklisten (Injektoren, Bremsen vorn, Ölwechsel), Druck eines Seitenbereichs |
-| Betrieb | Port-Fallback, `--open`, `/api/status`, klare Startprüfung des Datenverzeichnisses |
+| Chapters | 16 quick-access cards (00–09 plus wiring, bodyshop, technical guide); curated repair packs |
+| Sections | Tree built from the index: 17 groups → 238 sections → all 7,294 documents, three clicks to any page |
+| Search | Word boundaries, IDF weighting, phrase synonyms, typo tolerance, umlaut normalisation, paging |
+| Fault codes | 329 DTCs (P/B/C/U) from the diagnostic chapters; type a code → diagnostic sheet first |
+| Page | Hotspots from PDF links (including 254 rotated wiring diagrams), text selection, zoom, fit width, fullscreen |
+| Workshop | Notes per document, bookmarks, checklists (injectors, front brakes, oil change), printing a page range |
+| UI languages | German (default) and English — switch in the header, stored per browser |
+| Operation | Port fallback, `--open`, `/api/status`, clear start-up check of the data directory |
 
-## 2. Voraussetzungen
+## 2. Requirements
 
-- **Node.js ≥ 18** (getestet mit v24). Keine `npm install`-Pflicht: `dependencies` ist leer.
-- Windows, Edge oder Chrome (empfohlen), 4 GB RAM.
-- ~500 MB freier Plattenplatz für die PDFs.
+- **Node.js ≥ 18** (tested with v24). No `npm install` needed to run: `dependencies` is empty.
+- Windows, Edge or Chrome (recommended), 4 GB RAM.
+- ~500 MB free disk space for the PDFs.
 
-## 3. Projektstruktur
+## 3. Project structure
 
 ```
 mazda-manual-viewer/
-├─ server.js              HTTP-Server, Suche, Link-Extraktion (kein Framework)
-├─ build_index.js         erzeugt public/search_index.json aus den PDFs
-├─ lib/paths.js           Auflösung des Handbuch-Verzeichnisses
+├─ server.js              HTTP server, search, link extraction (no framework)
+├─ build_index.js         builds public/search_index.json from the PDFs
+├─ lib/paths.js           resolves the manual directory
 ├─ config/                chapters.json, packs.json, checklists.json, settings.json
-├─ public/                Frontend (index.html, app.js, style.css), PDF.js, search_index.json
-├─ tools/                 validate.js, run_tests.js, titles.js, ocr_*.{py,ps1,js}, Tests
-├─ electron/main.js       Desktop-Hülle (Fenster + Server im selben Prozess)
-├─ build/icon.png         App-Icon für den Desktop-Build
-├─ data/                  7.294 PDFs (nicht versioniert, siehe .gitignore)
-├─ START_VIEWER.bat       Doppelklick-Start mit Node-Prüfung
-├─ package.json           Scripts: start, app, dist, index, packs, validate, test
-└─ TODO.md / CHANGELOG.md Roadmap und Versionshistorie
+├─ public/                frontend (index.html, app.js, i18n.js, style.css), PDF.js, search_index.json
+├─ tools/                 validate.js, run_tests.js, titles.js, ocr_*.{py,ps1,js}, tests
+├─ electron/main.js       desktop shell (window + server in one process)
+├─ build/icon.png         app icon for the desktop build
+├─ data/                  7,294 PDFs (not versioned, see .gitignore)
+├─ START_VIEWER.bat       double-click launcher with Node check
+├─ package.json           scripts: start, app, dist, index, packs, validate, test
+└─ TODO.md / CHANGELOG.md roadmap and version history
 ```
 
-## 4. Datenherkunft und Installation
+## 4. Data source and installation
 
-Die PDFs stammen aus dem Handbuch-ZIP (`mazda_cx5_2012_2.2d_service_manual.zip`). Sie sind **nicht**
-im Repository (Urheberrecht, 451 MB). Ein frischer Rechner braucht drei Schritte:
+The PDFs come from the manual archive linked at the top of this README. They are **not** part of the
+repository (copyright, 451 MB). A fresh machine needs three steps:
 
-1. Projektordner kopieren.
-2. ZIP entpacken und **alle 7.294 PDFs direkt nach `data\`** legen
-   (Dateinamen unverändert, keine Unterordner).
-3. `npm start` — der Server prüft beim Start, ob Verzeichnis und Index zusammenpassen.
+1. Copy the project folder.
+2. Unpack the archive and put **all 7,294 PDFs directly into `data\`**
+   (keep the file names, no subdirectories).
+3. `npm start` — on start-up the server checks that directory and index match.
 
-Der Suchindex (`public/search_index.json`, ~4 MB) ist Teil des Projekts und bereits enthalten.
-Nur wenn sich die PDFs ändern, muss er neu gebaut werden:
+The search index (`public/search_index.json`, ~4 MB) is part of the project and already included.
+It only has to be rebuilt when the PDFs change:
 
 ```powershell
-npm run index     # Index aus data\ neu erzeugen (~2–3 min)
-npm run packs     # kuratierte Reparatur-Packs aus dem Index ableiten
+npm run index     # rebuild the index from data\ (~2–3 min)
+npm run packs     # derive the curated repair packs from the index
 ```
 
-## 5. Erster Start
+## 5. First start
 
 ```powershell
 npm start            # http://localhost:3300
-npm run start:open   # zusätzlich Browser öffnen
+npm run start:open   # also opens the browser
 ```
 
-Alternativ `START_VIEWER.bat` doppelklicken: prüft Node, startet den Server und zeigt nach dem
-Beenden den zuletzt genutzten Port.
+Alternatively double-click `START_VIEWER.bat`: it checks for Node, starts the server and shows the
+port used after shutdown.
 
-Ist Port 3300 belegt, weicht der Server automatisch auf 3301, 3302 … aus und schreibt den aktiven
-Port nach `.active_port`. `http://localhost:<Port>/api/status` zeigt jederzeit Port, Datenverzeichnis,
-PDF-Anzahl und Index-Abdeckung.
+If port 3300 is taken, the server automatically moves to 3301, 3302 … and writes the active port to
+`.active_port`. `http://localhost:<port>/api/status` always reports port, data directory, PDF count
+and index coverage.
 
-## 6. Bedienung
+## 6. Usage
 
-| Aktion | Taste / Element |
+| Action | Key / element |
 |---|---|
-| Blättern | ← / → oder Pager |
-| Zoom | + / − , Strg+Mausrad, Doppeltipp |
-| Breite anpassen | `W` oder Schaltfläche „Breite" |
-| Vollbild / Werkstattmodus | `F` |
-| Suche | Suchfeld oben, `Enter`; „mehr laden" für weitere Treffer |
-| Fehlercode | Code ins Suchfeld (`P0301`, `U0100:87`) → Diagnoseblätter zuerst; 329 Codes im Index (`/api/dtc`) |
-| Sprung zu Dateinummer | Sprungfeld (z. B. `1092` → `mazda_cx5_workshop_manual1092.pdf`) |
-| Kapitel / Sektionen | Sidebar: Schnellzugriff-Karten, darunter der Baum „Alle Sektionen" (Gruppe → Sektion → Dokument) |
-| Notizen, Lesezeichen | rechte Spalte, automatisch im LocalStorage gespeichert |
-| Checklisten | Kapitelkarte „Checklisten", Fortschritt pro Dokument |
-| Drucken / Export | `Strg+P` bzw. Schaltfläche, Seitenbereich z. B. `1573–1575` |
-| Tastatur-Hilfe | `?` |
+| Paging | ← / → or the pager |
+| Zoom | + / −, Ctrl + mouse wheel, double click |
+| Fit width | `W` or the “Fit width” button |
+| Fullscreen / workshop mode | `F` |
+| Search | search field at the top, `Enter`; “load more” for further hits |
+| Fault code | type the code into the search field (`P0301`, `U0100:87`) → diagnostic sheets first; 329 codes in the index (`/api/dtc`) |
+| Jump to file number | jump field (e.g. `1092` → `mazda_cx5_workshop_manual1092.pdf`) |
+| Chapters / sections | sidebar: quick-access cards, below them the “All sections” tree (group → section → document) |
+| Notes, bookmarks | right-hand column, stored automatically in localStorage |
+| Checklists | “Checklists” tab, progress per document |
+| Print / export | `Ctrl+P` or the button, page range e.g. `1573–1575` |
+| Keyboard help | `?` |
+| Language | `EN` / `DE` button in the header (defaults to German) |
 
-## 7. Konfiguration
+## 7. Configuration
 
-**Handbuch-Verzeichnis** — Reihenfolge (`lib/paths.js`):
+**Manual directory** — resolution order (`lib/paths.js`):
 
-1. Umgebungsvariable `MANUAL_DIR` (absolut oder relativ zum Arbeitsverzeichnis)
+1. environment variable `MANUAL_DIR` (absolute or relative to the working directory)
 2. `config/settings.json` → `"manualDir": "data"`
-3. Standard: `data\` im Projektordner
+3. default: `data\` inside the project folder
 
 ```json
-{ "manualDir": "D:/Handbuecher/mazda" }
+{ "manualDir": "D:/manuals/mazda" }
 ```
 
-**Port** — `PORT=3400 npm start`; ohne Angabe 3300 mit automatischem Fallback.
+**Port** — `PORT=3400 npm start`; default 3300 with automatic fallback.
 
 ## 8. Tests
 
 ```powershell
-npm run validate     # Index, Kapitel, Packs, Checklisten gegeneinander (offline, Exit-Code für CI)
-npm test             # validate + eigener Testserver auf Port 3480–3539 + API- und Suchtests
-npm run test:api     # nur API-Vertrag gegen laufenden Server
-npm run test:browser # Playwright in Chrome: echte Bedienung (30 Prüfungen), startet den Server selbst
+npm run validate     # index, chapters, packs, checklists against each other (offline, exit code for CI)
+npm test             # validate + own test server on port 3480–3539 + API and search tests
+npm run test:api     # API contract only, against a running server
+npm run test:browser # Playwright in Chrome: real UI (34 checks), starts the server itself
 ```
 
-`npm test` und `npm run test:browser` starten ihren Server selbst (Port 3480–3539) und lassen einen
-bereits laufenden Viewer auf 3300 unberührt. Der Browser-Test braucht einmalig `npm install`
-(Playwright ist Dev-Abhängigkeit) und ein installiertes Google Chrome — es werden keine
-Playwright-Browser heruntergeladen (`channel: 'chrome'`).
-`npm run test:api` erwartet die Adresse als Argument, Standard `http://127.0.0.1:3300`.
+`npm test` and `npm run test:browser` start their own server (port 3480–3539) and leave a viewer
+running on 3300 untouched. The browser test needs a one-time `npm install` (Playwright is a dev
+dependency) and an installed Google Chrome — no Playwright browsers are downloaded
+(`channel: 'chrome'`). `npm run test:api` takes the address as an argument, default
+`http://127.0.0.1:3300`.
 
-## 9. Bekannte Grenzen
+Current state: 59 API checks, 16 search checks, 34 browser checks — all green.
 
-- **Titelabdeckung 76,9 %** (5.608 von 7.294): Der Rest sind Seiten ohne eigene Überschrift
-  (Fortsetzungsseiten, Zeichnungen ohne Beschriftung) — dort bleibt der Titel leer statt geraten.
-- **OCR-Texte** der 253 Zeichnungsseiten (Schaltpläne, Bodyshop) sind maschinell gelesen und enthalten
-  Fehler („BAITERY", „[CRAY]"). Sie taugen für Stichworte, nicht für Zitate; die Seiten selbst sind
-  maßgeblich.
-- **Drehmomente** der Injektor-Karte sind gegen `01-14B-37` und `01-14B-38` geprüft und je Zeile verlinkt;
-  sie gelten für den 2.2 Skyactiv-D — andere Motorvarianten haben eigene Werte.
-- Die PDFs unterliegen dem Urheberrecht von Mazda — siehe Abschnitt 11.
+## 9. Known limits
 
-## 10. Wartung
+- **Title coverage 76.9 %** (5,608 of 7,294): the rest are pages without their own heading
+  (continuation pages, drawings without captions) — the title stays empty instead of being guessed.
+- **OCR text** of the 253 drawing pages (wiring diagrams, bodyshop) is machine-read and contains
+  errors (“BAITERY”, “[CRAY]”). Good for keywords, not for quoting; the pages themselves are
+  authoritative.
+- **Torque values** in the injector card are verified against `01-14B-37` and `01-14B-38` and linked
+  per row; they apply to the 2.2 Skyactiv-D — other engines have their own values.
+- The PDFs are copyrighted by Mazda — see section 12.
 
-- Index nach PDF-Änderungen: `npm run index && npm run packs && npm run validate`
-- Port-Datei `.active_port` ist reine Information und wird beim Start überschrieben.
-- Sicherungen vor Umbauten liegen in `_backup/` (nicht versioniert).
-- `TODO.md` führt offene Punkte, `CHANGELOG.md` die Versionshistorie.
+## 10. Maintenance
 
-**OCR neu erzeugen** (nur nötig, wenn sich die PDFs ändern; das Ergebnis
-`config/ocr_text.json` ist versioniert):
+- After PDF changes: `npm run index && npm run packs && npm run validate`
+- `.active_port` is informational only and overwritten on every start.
+- Backups before larger changes live in `_backup/` (not versioned).
+- `TODO.md` lists open items, `CHANGELOG.md` the version history.
+
+**Regenerate the OCR** (only needed when the PDFs change; the result `config/ocr_text.json` is
+versioned):
 
 ```powershell
-python tools/ocr_pages.py        # rendert die Seiten ohne Text (200 dpi)
+python tools/ocr_pages.py        # renders the pages without text (200 dpi)
 powershell -NoProfile -File tools/ocr_batch.ps1 `
   -Manifest "$env:TEMP\mazda-ocr\manifest.json" -Out "$env:TEMP\mazda-ocr\results.json"
 node tools/ocr_merge.js "$env:TEMP\mazda-ocr\results.json"
 npm run index
 ```
 
-Voraussetzungen: Python 3 mit `pymupdf` (`pip install pymupdf`) und ein Windows-OCR-Sprachpaket
-(hier de-DE). Der Viewer selbst braucht weder Python noch Netz — nur dieser Wartungsschritt.
+Requirements: Python 3 with `pymupdf` (`pip install pymupdf`) and a Windows OCR language pack
+(de-DE here). The viewer itself needs neither Python nor a network — only this maintenance step.
 
-**Versionierung:** Das Projekt ist ein Git-Repository auf `main`. Nicht versioniert sind `data\`
-(451 MB PDFs), `node_modules\`, `dist\` und `_backup\`; Teil des Repos sind dagegen
-`public/search_index.json` und `config/ocr_text.json`, weil der Viewer ohne sie nicht läuft
-(~5 MB). Push über SSH:
+**Versioning:** the project is a Git repository on `main`. Not versioned: `data\` (451 MB of PDFs),
+`node_modules\`, `dist\` and `_backup\`; part of the repository: `public/search_index.json` and
+`config/ocr_text.json`, because the viewer does not run without them (~5 MB). Push over SSH:
 
 ```powershell
-git remote add origin git@github.com:Wintryx/mazda-cx-5-workshop-repair-manual-viewer.git   # einmalig
+git remote add origin git@github.com:Wintryx/mazda-cx-5-workshop-repair-manual-viewer.git   # once
 git push -u origin main
 ```
 
-Das Repository liegt unter
+The repository lives at
 [github.com/Wintryx/mazda-cx-5-workshop-repair-manual-viewer](https://github.com/Wintryx/mazda-cx-5-workshop-repair-manual-viewer)
-und ist **privat**: Der Index enthält Titel und Stichworte, die aus dem Mazda-Handbuch extrahiert
-wurden, und unterliegt damit dem Urheberrecht (siehe Abschnitt 12). Die Releases sind mit den Tags
-`v1.5.0` bis `v1.10.0` markiert.
+and is **private**: the index contains titles and keywords extracted from the Mazda manual and is
+therefore subject to copyright (see section 12). Releases are tagged `v1.5.0` to `v1.10.0`.
 
-## 11. Desktop-App (Windows-EXE)
+## 11. Desktop app (Windows EXE)
 
-Für Rechner **ohne Node**: einmalig `npm install` (holt Electron und electron-builder als
-Dev-Abhängigkeiten), dann
+For machines **without Node**: `npm install` once (pulls Electron and electron-builder as dev
+dependencies), then
 
 ```powershell
-npm run app     # Entwicklungsmodus (Electron-Fenster)
-npm run dist    # baut Installer und portablen Ordner
+npm run app     # development mode (Electron window)
+npm run dist    # builds installer and portable folder
 ```
 
-Ergebnis in `dist\`:
+Output in `dist\`:
 
-| Datei | Größe | Zweck |
+| File | Size | Purpose |
 |---|---|---|
-| `win-unpacked\Mazda-CX5-Viewer.exe` | 362 MB (Ordner) | portabel — Ordner auf USB kopieren, EXE starten |
-| `Mazda-CX5-Viewer-Setup-<Version>.exe` | 108 MB | Installer, pro Benutzer, ohne Adminrechte |
+| `win-unpacked\Mazda-CX5-Viewer.exe` | 362 MB (folder) | portable — copy the folder to a USB stick, run the EXE |
+| `Mazda-CX5-Viewer-Setup-<version>.exe` | 108 MB | installer, per user, no admin rights |
 
-**Wichtig:** Der Ordner `data\` mit den 7.294 PDFs gehört **neben die EXE**, nicht in den Build —
-die PDFs werden bewusst nicht eingebacken. Auf dem Zielrechner also:
+**Important:** the `data\` folder with the 7,294 PDFs belongs **next to the EXE**, not inside the
+build — the PDFs are deliberately not bundled. On the target machine:
 
 ```
 Mazda-CX5-Viewer.exe
-data\            <- 7.294 PDFs
+data\            <- 7,294 PDFs
 ```
 
-Fehlt `data\`, zeigt die App einen Dialog mit dem erwarteten Pfad und beendet sich. Ein Handbuch-Update
-ist ein Kopiervorgang in `data\`, kein neuer Build. Notizen und Lesezeichen liegen im
-Electron-Profil (`%APPDATA%\Mazda CX-5 Viewer`).
+If `data\` is missing, the app shows a dialog with the expected path and exits. Updating the manual
+is a copy operation into `data\`, not a new build. Notes and bookmarks live in the Electron profile
+(`%APPDATA%\Mazda CX-5 Viewer`).
 
-Zwei Hinweise: Die EXE ist nicht signiert, Windows SmartScreen warnt beim ersten Start („Weitere
-Informationen" → „Trotzdem ausführen"). Und ist die Umgebungsvariable `ELECTRON_RUN_AS_NODE=1`
-gesetzt, startet die EXE als Node und beendet sich sofort — auf normalen PCs ist sie nicht gesetzt.
+Two notes: the EXE is unsigned, so Windows SmartScreen warns on first launch (“More info” →
+“Run anyway”). And if the environment variable `ELECTRON_RUN_AS_NODE=1` is set, the EXE starts as
+Node and exits immediately — it is not set on normal PCs.
 
-## 12. Rechtehinweis
+## 12. Copyright
 
-Die Handbuch-PDFs sind urheberrechtlich geschütztes Material von Mazda. Dieses Projekt ist ein
-privates Werkstatt-Hilfsmittel: **nicht öffentlich hosten, nicht weitergeben, nicht kommerziell nutzen.**
-Der Quellcode des Viewers darf frei angepasst werden; die Rechte an den Inhalten bleiben bei Mazda.
+The manual PDFs are copyrighted material owned by Mazda. This project is a private workshop tool:
+**do not host it publicly, do not redistribute it, do not use it commercially.** The viewer source
+code may be adapted freely; all rights to the content remain with Mazda.
