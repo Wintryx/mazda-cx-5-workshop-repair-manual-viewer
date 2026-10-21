@@ -31,6 +31,7 @@ Offen, nach Nutzen sortiert:
 
 | Punkt | Inhalt | Aufwand | Bringt |
 |---|---|---|---|
+| **7.1** | Windows-EXE mit Electron (ohne Node lauffähig) | ~1 Tag | Weitergabe an Werkstatt-PC ohne Installation |
 | **5.5** | Smoke-Test mit `node --test` | ~1 h | schnellere Rückmeldung als die jetzigen Skripte |
 | **5.6** | `.active_port` beim Beenden aufräumen | ~15 min | keine irreführende Datei |
 | **5.8** | Range-Requests (206), Request-Log | ~1 h | sauberes HTTP und Fehlersuche |
@@ -299,11 +300,74 @@ Welche Arbeiten wurden am Fahrzeug wann nach welcher Seite durchgeführt (LocalS
 
 ---
 
+## 🟣 P4 – Auslieferung als Desktop-App
+
+### [ ] 7.1 Windows-EXE mit Electron
+**Ziel:** `npm run dist` erzeugt eine ausführbare Windows-App, die auf einem PC **ohne Node**, ohne
+Internet und ohne weitere Installation läuft — Doppelklick, Fenster, fertig.
+
+**Warum Electron:** Der Viewer ist bereits eine Web-App mit eigenem HTTP-Server (`server.js`) und
+braucht nur einen Browser. Electron bringt Chromium mit, der bestehende Server läuft unverändert im
+Main-Prozess — die Oberfläche muss nicht angefasst werden. Reine Node-Paketierer (`pkg`, Node SEA)
+erzeugen eine kleinere EXE, öffnen aber kein eigenes Fenster und brauchen weiterhin Edge/Chrome.
+
+**Architektur**
+- `electron/main.js`: freien Port suchen, `process.env.PORT` und `MANUAL_DIR` setzen, den bestehenden
+  Server per `require('../server.js')` starten, `BrowserWindow` (1280×900, Menü aus,
+  `contextIsolation: true`, `nodeIntegration: false`) auf `http://127.0.0.1:<Port>/` öffnen.
+  Dafür muss `server.js` `startServer` exportieren (heute nur intern) — eine Zeile.
+- Beim Schließen: Fenster → Server → Prozess beenden, kein Zombie und kein belegter Port.
+- Fehlt `data\`, erscheint ein Dialog mit Pfad und Hinweis statt einer 404-Serie.
+- `MANUAL_DIR` wird in `main.js` auf `<exe-Ordner>\data` gesetzt — im asar-Archiv wäre `data/`
+  schreibgeschützt und nicht austauschbar. Die Reihenfolge in `lib/paths.js` bleibt sonst unverändert.
+
+**Build**
+- Dev-Abhängigkeiten: `electron` + `electron-builder` (Versionen beim Umsetzen festlegen).
+- `npm run app` startet die App im Entwicklungsmodus; `npm run dist` baut
+  `dist/win-unpacked/Mazda-CX5-Viewer.exe` (portabel) und `dist/Mazda-CX5-Viewer-Setup-<Version>.exe`
+  (NSIS, pro Benutzer, ohne Adminrechte).
+- `electron-builder`-Konfiguration unter `build` in `package.json`: `appId`, `productName`, `files`
+  (`server.js`, `lib/`, `public/`, `config/`), Icon (`.ico`), Version aus `package.json`.
+- Die 451 MB PDFs werden **nicht** eingebacken (`extraResources` bewusst nicht) — `data\` bleibt ein
+  Ordner neben der EXE, sonst wäre jeder Build 500 MB groß und ein Handbuch-Update unmöglich.
+
+**Daten und Updates**
+- `data\` liegt neben der EXE; ein Handbuch-Update ist ein Kopiervorgang, kein neuer Build.
+- Notizen/Lesezeichen liegen im Electron-Profil (`%APPDATA%\Mazda-CX5-Viewer`), nicht neben der EXE.
+- Auflösung bleibt: `MANUAL_DIR` → `config/settings.json` → `data\`.
+
+**Abnahmekriterien**
+- [ ] `npm run dist` erzeugt Installer und portablen Ordner
+- [ ] Frisches Windows ohne Node: Installation ohne Adminrechte, Start in unter 10 s
+- [ ] Kapitelbaum, Suche (inkl. `P0301`), PDF-Anzeige, Hotspots, Notizen, Checklisten und Druck laufen
+- [ ] Ohne `data\` erscheint eine verständliche Meldung statt einer 404-Serie
+- [ ] Beenden hinterlässt keinen laufenden Prozess und keinen belegten Port
+- [ ] Installer ≤ 550 MB, installiert ≤ 700 MB (die PDFs dominieren)
+
+**Risiken**
+- Unsignierte EXE → SmartScreen-Warnung; ein Code-Signing-Zertifikat kostet Geld und ist für den
+  Eigenbedarf verzichtbar
+- ~90 MB Chromium im Paket und regelmäßige Electron-Sicherheitsupdates
+- Virenscanner melden frisch gebaute, unsignierte Installer gelegentlich fälschlich
+- Ein Installer verteilt 451 MB — für den Eigenbedarf ist der portable Ordner meist die bessere Wahl
+
+**Alternativen** (falls Electron zu schwer ist)
+
+| Variante | Größe | Aufwand | Nachteil |
+|---|---|---|---|
+| Electron + electron-builder | ~180 MB + Daten | ~1 Tag | Chromium im Paket, Updates nötig |
+| Node-SEA/`pkg` + Verknüpfung | ~110 MB + Daten | ~3 h | kein eigenes Fenster, Browser bleibt nötig |
+| Portable ZIP mit `node.exe` + `START_VIEWER.bat` | ~50 MB + Daten | ~2 h | wirkt gebastelt, kein Eintrag im Startmenü |
+| Tauri/WebView2 | ~10 MB | ~2–3 Tage | zweiter Stack (Rust oder Sidecar), WebView2-Abhängigkeit |
+
+---
+
 ## Empfohlene Reihenfolge
 
 ### v1.10.0 (als Nächstes)
 
-Siehe Tabelle „Nächste Schritte" oben — zuerst die Betriebs-Kleinigkeiten 5.5/5.6/5.8, dann 6.5/6.6.
+Siehe Tabelle „Nächste Schritte" oben. **7.1** (Desktop-Build) ist ein eigener Block von ~1 Tag;
+daneben die Betriebs-Kleinigkeiten 5.5/5.6/5.8 und die Ausbau-Punkte 6.5/6.6.
 
 ### Abgeschlossene Sprints (v1.4.0)
 
